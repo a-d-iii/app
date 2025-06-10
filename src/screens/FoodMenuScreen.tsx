@@ -1,6 +1,6 @@
 // src/screens/FoodMenuScreen.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -37,12 +37,20 @@ function formatTime(h: number, m: number) {
   return `${pad(h)}:${pad(m)}`;
 }
 
+function isSameDay(a: Date, b: Date) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
 type Ratings = { [key: string]: number };
 type Favorites = { [key: string]: boolean };
 
 export default function FoodMenuScreen({ navigation }: any) {
-  const today = new Date();
-  const dateLabel = today.toLocaleDateString('en-US', {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const dateLabel = selectedDate.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'short',
     day: 'numeric',
@@ -53,6 +61,16 @@ export default function FoodMenuScreen({ navigation }: any) {
   const [statuses, setStatuses] = useState<{ [name: string]: 'ongoing' | 'next' | 'later' }>({});
   const [modalItem, setModalItem] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Favorites>({});
+
+  const days = useMemo(() => {
+    const start = new Date(selectedDate);
+    start.setDate(start.getDate() - 3);
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      return d;
+    });
+  }, [selectedDate]);
 
   useEffect(() => {
     AsyncStorage.getItem('mealRatings').then((raw) => {
@@ -137,6 +155,29 @@ export default function FoodMenuScreen({ navigation }: any) {
           <Text style={styles.dateLabel}>{dateLabel}</Text>
         </View>
       </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.dateRow}
+      >
+        {days.map((d) => {
+          const selected = isSameDay(d, selectedDate);
+          return (
+            <TouchableOpacity
+              key={d.toDateString()}
+              style={[styles.dateItem, selected && styles.selectedDateItem]}
+              onPress={() => setSelectedDate(new Date(d))}
+            >
+              <Text style={[styles.dateText, selected && styles.selectedDateText]}>
+                {d.toLocaleDateString('en-US', { weekday: 'short' })}
+              </Text>
+              <Text style={[styles.dateText, selected && styles.selectedDateText]}>
+                {d.getDate()}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
       <ScrollView contentContainerStyle={styles.content}>
         {MEALS.map((meal) => {
           const timer = timers[meal.name] || '';
@@ -299,5 +340,28 @@ const styles = StyleSheet.create({
   rateText: {
     color: '#fff',
     fontSize: 12,
+  },
+  dateRow: {
+    flexDirection: 'row',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  dateItem: {
+    width: 60,
+    alignItems: 'center',
+    paddingVertical: 6,
+    borderRadius: 12,
+    marginHorizontal: 4,
+  },
+  selectedDateItem: {
+    backgroundColor: '#007bff',
+  },
+  dateText: {
+    fontSize: 12,
+    color: '#333',
+  },
+  selectedDateText: {
+    color: '#fff',
+    fontWeight: '600',
   },
 });
