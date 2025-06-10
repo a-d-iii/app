@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal, View, TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { Camera } from 'expo-camera';
+import { Camera, CameraView, CameraType, FocusMode } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 
 export type CameraModalProps = {
@@ -10,7 +10,7 @@ export type CameraModalProps = {
 };
 
 export default function CameraModal({ visible, onClose, onCapture }: CameraModalProps) {
-  const cameraRef = useRef<Camera | null>(null);
+  const cameraRef = useRef<CameraView | null>(null);
   const [hasPermission, setHasPermission] = useState(false);
 
   useEffect(() => {
@@ -36,11 +36,11 @@ export default function CameraModal({ visible, onClose, onCapture }: CameraModal
     <Modal visible={visible} animationType="slide">
       <View style={styles.container}>
         {hasPermission && (
-          <Camera
+          <CameraView
             ref={cameraRef}
             style={StyleSheet.absoluteFill}
-            type={Camera.Constants.Type.back}
-            autoFocus={Camera.Constants.AutoFocus.on}
+            facing={CameraType.back}
+            autofocus={FocusMode.on}
           />
         )}
         <View style={styles.bottomBar}>
