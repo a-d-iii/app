@@ -180,24 +180,6 @@ export default function FoodMenuScreen({ navigation }: any) {
           return (
             <TouchableOpacity
               key={d.toDateString()}
-              style={[styles.calendarDay, isSelected && styles.calendarSelected]}
-              onPress={() => setSelectedDate(d)}
-            >
-              <Text style={styles.calendarDayOfWeek}>
-                {d.toLocaleDateString('en-US', { weekday: 'short' })}
-              </Text>
-              <Text style={styles.calendarDate}>{d.getDate()}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
-      <ScrollView contentContainerStyle={styles.content}>
-        {MEALS.map((meal) => {
-          const timer = timers[meal.name] || '';
-          const status = statuses[meal.name];
-          return (
-            <TouchableOpacity
-              key={d.toDateString()}
               style={styles.calendarDay}
               onPress={() => setSelectedDate(d)}
             >
@@ -244,7 +226,7 @@ export default function FoodMenuScreen({ navigation }: any) {
                 {formatTime(meal.startHour, meal.startMinute)} – {formatTime(meal.endHour, meal.endMinute)}
               </Text>
               <Text style={styles.mealItems}>{meal.items.join(', ')}</Text>
-              {meal.highlights?.map((item) => {
+                {meal.highlights?.map((item) => {
                 const key = `${meal.name}-${item}`;
                 return (
                   <View key={key} style={styles.highlightRow}>
@@ -280,14 +262,10 @@ export default function FoodMenuScreen({ navigation }: any) {
                     )}
                   </View>
                 );
-              })
+                })}
             </Animated.View>
           );
-
-        })
-
-        })}
-
+          })}
         </ScrollView>
       </View>
       <View style={styles.summaryBar}>
@@ -424,9 +402,6 @@ const styles = StyleSheet.create({
   },
   calendarRow: {
     paddingVertical: 8,
-  calendarRow: {
-    borderBottomWidth: 1,
-    borderColor: '#ddd',
   },
   calendarContent: {
     paddingHorizontal: 8,
@@ -444,9 +419,6 @@ const styles = StyleSheet.create({
   },
   calendarSelected: {
     backgroundColor: '#d0d0d0',
-  calendarSelected: {
-    backgroundColor: '#e0e0e0',
-    borderRadius: 8,
   },
   calendarDayOfWeek: {
     fontSize: 12,
