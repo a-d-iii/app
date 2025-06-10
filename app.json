@@ -19,7 +19,7 @@
       "backgroundColor": "#121212",    // dark shade behind Home/Recents/Back
       "barStyle": "light-content"      // makes the system icons white
     },
-    "plugins": ["expo-media-library"],
+    "plugins": ["expo-media-library", "expo-camera"],
 
     "ios": {
       "supportsTablet": true,
@@ -36,7 +36,8 @@
       // "edgeToEdgeEnabled": true,
       "package": "com.anonymous.vitstudentapp",
       "permissions": [
-        "ACCESS_FINE_LOCATION"
+        "ACCESS_FINE_LOCATION",
+        "CAMERA"
       ]
     },
     "web": {

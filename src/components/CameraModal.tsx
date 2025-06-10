@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal, View, TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { Camera, CameraType } from 'expo-camera';
+import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 
 export type CameraModalProps = {
@@ -39,7 +39,7 @@ export default function CameraModal({ visible, onClose, onCapture }: CameraModal
           <Camera
             ref={cameraRef}
             style={StyleSheet.absoluteFill}
-            type={CameraType.back}
+            type={Camera.Constants.Type.back}
             autoFocus={Camera.Constants.AutoFocus.on}
           />
         )}
