@@ -61,6 +61,12 @@ export default function SummaryCard() {
   const hue = HUE_PRESETS[hueIndex];
   const pageBg = `hsl(${hue},30%,${lightness}%)`;
 
+  // Greeting header background HSL
+  const [headerHueIndex, setHeaderHueIndex] = useState(0);
+  const [headerLightness, setHeaderLightness] = useState(100);
+  const headerHue = HUE_PRESETS[headerHueIndex];
+  const headerBg = `hsl(${headerHue},30%,${headerLightness}%)`;
+
   const navigation = useNavigation();
   const { icon } = useUser();
 
@@ -125,12 +131,17 @@ export default function SummaryCard() {
   const lighten = () => setLightness(l=>Math.min(l+5,100));
   const darken  = () => setLightness(l=>Math.max(l-5,0));
 
+  // Greeting header color controls
+  const cycleHeaderHue = () => setHeaderHueIndex(i=>(i+1)%HUE_PRESETS.length);
+  const lightenHeader = () => setHeaderLightness(l=>Math.min(l+5,100));
+  const darkenHeader  = () => setHeaderLightness(l=>Math.max(l-5,0));
+
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: pageBg }]}>
       <StatusBar translucent backgroundColor="transparent" barStyle="dark-content"/>
 
-      {/* Greeting Header (fixed white/light shade) */}
-      <View style={styles.staticHeader}>
+      {/* Greeting Header */}
+      <View style={[styles.staticHeader,{ backgroundColor: headerBg }]}>
         <TouchableOpacity
           style={styles.profileButton}
           onPress={() => navigation.navigate('Profile')}
@@ -143,8 +154,9 @@ export default function SummaryCard() {
           <Text style={styles.greetingText}>Hello, Adithyaa</Text>
           <Text style={styles.dateText}>Saturday, June 7, 2025</Text>
         </View>
-        {/* Color controls apply to page */}
+        {/* Color controls */}
         <View style={styles.colorControls}>
+          {/* Page controls */}
           <TouchableOpacity onPress={cycleHue} style={styles.controlButton}>
             <Text style={styles.controlText}>🎨</Text>
           </TouchableOpacity>
@@ -152,6 +164,17 @@ export default function SummaryCard() {
             <Text style={styles.controlText}>☀️</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={darken} style={styles.controlButton}>
+            <Text style={styles.controlText}>🌙</Text>
+          </TouchableOpacity>
+          <View style={styles.groupSpacer}/>
+          {/* Greeting controls */}
+          <TouchableOpacity onPress={cycleHeaderHue} style={styles.controlButton}>
+            <Text style={styles.controlText}>🎨</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={lightenHeader} style={styles.controlButton}>
+            <Text style={styles.controlText}>☀️</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={darkenHeader} style={styles.controlButton}>
             <Text style={styles.controlText}>🌙</Text>
           </TouchableOpacity>
         </View>
@@ -357,6 +380,7 @@ const styles = StyleSheet.create({
   dateText:   { color:'#666', fontSize:12, fontWeight:'700', marginTop:4 },
 
   colorControls: { flexDirection:'row', position:'absolute', bottom:12, right:24 },
+  groupSpacer:{ width:12 },
   controlButton: { marginLeft:12 },
   controlText:   { fontSize:18 },
 
