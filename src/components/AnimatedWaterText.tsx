@@ -1,15 +1,9 @@
 // src/components/AnimatedWaterText.tsx
 
-import React, { useEffect, useState } from 'react';
-import { Dimensions } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { Dimensions, Animated, Easing } from 'react-native';
 import Svg, { Defs, Mask, Rect, Text as SvgText } from 'react-native-svg';
 import { Accelerometer } from 'expo-sensors';
-import Animated, {
-  useSharedValue,
-  useAnimatedProps,
-  withTiming,
-  Easing,
-} from 'react-native-reanimated';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -43,7 +37,7 @@ export default function AnimatedWaterText({
   }, []);
 
   // Shared value for the water's Y position
-  const waterY = useSharedValue(containerHeight * 0.4);
+  const waterY = useRef(new Animated.Value(containerHeight * 0.4)).current;
 
   // Whenever accelY changes, nudge waterY by up to ±20px
   useEffect(() => {
@@ -55,16 +49,17 @@ export default function AnimatedWaterText({
     // Base at 0.4×height, plus/minus offsetRange
     const target = containerHeight * 0.4 + nY * offsetRange;
 
-    waterY.value = withTiming(target, {
+    Animated.timing(waterY, {
+      toValue: target,
       duration: 100,
       easing: Easing.linear,
-    });
+      useNativeDriver: false,
+    }).start();
   }, [accelY, containerHeight, waterY]);
 
-  // Animated props for the <AnimatedRect>
-  const animatedProps = useAnimatedProps(() => ({
-    y: waterY.value,
-  }));
+  const animatedProps = {
+    y: waterY,
+  };
 
   return (
     <Svg
