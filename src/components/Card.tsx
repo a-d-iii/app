@@ -27,6 +27,17 @@ export const CARD_HEIGHT = SCREEN_HEIGHT * 0.60;
 /** Number of raindrops */
 const RAINDROP_COUNT = 12;
 
+function isClassOver(timeRange: string) {
+  const parts = timeRange.split('–').map((s) => s.trim());
+  if (parts.length !== 2) return false;
+  const [_start, end] = parts;
+  const [endH, endM] = end.split(':').map(Number);
+  const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const endMinutes = endH * 60 + endM;
+  return nowMinutes > endMinutes;
+}
+
 /** More “painterly” multi-stop gradients */
 export const GRADIENTS = [
   ['#8E44AD', '#C0392B', '#F39C12'],  // rich purples, reds, ochre
@@ -170,7 +181,6 @@ export default function Card({
           >
             <BlobPattern />
             <Raindrops />
-            <View style={styles.darkenOverlay} />
 
             {/* WEEKDAY & DATE */}
             <View style={styles.weekdayContainer}>
@@ -193,9 +203,9 @@ export default function Card({
             <View style={styles.contentContainer}>
               <Text style={styles.courseText}>{courseCode}</Text>
               {roomDetail !== '' && (
-                <Text style={styles.roomText}>{roomDetail}</Text>
+                <Text style={styles.roomText} numberOfLines={1}>{roomDetail}</Text>
               )}
-              <Text style={styles.timeText}>{time}</Text>
+              <Text style={styles.timeText} numberOfLines={1}>{time}</Text>
             </View>
 
             {/* BUTTON BAR */}
@@ -244,18 +254,33 @@ export default function Card({
             style={styles.gradient}
           >
             <BlobPattern />
-            <View style={[styles.darkenOverlay, { backgroundColor: 'rgba(0,0,0,0.25)' }]} />
 
             {/* BACK-SIDE SCHEDULE */}
             <View style={styles.contentContainer}>
               <View style={styles.backContent}>
                 <Text style={styles.backHeader}>Today's Schedule</Text>
-                {daySchedule.map((cls, idx) => (
-                  <View key={idx} style={styles.backRow}>
-                    <Text style={styles.backTime}>{cls.time}</Text>
-                    <Text style={styles.backTitle}>{cls.title}</Text>
-                  </View>
-                ))}
+                {daySchedule.map((cls, idx) => {
+                  const parts = cls.title.split('@').map((p) => p.trim());
+                  const display = parts.length > 1 ? `${parts[0]} • ${parts[1]}` : cls.title;
+                  const past = isClassOver(cls.time);
+                  return (
+                    <View key={idx} style={styles.backRow}>
+                      <Ionicons
+                        name="ellipse"
+                        size={8}
+                        color={past ? '#ff6666' : '#fff'}
+                        style={styles.bulletIcon}
+                      />
+                      <Text style={styles.backTime} numberOfLines={1}>{cls.time}</Text>
+                      <Text
+                        style={[styles.backTitle, past && styles.pastTitle]}
+                        numberOfLines={1}
+                      >
+                        {display}
+                      </Text>
+                    </View>
+                  );
+                })}
               </View>
             </View>
           </LinearGradient>
@@ -425,10 +450,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
   },
-  darkenOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-  },
   weekdayContainer: {
     position: 'absolute',
     top: 12,
@@ -500,33 +521,49 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
+    paddingVertical: 24,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
     zIndex: 3,
   },
   backHeader: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '700',
     color: '#fff',
-    marginBottom: 12,
+    marginBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.5)',
-    paddingBottom: 4,
+    borderBottomColor: 'rgba(255,255,255,0.4)',
+    paddingBottom: 6,
     textAlign: 'center',
   },
   backRow: {
     flexDirection: 'row',
-    marginVertical: 6,
+    alignItems: 'center',
+    marginVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.2)',
+    paddingBottom: 6,
+  },
+  bulletIcon: {
+    marginRight: 8,
   },
   backTime: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#e0f0ff',
-    width: 100,
-    fontWeight: '600',
+    width: 110,
+    fontWeight: '700',
+    marginRight: 8,
   },
   backTitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#fff',
     flex: 1,
     fontWeight: '500',
+    flexWrap: 'nowrap',
+  },
+  pastTitle: {
+    color: '#ff6666',
   },
   buttonBar: {
     position: 'absolute',
