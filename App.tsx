@@ -49,6 +49,7 @@ type TabParamList = {
   Home: undefined;
   Planner: undefined;
   Social: undefined;
+  Food: undefined;
   More: undefined;
 };
 
@@ -71,7 +72,7 @@ function MoreStackNavigator() {
 }
 
 /** 
- * Main Tabs: Home, Planner, Social, More (wrapped in MoreStackNavigator)
+ * Main Tabs: Home, Planner, Social, Food, More (wrapped in MoreStackNavigator)
  */
 function MainTabs() {
   return (
@@ -87,6 +88,8 @@ function MainTabs() {
             iconName = focused ? 'calendar' : 'calendar-outline';
           } else if (route.name === 'Social') {
             iconName = focused ? 'people' : 'people-outline';
+          } else if (route.name === 'Food') {
+            iconName = focused ? 'fast-food' : 'fast-food-outline';
           } else if (route.name === 'More') {
             iconName = focused
               ? 'ellipsis-horizontal'
@@ -105,6 +108,7 @@ function MainTabs() {
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Planner" component={PlannerScreen} />
       <Tab.Screen name="Social" component={SocialScreen} />
+      <Tab.Screen name="Food" component={FoodMenuScreen} />
       {/* Use the stack navigator for “More” */}
       <Tab.Screen name="More" component={MoreStackNavigator} />
     </Tab.Navigator>
