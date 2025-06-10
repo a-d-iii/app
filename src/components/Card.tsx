@@ -14,7 +14,8 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import CameraModal from './CameraModal';
+import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RatingModal from './RatingModal';
 import TemperatureBadge from './TemperatureBadge';
@@ -115,7 +116,6 @@ export default function Card({
   // Choose painterly gradient
   const gradientColors = GRADIENTS[index % GRADIENTS.length];
 
-  const [cameraVisible, setCameraVisible] = useState(false);
 
   const handleCapture = async (uri: string) => {
     const timestamp = Date.now();
@@ -126,6 +126,18 @@ export default function Card({
     arr.push({ uri, timestamp });
     parsed[classId] = arr;
     await AsyncStorage.setItem('photosByClass', JSON.stringify(parsed));
+  };
+
+  const openSystemCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    const { status: mediaStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted' || mediaStatus !== 'granted') return;
+
+    const result = await ImagePicker.launchCameraAsync();
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const asset = await MediaLibrary.createAssetAsync(result.assets[0].uri);
+      handleCapture(asset.uri);
+    }
   };
 
   // Submit rating
@@ -202,7 +214,7 @@ export default function Card({
             <View style={styles.buttonBar}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => setCameraVisible(true)}
+                onPress={openSystemCamera}
                 activeOpacity={0.7}
               >
                 <Ionicons name="camera" size={20} color="#fff" />
@@ -268,11 +280,6 @@ export default function Card({
         onClose={() => setShowRatingModal(false)}
         onSubmit={submitRating}
         initialRating={currentRating}
-      />
-      <CameraModal
-        visible={cameraVisible}
-        onClose={() => setCameraVisible(false)}
-        onCapture={handleCapture}
       />
     </View>
   );
