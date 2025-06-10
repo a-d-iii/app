@@ -62,7 +62,7 @@ const BottomPanel = forwardRef<BottomPanelHandle, Props>(
         Animated.timing(slide, {
           toValue: 1,
           duration: 150, // faster open
-          useNativeDriver: true,
+          useNativeDriver: false,
         }).start();
       }
     }, [isVisible, slide]);
@@ -72,7 +72,7 @@ const BottomPanel = forwardRef<BottomPanelHandle, Props>(
       Animated.timing(slide, {
         toValue: 0,
         duration: 150, // faster close
-        useNativeDriver: true,
+        useNativeDriver: false,
       }).start(() => {
         onDismiss();
       });

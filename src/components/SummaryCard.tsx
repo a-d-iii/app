@@ -30,7 +30,7 @@ const GRADIENT_WIDTH = width * 0.9;
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 const AnimatedScrollView     = Animated.createAnimatedComponent(ScrollView);
-const AnimatedIonicon        = Animated.createAnimatedComponent(Ionicons);
+const AnimatedIconWrapper    = Animated.createAnimatedComponent(View);
 
 // Data types
 type ClassItem   = {
@@ -141,12 +141,12 @@ export default function SummaryCard() {
 
   useEffect(() => {
     classAnims.forEach((anim, i) => {
-      Animated.timing(anim, {
-        toValue: 1,
-        duration: 400,
-        delay: i * 100,
-        useNativeDriver: true,
-      }).start();
+        Animated.timing(anim, {
+          toValue: 1,
+          duration: 400,
+          delay: i * 100,
+          useNativeDriver: false,
+        }).start();
     });
   }, [classAnims]);
 
@@ -303,16 +303,13 @@ export default function SummaryCard() {
               ]}
             >
               <View style={styles.classIcon}>
-                <AnimatedIonicon
-                  name={cls.iconStart as any}
-                  size={22}
+                <AnimatedIconWrapper
                   style={{
                     position: 'absolute',
                     opacity: classAnims[idx].interpolate({
                       inputRange: [0, 0.5, 1],
                       outputRange: [1, 0, 0],
                     }),
-                    color: iconColor,
                     transform: [
                       {
                         scale: classAnims[idx].interpolate({
@@ -322,16 +319,15 @@ export default function SummaryCard() {
                       },
                     ],
                   }}
-                />
-                <AnimatedIonicon
-                  name={cls.iconEnd as any}
-                  size={22}
+                >
+                  <Ionicons name={cls.iconStart as any} size={22} color={iconColor} />
+                </AnimatedIconWrapper>
+                <AnimatedIconWrapper
                   style={{
                     opacity: classAnims[idx].interpolate({
                       inputRange: [0, 0.5, 1],
                       outputRange: [0, 0, 1],
                     }),
-                    color: iconColor,
                     transform: [
                       {
                         scale: classAnims[idx].interpolate({
@@ -341,7 +337,9 @@ export default function SummaryCard() {
                       },
                     ],
                   }}
-                />
+                >
+                  <Ionicons name={cls.iconEnd as any} size={22} color={iconColor} />
+                </AnimatedIconWrapper>
               </View>
               <View style={styles.classLeft}>
                 <Text style={styles.courseText}>{cls.course}</Text>

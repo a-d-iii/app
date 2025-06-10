@@ -61,7 +61,7 @@ export default function TemperatureBadge({
 
     return () => {
       loopHandle.stop();
-      humidityAnim.stopAnimation();
+      // Avoid calling stopAnimation on a frozen value
     };
   }, [humidityAnim]);
 
