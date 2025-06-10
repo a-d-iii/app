@@ -14,8 +14,16 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RatingModal from '../components/RatingModal';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { MEALS } from '../data/meals';
+
+const MEAL_ICONS: { [name: string]: string } = {
+  Breakfast: 'cafe-outline',
+  Lunch: 'restaurant-outline',
+  Snacks: 'fast-food-outline',
+  Dinner: 'moon-outline',
+};
 
 // Pad numbers to two digits without relying on ES2017 String.padStart
 function pad(n: number): string {
@@ -27,6 +35,7 @@ function formatTime(h: number, m: number) {
 }
 
 type Ratings = { [key: string]: number };
+type Favorites = { [key: string]: boolean };
 
 export default function FoodMenuScreen({ navigation }: any) {
   const today = new Date();
@@ -40,10 +49,14 @@ export default function FoodMenuScreen({ navigation }: any) {
   const [timers, setTimers] = useState<{ [name: string]: string }>({});
   const [statuses, setStatuses] = useState<{ [name: string]: 'ongoing' | 'next' | 'later' }>({});
   const [modalItem, setModalItem] = useState<string | null>(null);
+  const [favorites, setFavorites] = useState<Favorites>({});
 
   useEffect(() => {
     AsyncStorage.getItem('mealRatings').then((raw) => {
       if (raw) setRatings(JSON.parse(raw));
+    });
+    AsyncStorage.getItem('mealFavorites').then((raw) => {
+      if (raw) setFavorites(JSON.parse(raw));
     });
   }, []);
 
@@ -66,13 +79,26 @@ export default function FoodMenuScreen({ navigation }: any) {
         if (now >= start && now < end) status = 'ongoing';
         else if (idx === nextIdx) status = 'next';
 
-        const diff = start.getTime() - now.getTime();
-        const secs = Math.max(0, Math.floor(diff / 1000));
-        const hrs = Math.floor(secs / 3600);
-        const mins = Math.floor((secs % 3600) / 60);
-        const s = secs % 60;
-        const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
-        const label = now >= start ? 'Started' : `${pad(hrs)}:${pad(mins)}:${pad(s)}`;
+        const toStart = start.getTime() - now.getTime();
+        const toEnd = end.getTime() - now.getTime();
+        const pad2 = (n: number) => (n < 10 ? `0${n}` : `${n}`);
+
+        let label = '';
+        if (toStart > 0) {
+          const secs = Math.floor(toStart / 1000);
+          const hrs = Math.floor(secs / 3600);
+          const mins = Math.floor((secs % 3600) / 60);
+          const s = secs % 60;
+          label = `${pad2(hrs)}:${pad2(mins)}:${pad2(s)} to start`;
+        } else if (toEnd > 0) {
+          const secs = Math.floor(toEnd / 1000);
+          const hrs = Math.floor(secs / 3600);
+          const mins = Math.floor((secs % 3600) / 60);
+          const s = secs % 60;
+          label = `${pad2(hrs)}:${pad2(mins)}:${pad2(s)} left`;
+        } else {
+          label = 'Ended';
+        }
 
         setTimers((t) => ({ ...t, [m.name]: label }));
         setStatuses((s2) => ({ ...s2, [m.name]: status }));
@@ -91,13 +117,19 @@ export default function FoodMenuScreen({ navigation }: any) {
     await AsyncStorage.setItem('mealRatings', JSON.stringify(updated));
   };
 
+  const toggleFavorite = async (itemKey: string) => {
+    const updated = { ...favorites, [itemKey]: !favorites[itemKey] };
+    setFavorites(updated);
+    await AsyncStorage.setItem('mealFavorites', JSON.stringify(updated));
+  };
+
   return (
     <SafeAreaView style={styles.root}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.backText}>← Back</Text>
         </TouchableOpacity>
-        <View style={styles.headerTextWrap}>
+        <View style={styles.headerTextWrap} pointerEvents="none">
           <Text style={styles.title}>Full Day’s Menu</Text>
           <Text style={styles.dateLabel}>{dateLabel}</Text>
         </View>
@@ -116,7 +148,15 @@ export default function FoodMenuScreen({ navigation }: any) {
               ]}
             >
               <View style={styles.mealHeaderRow}>
-                <Text style={styles.mealHeader}>{meal.name}</Text>
+                <View style={styles.mealHeaderLeft}>
+                  <Ionicons
+                    name={MEAL_ICONS[meal.name]}
+                    size={18}
+                    color="#333"
+                    style={styles.mealIcon}
+                  />
+                  <Text style={styles.mealHeader}>{meal.name}</Text>
+                </View>
                 <Text style={styles.timer}>{timer}</Text>
               </View>
               <Text style={styles.timeRange}>
@@ -128,10 +168,14 @@ export default function FoodMenuScreen({ navigation }: any) {
                 return (
                   <View key={key} style={styles.highlightRow}>
                     <Text style={styles.highlightText}>{item}</Text>
-                    <TouchableOpacity
-                      onPress={() => openModal(key)}
-                      style={styles.rateButton}
-                    >
+                    <TouchableOpacity onPress={() => toggleFavorite(key)} style={styles.favoriteButton}>
+                      <Ionicons
+                        name={favorites[key] ? 'heart' : 'heart-outline'}
+                        size={18}
+                        color={favorites[key] ? '#e91e63' : '#666'}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => openModal(key)} style={styles.rateButton}>
                       <Text style={styles.rateText}>{ratings[key] ? `${ratings[key]}★` : 'Rate'}</Text>
                     </TouchableOpacity>
                     {modalItem === key && (
@@ -167,7 +211,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   headerTextWrap: {
-    flex: 1,
+    position: 'absolute',
+    left: 0,
+    right: 0,
     alignItems: 'center',
   },
   backText: {
@@ -203,6 +249,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  mealHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  mealIcon: {
+    marginRight: 4,
+  },
   mealHeader: {
     fontSize: 16,
     fontWeight: '600',
@@ -230,6 +283,9 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: '#333',
+  },
+  favoriteButton: {
+    marginHorizontal: 6,
   },
   rateButton: {
     backgroundColor: '#007bff',
