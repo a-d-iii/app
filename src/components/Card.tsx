@@ -14,7 +14,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import * as ImagePicker from 'expo-image-picker';
+import CameraModal from './CameraModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RatingModal from './RatingModal';
 import TemperatureBadge from './TemperatureBadge';
@@ -115,29 +115,17 @@ export default function Card({
   // Choose painterly gradient
   const gradientColors = GRADIENTS[index % GRADIENTS.length];
 
-  // Take photo
-  const takePhoto = async () => {
-    try {
-      const { status } = await ImagePicker.requestCameraPermissionsAsync();
-      if (status !== 'granted') return;
-      const result = await ImagePicker.launchCameraAsync({
-        quality: 0.5,
-        base64: false,
-      });
-      if (!result.cancelled) {
-        const uri = result.uri;
-        const timestamp = Date.now();
-        const raw = await AsyncStorage.getItem('photosByClass');
-        const parsed: { [key: string]: { uri: string; timestamp: number }[] } =
-          raw ? JSON.parse(raw) : {};
-        const arr = parsed[classId] || [];
-        arr.push({ uri, timestamp });
-        parsed[classId] = arr;
-        await AsyncStorage.setItem('photosByClass', JSON.stringify(parsed));
-      }
-    } catch {
-      // silent
-    }
+  const [cameraVisible, setCameraVisible] = useState(false);
+
+  const handleCapture = async (uri: string) => {
+    const timestamp = Date.now();
+    const raw = await AsyncStorage.getItem('photosByClass');
+    const parsed: { [key: string]: { uri: string; timestamp: number }[] } =
+      raw ? JSON.parse(raw) : {};
+    const arr = parsed[classId] || [];
+    arr.push({ uri, timestamp });
+    parsed[classId] = arr;
+    await AsyncStorage.setItem('photosByClass', JSON.stringify(parsed));
   };
 
   // Submit rating
@@ -214,7 +202,7 @@ export default function Card({
             <View style={styles.buttonBar}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={takePhoto}
+                onPress={() => setCameraVisible(true)}
                 activeOpacity={0.7}
               >
                 <Ionicons name="camera" size={20} color="#fff" />
@@ -280,6 +268,11 @@ export default function Card({
         onClose={() => setShowRatingModal(false)}
         onSubmit={submitRating}
         initialRating={currentRating}
+      />
+      <CameraModal
+        visible={cameraVisible}
+        onClose={() => setCameraVisible(false)}
+        onCapture={handleCapture}
       />
     </View>
   );
