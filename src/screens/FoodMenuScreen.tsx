@@ -280,10 +280,14 @@ export default function FoodMenuScreen({ navigation }: any) {
                     )}
                   </View>
                 );
-              })}
+              })
             </Animated.View>
           );
+
+        })
+
         })}
+
         </ScrollView>
       </View>
       <View style={styles.summaryBar}>
