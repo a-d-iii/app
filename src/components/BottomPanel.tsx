@@ -13,6 +13,8 @@ import {
   StyleSheet,
   Text,
   View,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -48,7 +50,10 @@ type Props = {
 };
 
 const BottomPanel = forwardRef<BottomPanelHandle, Props>(
-  ({ isVisible, onDismiss }, ref) => {
+  (
+    { isVisible, onDismiss }: Props,
+    ref: React.ForwardedRef<BottomPanelHandle>
+  ) => {
     const slide = useRef(new Animated.Value(isVisible ? 1 : 0)).current;
 
     // Expose close()
@@ -101,7 +106,7 @@ const BottomPanel = forwardRef<BottomPanelHandle, Props>(
           bounces
           overScrollMode="always"
           scrollEventThrottle={16}
-          onScrollEndDrag={({ nativeEvent }) => {
+          onScrollEndDrag={({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
             const { y } = nativeEvent.contentOffset;
             const { y: vy = 0 } = nativeEvent.velocity ?? {};
             if (y <= 0 && vy > 0.5) {
