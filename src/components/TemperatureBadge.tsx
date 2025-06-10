@@ -43,6 +43,28 @@ export default function TemperatureBadge({
   useEffect(() => {
     const loopHandle = Animated.loop(
       Animated.sequence([
+        Animated.timing(
+          humidityAnim,
+          Object.assign(
+            {
+              toValue: 1,
+              duration: 3000,
+              easing: Easing.inOut(Easing.ease),
+            },
+            { useNativeDriver: true }
+          )
+        ),
+        Animated.timing(
+          humidityAnim,
+          Object.assign(
+            {
+              toValue: 0,
+              duration: 3000,
+              easing: Easing.inOut(Easing.ease),
+            },
+            { useNativeDriver: true }
+          )
+        ),
         Animated.timing(humidityAnim, {
           toValue: 1,
           duration: 3000,

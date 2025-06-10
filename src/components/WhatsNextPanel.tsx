@@ -60,22 +60,36 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
     // When isVisible → animate slide down
     useEffect(() => {
       if (isVisible) {
+
+        Animated.timing(
+          slide,
+          Object.assign({ toValue: 1, duration: 150 }, { useNativeDriver: true })
+        ).start();
+
         Animated.timing(slide, {
           toValue: 1,
           duration: 150,
           useNativeDriver: true,
         }).start();
+
       }
     }, [isVisible, slide]);
 
     // Expose close() to parent via ref
     useImperativeHandle(ref, () => ({
       close: () => {
+
+        Animated.timing(
+          slide,
+          Object.assign({ toValue: 0, duration: 150 }, { useNativeDriver: true })
+        ).start(() => {
+
         Animated.timing(slide, {
           toValue: 0,
           duration: 150,
           useNativeDriver: true,
         }).start(() => {
+
           onDismiss();
         });
       },
@@ -206,11 +220,17 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
 
             navigation.getParent()?.navigate('FoodMenuScreen');
 
+            Animated.timing(
+              slide,
+              Object.assign({ toValue: 0, duration: 150 }, { useNativeDriver: true })
+            ).start(() => onDismiss());
+
             Animated.timing(slide, {
               toValue: 0,
               duration: 150,
               useNativeDriver: true,
             }).start(() => onDismiss());
+
           }}
         >
           <Text style={styles.fullMenuText}>View Full Menu</Text>
