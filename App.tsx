@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { UserProvider } from './src/context/UserContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { enableScreens } from 'react-native-screens';
@@ -96,15 +97,17 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <NavigationContainer>
-          <RootStack.Navigator screenOptions={{ headerShown: false }}>
-            <RootStack.Screen name="MainTabs" component={MainTabs} />
-            <RootStack.Screen
-              name="FoodMenuScreen"
-              component={FoodMenuScreen}
-            />
-          </RootStack.Navigator>
-        </NavigationContainer>
+        <UserProvider>
+          <NavigationContainer>
+            <RootStack.Navigator screenOptions={{ headerShown: false }}>
+              <RootStack.Screen name="MainTabs" component={MainTabs} />
+              <RootStack.Screen
+                name="FoodMenuScreen"
+                component={FoodMenuScreen}
+              />
+            </RootStack.Navigator>
+          </NavigationContainer>
+        </UserProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
