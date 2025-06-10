@@ -73,7 +73,7 @@ export default function GalleryScreen() {
           selectedValue={selectedClass}
           onValueChange={(val) => setSelectedClass(val)}
         >
-          <Picker.Item label="All Classes" value="all" />
+          <Picker.Item key="all" label="All Classes" value="all" />
           {classIds.map((cid) => (
             <Picker.Item key={cid} label={`Class ${cid}`} value={cid} />
           ))}
@@ -87,7 +87,7 @@ export default function GalleryScreen() {
       ) : (
         <FlatList
           data={flatData}
-          keyExtractor={(item, idx) => item.uri + idx}
+          keyExtractor={(item) => `${item.timestamp}-${item.uri}`}
           numColumns={3}
           renderItem={({ item }) => (
             <Image source={{ uri: item.uri }} style={styles.photo} />
