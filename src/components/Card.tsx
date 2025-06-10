@@ -116,16 +116,6 @@ export default function Card({
   };
 
   const toggleFlip = () => {
-    const config = Object.assign(
-      {
-        toValue: flipped ? 0 : 180,
-        duration: 350,
-        easing: Easing.inOut(Easing.ease),
-      },
-      { useNativeDriver: true }
-    );
-    Animated.timing(flipAnim, config).start(() => setFlipped(!flipped));
-
     Animated.timing(flipAnim, {
       toValue: flipped ? 0 : 180,
       duration: 350,
@@ -300,13 +290,6 @@ export default function Card({
                       >
                         {display}
                       </Text>
-
-                      <Text style={styles.backTime} numberOfLines={1}>{cls.time}</Text>
-
-                      <Text style={styles.backTime}>{cls.time}</Text>
-
-                      <Text style={[styles.backTitle, past && styles.pastTitle]}>{display}</Text>
-
                     </View>
                   );
                 })}
@@ -347,51 +330,24 @@ function Raindrops() {
     drops.forEach(({ anim, delay, speed }) => {
       const loop = () => {
         anim.setValue(-20);
-          Animated.timing(
-            anim,
-            Object.assign(
-              {
-                toValue: CARD_HEIGHT + 20,
-                duration: speed,
-                delay,
-                easing: Easing.linear,
-              },
-              { useNativeDriver: true }
-            )
-          ).start(({ finished }) => {
-
-          Animated.timing(anim, {
-            toValue: CARD_HEIGHT + 20,
-            duration: speed,
-            delay,
-            easing: Easing.linear,
-            useNativeDriver: true,
-          }).start(({ finished }) => {
+        Animated.timing(anim, {
+          toValue: CARD_HEIGHT + 20,
+          duration: speed,
+          delay,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }).start(({ finished }) => {
           if (finished) {
             const newSpeed = 1800 + Math.random() * 800;
             const newDelay = Math.random() * 1200;
             anim.setValue(-20);
-              Animated.timing(
-                anim,
-                Object.assign(
-                  {
-                    toValue: CARD_HEIGHT + 20,
-                    duration: newSpeed,
-                    delay: newDelay,
-                    easing: Easing.linear,
-                  },
-                  { useNativeDriver: true }
-                )
-              ).start(({ finished: f2 }) => {
-
-              Animated.timing(anim, {
-                toValue: CARD_HEIGHT + 20,
-                duration: newSpeed,
-                delay: newDelay,
-                easing: Easing.linear,
-                useNativeDriver: true,
-              }).start(({ finished: f2 }) => {
-
+            Animated.timing(anim, {
+              toValue: CARD_HEIGHT + 20,
+              duration: newSpeed,
+              delay: newDelay,
+              easing: Easing.linear,
+              useNativeDriver: true,
+            }).start(({ finished: f2 }) => {
               if (f2) loop();
             });
           }
