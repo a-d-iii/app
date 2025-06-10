@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MEALS } from '../data/meals';
+import type { Meal } from '../data/meals';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const PANEL_HEIGHT = SCREEN_HEIGHT * 0.35; // covers 35% of screen
@@ -48,7 +49,7 @@ type Props = {
 };
 
 const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
-  ({ isVisible, onDismiss }, ref) => {
+  ({ isVisible, onDismiss }: Props, ref: React.ForwardedRef<WhatsNextPanelHandle>) => {
     const navigation = useNavigation();
 
     // Animated value: 0 = hidden above, 1 = fully visible
@@ -87,7 +88,7 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
     // Compute next meal
     function computeNextMeal(): Date {
       const now = new Date();
-      let found = MEALS.find((meal) => {
+      let found: Meal | undefined = MEALS.find((meal: Meal) => {
         if (now.getHours() < meal.startHour) return true;
         if (
           now.getHours() === meal.startHour &&

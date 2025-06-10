@@ -51,3 +51,5 @@ export const MEALS: Meal[] = [
 
   },
 ];
+
+export default MEALS;
