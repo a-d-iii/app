@@ -97,6 +97,9 @@ export default function CardCarousel({
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
           {
             useNativeDriver: true, // avoid mutating the event object on JS thread
+
+            listener: handleScroll,
+
           }
         )}
       >

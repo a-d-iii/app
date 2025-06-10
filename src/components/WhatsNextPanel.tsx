@@ -63,7 +63,7 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
         Animated.timing(slide, {
           toValue: 1,
           duration: 150,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }).start();
       }
     }, [isVisible, slide]);
@@ -74,7 +74,7 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
         Animated.timing(slide, {
           toValue: 0,
           duration: 150,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }).start(() => {
           onDismiss();
         });
@@ -209,7 +209,7 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
             Animated.timing(slide, {
               toValue: 0,
               duration: 150,
-              useNativeDriver: false,
+              useNativeDriver: true,
             }).start(() => onDismiss());
           }}
         >
