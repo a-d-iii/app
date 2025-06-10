@@ -93,15 +93,11 @@ export default function CardCarousel({
         decelerationRate="fast"
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          {
-            useNativeDriver: true, // avoid mutating the event object on JS thread
-
-            listener: handleScroll,
-
-          }
-        )}
+        onScroll={(e) => {
+          const value = e.nativeEvent.contentOffset.x;
+          scrollX.setValue(value);
+          handleScroll(e);
+        }}
       >
         {cards.map((c, i) => (
           <View key={c.id} style={styles.page}>
