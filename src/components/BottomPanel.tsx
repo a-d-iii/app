@@ -91,10 +91,10 @@ const BottomPanel = forwardRef<BottomPanelHandle, Props>(
 
     return (
       <Animated.View
+        pointerEvents={isVisible ? 'auto' : 'none'}
         style={[
           styles.container,
           { transform: [{ translateY }] },
-          !isVisible && { pointerEvents: 'none' },
         ]}
       >
         <View style={styles.handleContainer}>

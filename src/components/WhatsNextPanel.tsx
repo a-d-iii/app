@@ -162,6 +162,7 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
     // If not visible, disable touches
     return (
       <Animated.View
+        pointerEvents={isVisible ? 'auto' : 'none'}
         style={[
           styles.container,
           {
@@ -177,7 +178,6 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
               },
             ],
           },
-          !isVisible && { pointerEvents: 'none' },
         ]}
       >
         {/* Handle bar and swipe-up listener */}
