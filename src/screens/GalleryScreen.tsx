@@ -48,16 +48,19 @@ export default function GalleryScreen() {
   // Whenever photosByClass or selectedClass changes, update flatData
   useEffect(() => {
     if (selectedClass === 'all') {
-      // flatten all entries
+      // flatten all entries (clone each array so we don't mutate state)
       const all: PhotoEntry[] = [];
       Object.values(photosByClass).forEach((arr) => {
-        all.push(...arr);
+        all.push(...arr.slice());
       });
       // sort by timestamp descending
       all.sort((a, b) => b.timestamp - a.timestamp);
       setFlatData(all);
     } else {
-      const arr = photosByClass[selectedClass] || [];
+      // copy before sorting so the original state stays immutable
+      const arr = photosByClass[selectedClass]
+        ? [...photosByClass[selectedClass]]
+        : [];
       arr.sort((a, b) => b.timestamp - a.timestamp);
       setFlatData(arr);
     }
