@@ -242,6 +242,11 @@ const styles = StyleSheet.create({
     padding: 12,
     marginVertical: 8,
     width: '100%',
+
+    marginHorizontal: 4,
+    // use a percentage width to display two columns on most screens
+    width: '48%',
+
   },
   ongoing: {
     backgroundColor: '#e8f5e9',

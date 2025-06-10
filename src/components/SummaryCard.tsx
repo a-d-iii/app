@@ -15,6 +15,8 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+import { useUser } from '../context/UserContext';
 
 const { width, height } = Dimensions.get('window');
 const STATUS_BAR_HEIGHT = Platform.OS === 'android'
@@ -58,6 +60,9 @@ export default function SummaryCard() {
   const [lightness, setLightness] = useState(95);
   const hue = HUE_PRESETS[hueIndex];
   const pageBg = `hsl(${hue},30%,${lightness}%)`;
+
+  const navigation = useNavigation();
+  const { icon } = useUser();
 
   // Tasks state
   const [tasks, setTasks] = useState<TaskItem[]>([
@@ -112,8 +117,13 @@ export default function SummaryCard() {
 
       {/* Greeting Header (fixed white/light shade) */}
       <View style={styles.staticHeader}>
-        <TouchableOpacity style={styles.profileButton}>
-          <View style={styles.profileCircle}/>
+        <TouchableOpacity
+          style={styles.profileButton}
+          onPress={() => navigation.navigate('Profile')}
+        >
+          <View style={styles.profileCircle}>
+            <Ionicons name={icon as any} size={32} color="#333" />
+          </View>
         </TouchableOpacity>
         <View style={styles.headerTextContainer}>
           <Text style={styles.greetingText}>Hello, Adithyaa</Text>
@@ -311,7 +321,7 @@ const styles = StyleSheet.create({
     borderRadius:28,
     overflow:'hidden',
   },
-  profileCircle: { flex:1, backgroundColor:'#ccc' },
+  profileCircle: { flex:1, backgroundColor:'#ccc', justifyContent:'center', alignItems:'center' },
   headerTextContainer: { marginLeft:0 },
   greetingText: { color:'#333', fontSize:26, fontWeight:'700' },
   dateText:   { color:'#666', fontSize:12, fontWeight:'700', marginTop:4 },
@@ -380,7 +390,8 @@ const styles = StyleSheet.create({
 
   menuGrid: { flexDirection:'row', flexWrap:'wrap', justifyContent:'space-between' },
   menuBox:  {
-    width:(width - 16*3)/2,
+    // use percentage width for more flexible two-column layout
+    width: '48%',
     backgroundColor:'#fff',
     borderRadius:12,
     padding:12,

@@ -14,6 +14,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const { height } = Dimensions.get('window');
 const PANEL_HEIGHT = height * 0.5;
@@ -27,13 +28,13 @@ const REMINDERS = [
   'CSE1005 assignment',
 ];
 const UTILITIES = [
-  { icon: '🧮', label: 'Calculator' },
-  { icon: '📊', label: 'Attendance Tracker' },
-  { icon: '📈', label: 'Grade Predictor' },
-  { icon: '🗺️', label: 'Campus Map' },
-  { icon: '🆘', label: 'Help Desk' },
-  { icon: '📚', label: 'Library Search' },
-  { icon: '⚙️', label: 'Settings' },
+  { icon: 'calculator-outline', label: 'Calculator' },
+  { icon: 'stats-chart-outline', label: 'Attendance Tracker' },
+  { icon: 'trending-up-outline', label: 'Grade Predictor' },
+  { icon: 'map-outline', label: 'Campus Map' },
+  { icon: 'help-circle-outline', label: 'Help Desk' },
+  { icon: 'book-outline', label: 'Library Search' },
+  { icon: 'settings-outline', label: 'Settings' },
 ];
 /* ――――――――――――――――――――――――――― */
 
@@ -115,15 +116,20 @@ const BottomPanel = forwardRef<BottomPanelHandle, Props>(
             </View>
           ))}
 
-          <Text style={[styles.sectionHeader, { marginTop: 20 }]}>
-            Utilities
-          </Text>
-          {UTILITIES.map((util, idx) => (
-            <View key={idx} style={styles.utilityRow}>
-              <Text style={styles.utilityIcon}>{util.icon}</Text>
-              <Text style={styles.utilityLabel}>{util.label}</Text>
-            </View>
-          ))}
+          <Text style={[styles.sectionHeader, { marginTop: 20 }]}>Utilities</Text>
+          <View style={styles.utilityGrid}>
+            {UTILITIES.map((util, idx) => (
+              <View key={idx} style={styles.utilityItem}>
+                <Ionicons
+                  name={util.icon as any}
+                  size={28}
+                  color="#444"
+                  style={styles.utilityIcon}
+                />
+                <Text style={styles.utilityLabel}>{util.label}</Text>
+              </View>
+            ))}
+          </View>
 
           <View style={{ height: 40 }} />
         </ScrollView>
@@ -141,7 +147,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: PANEL_HEIGHT,
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f2f5',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     elevation: 6,
@@ -173,26 +179,32 @@ const styles = StyleSheet.create({
   },
   todoItem: {
     marginVertical: 6,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: '#eee',
   },
   todoText: {
     fontSize: 14,
     color: '#555',
   },
-  utilityRow: {
+  utilityGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  utilityItem: {
+    width: '30%',
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    marginVertical: 12,
   },
   utilityIcon: {
-    fontSize: 24,
-    width: 32,
-    textAlign: 'center',
+    marginBottom: 4,
   },
   utilityLabel: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#333',
-    marginLeft: 8,
+    textAlign: 'center',
   },
 });
