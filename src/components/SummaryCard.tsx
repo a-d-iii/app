@@ -154,7 +154,21 @@ export default function SummaryCard() {
           <Text style={styles.greetingText}>Hello, Adithyaa</Text>
           <Text style={styles.dateText}>Saturday, June 7, 2025</Text>
         </View>
-        {/* Color controls for header background */}
+        {/* Header color controls */}
+        <View style={styles.headerColorControls}>
+          <TouchableOpacity onPress={cycleHeaderHue} style={styles.controlButton}>
+            <Text style={styles.controlText}>🎨</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={lightenHeader} style={styles.controlButton}>
+            <Text style={styles.controlText}>☀️</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={darkenHeader} style={styles.controlButton}>
+            <Text style={styles.controlText}>🌙</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Page color controls */}
+
         <View style={styles.colorControls}>
           <TouchableOpacity onPress={cycleHeaderHue} style={styles.controlButton}>
             <Text style={styles.controlText}>🎨</Text>
@@ -365,6 +379,13 @@ const styles = StyleSheet.create({
   headerTextContainer: { marginLeft:0 },
   greetingText: { color:'#333', fontSize:26, fontWeight:'700' },
   dateText:   { color:'#666', fontSize:12, fontWeight:'700', marginTop:4 },
+
+  headerColorControls: {
+    flexDirection:'row',
+    position:'absolute',
+    bottom:12,
+    left:24,
+  },
 
   colorControls: { flexDirection:'row', position:'absolute', bottom:12, right:24 },
   controlButton: { marginLeft:12 },
