@@ -234,17 +234,14 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
   },
   mealBlock: {
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 12,
     marginVertical: 8,
-    marginHorizontal: 4,
-    width: (width - 16 * 3) / 2,
+    width: '100%',
   },
   ongoing: {
     backgroundColor: '#e8f5e9',
