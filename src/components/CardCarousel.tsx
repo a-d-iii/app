@@ -96,7 +96,9 @@ export default function CardCarousel({
         scrollEventThrottle={16}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
+          {
+            useNativeDriver: true, // avoid mutating the event object on JS thread
+          }
         )}
       >
         {cards.map((c, i) => (
