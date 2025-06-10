@@ -3,6 +3,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { enableScreens } from 'react-native-screens';
+
+enableScreens();
+
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -32,58 +37,31 @@ function SocialScreen() {
   );
 }
 
-// ——— New files you need to create under src/screens: ———
-// src/screens/MoreRootScreen.tsx  (listing utilities, including “Gallery”)
-// src/screens/GalleryScreen.tsx   (the gallery view)
-
-// Import those here:
-import MoreRootScreen from './src/screens/MoreRootScreen';
-import GalleryScreen from './src/screens/GalleryScreen';
-import Profile from './src/screens/Profile';
-import { UserProvider } from './src/context/UserContext';
-
-type RootStackParamList = {
-  MainTabs: undefined;
-  FoodMenuScreen: undefined;
-  Profile: undefined;
-};
-
-type TabParamList = {
-  Home: undefined;
-  Planner: undefined;
-  Social: undefined;
-  Food: undefined;
-  More: undefined;
-};
-
-const Tab = createBottomTabNavigator<TabParamList>();
-const RootStack = createNativeStackNavigator<RootStackParamList>();
-const MoreStack = createNativeStackNavigator();
-
-/** 
- * Wrap the “More” tab in its own stack navigator.
- * MoreRootScreen lists utilities (e.g., “Gallery” button).
- * GalleryScreen displays all class‐filtered photos.
- */
-function MoreStackNavigator() {
+function MoreScreen() {
   return (
-    <MoreStack.Navigator screenOptions={{ headerShown: false }}>
-      <MoreStack.Screen name="MoreRoot" component={MoreRootScreen} />
-      <MoreStack.Screen name="Gallery" component={GalleryScreen} />
-    </MoreStack.Navigator>
+    <View style={styles.placeholder}>
+      <Text style={styles.placeholderText}>More Screen</Text>
+    </View>
   );
 }
 
-/** 
- * Main Tabs: Home, Planner, Social, Food, More (wrapped in MoreStackNavigator)
- */
+const Tab = createBottomTabNavigator();
+const RootStack = createNativeStackNavigator();
+
+function MoreStackNavigator() {
+  return (
+    <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      <RootStack.Screen name="MoreMain" component={MoreScreen} />
+    </RootStack.Navigator>
+  );
+}
+
 function MainTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName = '';
+          let iconName: keyof typeof Ionicons.glyphMap = 'home';
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
@@ -91,8 +69,6 @@ function MainTabs() {
             iconName = focused ? 'calendar' : 'calendar-outline';
           } else if (route.name === 'Social') {
             iconName = focused ? 'people' : 'people-outline';
-          } else if (route.name === 'Food') {
-            iconName = focused ? 'fast-food' : 'fast-food-outline';
           } else if (route.name === 'More') {
             iconName = focused
               ? 'ellipsis-horizontal'
@@ -111,8 +87,6 @@ function MainTabs() {
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Planner" component={PlannerScreen} />
       <Tab.Screen name="Social" component={SocialScreen} />
-      <Tab.Screen name="Food" component={FoodMenuScreen} />
-      {/* Use the stack navigator for “More” */}
       <Tab.Screen name="More" component={MoreStackNavigator} />
     </Tab.Navigator>
   );
@@ -120,8 +94,8 @@ function MainTabs() {
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <UserProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
         <NavigationContainer>
           <RootStack.Navigator screenOptions={{ headerShown: false }}>
             <RootStack.Screen name="MainTabs" component={MainTabs} />
@@ -129,11 +103,10 @@ export default function App() {
               name="FoodMenuScreen"
               component={FoodMenuScreen}
             />
-            <RootStack.Screen name="Profile" component={Profile} />
           </RootStack.Navigator>
         </NavigationContainer>
-      </UserProvider>
-    </SafeAreaProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 
