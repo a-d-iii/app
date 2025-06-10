@@ -97,6 +97,20 @@ export default function SummaryCard() {
     { course:'Networks',   faculty:'Dr. Patel',  start:'10:30', end:'11:30', room:'Lab 2' },
   ];
 
+  // Animations for timetable boxes
+  const classAnims = useRef(daySchedule.map(() => new Animated.Value(0))).current;
+
+  useEffect(() => {
+    classAnims.forEach((anim, i) => {
+      Animated.timing(anim, {
+        toValue: 1,
+        duration: 400,
+        delay: i * 100,
+        useNativeDriver: true,
+      }).start();
+    });
+  }, [classAnims]);
+
   const toggleTask = (id:number) =>
     setTasks(prev => prev.map(t=> t.id===id?{...t,done:!t.done}:t));
 
@@ -202,7 +216,23 @@ export default function SummaryCard() {
           const hrs = ((e.getTime()-s.getTime())/3600000).toFixed(1);
           const tstr = s.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
           return (
-            <View key={idx} style={styles.classBox}>
+            <Animated.View
+              key={idx}
+              style={[
+                styles.classBox,
+                {
+                  opacity: classAnims[idx],
+                  transform: [
+                    {
+                      translateY: classAnims[idx].interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [20, 0],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
               <View style={styles.classLeft}>
                 <Text style={styles.courseText}>{cls.course}</Text>
                 <Text style={styles.facultyText}>{cls.faculty}</Text>
@@ -212,7 +242,7 @@ export default function SummaryCard() {
                 <Text style={styles.hoursText}>{hrs}h</Text>
                 <Text style={styles.roomText}>{cls.room}</Text>
               </View>
-            </View>
+            </Animated.View>
           );
         })}
 
