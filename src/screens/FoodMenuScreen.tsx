@@ -234,18 +234,19 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
   },
   mealBlock: {
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 12,
     marginVertical: 8,
+    width: '100%',
+
     marginHorizontal: 4,
     // use a percentage width to display two columns on most screens
     width: '48%',
+
   },
   ongoing: {
     backgroundColor: '#e8f5e9',
