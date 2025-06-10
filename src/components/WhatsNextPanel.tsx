@@ -204,7 +204,7 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
           style={styles.fullMenuButton}
           onPress={() => {
 
-            navigation.getParent()?.navigate('FoodMenuScreen');
+            navigation.navigate('Food');
 
             Animated.timing(slide, {
               toValue: 0,
