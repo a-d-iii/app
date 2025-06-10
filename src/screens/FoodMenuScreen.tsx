@@ -191,7 +191,7 @@ export default function FoodMenuScreen({ navigation }: any) {
                     )}
                   </View>
                 );
-              })}
+              });
             </Animated.View>
           );
         })}
