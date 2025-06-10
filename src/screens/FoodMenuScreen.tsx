@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RatingModal from '../components/RatingModal';
+
 import { MEALS } from '../data/meals';
 
 function formatTime(h: number, m: number) {
@@ -140,6 +141,16 @@ export default function FoodMenuScreen({ navigation }: any) {
             </Animated.View>
           );
         })}
+        {MEALS.map((meal) => (
+          <React.Fragment key={meal.name}>
+            <Text style={styles.mealHeader}>
+              {meal.name} ({formatTime(meal.startHour, meal.startMinute)} –
+              {formatTime(meal.endHour, meal.endMinute)}):
+            </Text>
+            <Text style={styles.mealItems}>{meal.items.join(', ')}</Text>
+          </React.Fragment>
+        ))}
+
       </ScrollView>
     </SafeAreaView>
   );
