@@ -35,7 +35,7 @@ export default function AppNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="FoodMenu"
+          name="FoodMenuScreen"
           component={FoodMenuScreen}
           options={{ title: 'Full Menu' }}
         />
