@@ -197,8 +197,6 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
 
             navigation.getParent()?.navigate('FoodMenuScreen');
 
-            navigation.getParent()?.navigate('FoodMenu');
-
             Animated.timing(slide, {
               toValue: 0,
               duration: 150,
