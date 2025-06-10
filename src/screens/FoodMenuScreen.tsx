@@ -226,7 +226,7 @@ export default function FoodMenuScreen({ navigation }: any) {
                 {formatTime(meal.startHour, meal.startMinute)} – {formatTime(meal.endHour, meal.endMinute)}
               </Text>
               <Text style={styles.mealItems}>{meal.items.join(', ')}</Text>
-              {meal.highlights?.map((item) => {
+                {meal.highlights?.map((item) => {
                 const key = `${meal.name}-${item}`;
                 return (
                   <View key={key} style={styles.highlightRow}>
@@ -262,10 +262,10 @@ export default function FoodMenuScreen({ navigation }: any) {
                     )}
                   </View>
                 );
-              })
+                })}
             </Animated.View>
           );
-        })
+
         </ScrollView>
       </View>
       <View style={styles.summaryBar}>
