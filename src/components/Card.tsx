@@ -193,7 +193,6 @@ export default function Card({
           >
             <BlobPattern />
             <Raindrops />
-            <View style={styles.darkenOverlay} />
 
             {/* WEEKDAY & DATE */}
             <View style={styles.weekdayContainer}>
@@ -278,11 +277,26 @@ export default function Card({
                   const past = isClassOver(cls.time);
                   return (
                     <View key={idx} style={styles.backRow}>
+                      <Ionicons
+                        name="ellipse"
+                        size={8}
+                        color={past ? '#ff6666' : '#fff'}
+                        style={styles.bulletIcon}
+                      />
+                      <Text style={styles.backTime} numberOfLines={1}>{cls.time}</Text>
+                      <Text
+                        style={[styles.backTitle, past && styles.pastTitle]}
+                        numberOfLines={1}
+                      >
+                        {display}
+                      </Text>
+
                       <Text style={styles.backTime} numberOfLines={1}>{cls.time}</Text>
 
                       <Text style={styles.backTime}>{cls.time}</Text>
 
                       <Text style={[styles.backTitle, past && styles.pastTitle]}>{display}</Text>
+
                     </View>
                   );
                 })}
@@ -450,10 +464,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
   },
-  darkenOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-  },
   weekdayContainer: {
     position: 'absolute',
     top: 12,
@@ -525,6 +535,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
+    paddingVertical: 24,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+
     paddingVertical: 16,
     borderRadius: 16,
     borderWidth: 1,
@@ -532,38 +547,51 @@ const styles = StyleSheet.create({
 
     backgroundColor: 'rgba(0,0,0,0.25)',
 
+
     zIndex: 3,
   },
   backHeader: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '700',
     color: '#fff',
-    marginBottom: 12,
+    marginBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.5)',
-    paddingBottom: 4,
+    borderBottomColor: 'rgba(255,255,255,0.4)',
+    paddingBottom: 6,
     textAlign: 'center',
   },
   backRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.2)',
+    paddingBottom: 6,
+  },
+  bulletIcon: {
+    marginRight: 8,
+
     marginVertical: 6,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255,255,255,0.2)',
     paddingBottom: 4,
+
   },
   backTime: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#e0f0ff',
     width: 110,
+    fontWeight: '700',
+
 
     width: 90,
 
     fontWeight: '600',
+
     marginRight: 8,
   },
   backTitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#fff',
     flex: 1,
     fontWeight: '500',
