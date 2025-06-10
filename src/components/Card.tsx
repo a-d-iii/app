@@ -28,6 +28,17 @@ export const CARD_HEIGHT = SCREEN_HEIGHT * 0.60;
 /** Number of raindrops */
 const RAINDROP_COUNT = 12;
 
+function isClassOver(timeRange: string) {
+  const parts = timeRange.split('–').map((s) => s.trim());
+  if (parts.length !== 2) return false;
+  const [_start, end] = parts;
+  const [endH, endM] = end.split(':').map(Number);
+  const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const endMinutes = endH * 60 + endM;
+  return nowMinutes > endMinutes;
+}
+
 /** More “painterly” multi-stop gradients */
 export const GRADIENTS = [
   ['#8E44AD', '#C0392B', '#F39C12'],  // rich purples, reds, ochre
@@ -205,9 +216,9 @@ export default function Card({
             <View style={styles.contentContainer}>
               <Text style={styles.courseText}>{courseCode}</Text>
               {roomDetail !== '' && (
-                <Text style={styles.roomText}>{roomDetail}</Text>
+                <Text style={styles.roomText} numberOfLines={1}>{roomDetail}</Text>
               )}
-              <Text style={styles.timeText}>{time}</Text>
+              <Text style={styles.timeText} numberOfLines={1}>{time}</Text>
             </View>
 
             {/* BUTTON BAR */}
@@ -262,12 +273,17 @@ export default function Card({
             <View style={styles.contentContainer}>
               <View style={styles.backContent}>
                 <Text style={styles.backHeader}>Today's Schedule</Text>
-                {daySchedule.map((cls, idx) => (
-                  <View key={idx} style={styles.backRow}>
-                    <Text style={styles.backTime}>{cls.time}</Text>
-                    <Text style={styles.backTitle}>{cls.title}</Text>
-                  </View>
-                ))}
+                {daySchedule.map((cls, idx) => {
+                  const parts = cls.title.split('@').map((p) => p.trim());
+                  const display = parts.length > 1 ? `${parts[0]} • ${parts[1]}` : cls.title;
+                  const past = isClassOver(cls.time);
+                  return (
+                    <View key={idx} style={styles.backRow}>
+                      <Text style={styles.backTime}>{cls.time}</Text>
+                      <Text style={[styles.backTitle, past && styles.pastTitle]}>{display}</Text>
+                    </View>
+                  );
+                })}
               </View>
             </View>
           </LinearGradient>
@@ -507,6 +523,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.25)',
     zIndex: 3,
   },
   backHeader: {
@@ -521,19 +542,28 @@ const styles = StyleSheet.create({
   },
   backRow: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.2)',
+    paddingBottom: 4,
   },
   backTime: {
     fontSize: 16,
     color: '#e0f0ff',
-    width: 100,
+    width: 90,
     fontWeight: '600',
+    marginRight: 8,
   },
   backTitle: {
     fontSize: 16,
     color: '#fff',
     flex: 1,
     fontWeight: '500',
+    flexWrap: 'nowrap',
+  },
+  pastTitle: {
+    color: '#ff6666',
   },
   buttonBar: {
     position: 'absolute',
