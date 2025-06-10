@@ -192,7 +192,14 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
 
         <Pressable
           style={styles.fullMenuButton}
-          onPress={() => navigation.getParent()?.navigate('FoodMenuScreen')}
+          onPress={() => {
+            navigation.getParent()?.navigate('FoodMenu');
+            Animated.timing(slide, {
+              toValue: 0,
+              duration: 150,
+              useNativeDriver: true,
+            }).start(() => onDismiss());
+          }}
         >
           <Text style={styles.fullMenuText}>View Full Menu</Text>
         </Pressable>
