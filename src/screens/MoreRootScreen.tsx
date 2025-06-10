@@ -7,7 +7,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Platform,
+  StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -17,7 +20,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
  */
 const utilities = [
   { key: 'gallery', label: 'Gallery', icon: 'images-outline' },
-  // add more utilities here if needed…
+  { key: 'cgpa', label: 'CGPA Calculator', icon: 'calculator-outline' },
+  { key: 'facultyRanker', label: 'Faculty Ranker', icon: 'bar-chart-outline' },
+  { key: 'jpgToPdf', label: 'JPG to PDF', icon: 'document-outline' },
+  { key: 'cetc', label: 'CETC', icon: 'school-outline' },
 ];
 
 export default function MoreRootScreen() {
@@ -39,14 +45,19 @@ export default function MoreRootScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
+      ]}
+    >
       <FlatList
         data={utilities}
         renderItem={renderItem}
         keyExtractor={(item) => item.key}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
