@@ -42,10 +42,19 @@ type Favorites = { [key: string]: boolean };
 
 export default function FoodMenuScreen({ navigation }: any) {
   const today = new Date();
-  const dateLabel = today.toLocaleDateString('en-US', {
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
+  const dateLabel = selectedDate.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'short',
     day: 'numeric',
+  });
+
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 15);
+  const calendarDates = Array.from({ length: 31 }, (_, i) => {
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+    return d;
   });
 
   const [ratings, setRatings] = useState<Ratings>({});
@@ -137,6 +146,29 @@ export default function FoodMenuScreen({ navigation }: any) {
           <Text style={styles.dateLabel}>{dateLabel}</Text>
         </View>
       </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.calendarRow}
+        contentContainerStyle={styles.calendarContent}
+      >
+        {calendarDates.map((d) => {
+          const isSelected =
+            d.toDateString() === selectedDate.toDateString();
+          return (
+            <TouchableOpacity
+              key={d.toDateString()}
+              style={[styles.calendarDay, isSelected && styles.calendarSelected]}
+              onPress={() => setSelectedDate(d)}
+            >
+              <Text style={styles.calendarDayOfWeek}>
+                {d.toLocaleDateString('en-US', { weekday: 'short' })}
+              </Text>
+              <Text style={styles.calendarDate}>{d.getDate()}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
       <ScrollView contentContainerStyle={styles.content}>
         {MEALS.map((meal) => {
           const timer = timers[meal.name] || '';
@@ -299,5 +331,29 @@ const styles = StyleSheet.create({
   rateText: {
     color: '#fff',
     fontSize: 12,
+  },
+  calendarRow: {
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
+  },
+  calendarContent: {
+    paddingHorizontal: 8,
+  },
+  calendarDay: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+  },
+  calendarSelected: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: 8,
+  },
+  calendarDayOfWeek: {
+    fontSize: 12,
+    color: '#555',
+  },
+  calendarDate: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
