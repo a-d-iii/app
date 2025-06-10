@@ -65,6 +65,18 @@ export default function TemperatureBadge({
             { useNativeDriver: true }
           )
         ),
+        Animated.timing(humidityAnim, {
+          toValue: 1,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(humidityAnim, {
+          toValue: 0,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
       ])
     );
     loopHandle.start();

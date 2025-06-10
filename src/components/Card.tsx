@@ -125,6 +125,13 @@ export default function Card({
       { useNativeDriver: true }
     );
     Animated.timing(flipAnim, config).start(() => setFlipped(!flipped));
+
+    Animated.timing(flipAnim, {
+      toValue: flipped ? 0 : 180,
+      duration: 350,
+      useNativeDriver: true,
+      easing: Easing.inOut(Easing.ease),
+    }).start(() => setFlipped(!flipped));
   };
 
   // Choose painterly gradient
@@ -352,6 +359,14 @@ function Raindrops() {
               { useNativeDriver: true }
             )
           ).start(({ finished }) => {
+
+          Animated.timing(anim, {
+            toValue: CARD_HEIGHT + 20,
+            duration: speed,
+            delay,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }).start(({ finished }) => {
           if (finished) {
             const newSpeed = 1800 + Math.random() * 800;
             const newDelay = Math.random() * 1200;
@@ -368,6 +383,15 @@ function Raindrops() {
                   { useNativeDriver: true }
                 )
               ).start(({ finished: f2 }) => {
+
+              Animated.timing(anim, {
+                toValue: CARD_HEIGHT + 20,
+                duration: newSpeed,
+                delay: newDelay,
+                easing: Easing.linear,
+                useNativeDriver: true,
+              }).start(({ finished: f2 }) => {
+
               if (f2) loop();
             });
           }
