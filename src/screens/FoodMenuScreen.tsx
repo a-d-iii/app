@@ -9,6 +9,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import { MEALS } from '../data/meals';
+
+function formatTime(h: number, m: number) {
+  return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+}
 
 export default function FoodMenuScreen({ navigation }: any) {
   return (
@@ -20,20 +25,15 @@ export default function FoodMenuScreen({ navigation }: any) {
         <Text style={styles.title}>Full Day’s Menu</Text>
       </View>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.mealHeader}>Breakfast (08:00 – 10:00):</Text>
-        <Text style={styles.mealItems}>
-          Upma, Poha, Idli, Paratha, Aloo Bhaji, Chai
-        </Text>
-
-        <Text style={styles.mealHeader}>Lunch (12:30 – 14:00):</Text>
-        <Text style={styles.mealItems}>
-          Veg Biryani, Dal Makhani, Mixed Veg, Roti, Salad
-        </Text>
-
-        <Text style={styles.mealHeader}>Dinner (19:00 – 21:00):</Text>
-        <Text style={styles.mealItems}>
-          Paneer Butter Masala, Chapati, Dal Tadka, Rice, Raita
-        </Text>
+        {MEALS.map((meal) => (
+          <React.Fragment key={meal.name}>
+            <Text style={styles.mealHeader}>
+              {meal.name} ({formatTime(meal.startHour, meal.startMinute)} –
+              {formatTime(meal.endHour, meal.endMinute)}):
+            </Text>
+            <Text style={styles.mealItems}>{meal.items.join(', ')}</Text>
+          </React.Fragment>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
