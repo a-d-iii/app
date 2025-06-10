@@ -19,6 +19,7 @@
       "backgroundColor": "#121212",    // dark shade behind Home/Recents/Back
       "barStyle": "light-content"      // makes the system icons white
     },
+    "plugins": ["expo-media-library"],
 
     "ios": {
       "supportsTablet": true,
