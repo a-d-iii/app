@@ -59,21 +59,19 @@ const BottomPanel = forwardRef<BottomPanelHandle, Props>(
     // When isVisible flips to true → slide up
     useEffect(() => {
       if (isVisible) {
-        Animated.timing(slide, {
-          toValue: 1,
-          duration: 150, // faster open
-          useNativeDriver: false,
-        }).start();
+        Animated.timing(
+          slide,
+          Object.assign({ toValue: 1, duration: 150 }, { useNativeDriver: true })
+        ).start();
       }
     }, [isVisible, slide]);
 
     // Slide-down, then notify parent
     const slideDown = () => {
-      Animated.timing(slide, {
-        toValue: 0,
-        duration: 150, // faster close
-        useNativeDriver: false,
-      }).start(() => {
+      Animated.timing(
+        slide,
+        Object.assign({ toValue: 0, duration: 150 }, { useNativeDriver: true })
+      ).start(() => {
         onDismiss();
       });
     };

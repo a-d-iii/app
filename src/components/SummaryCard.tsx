@@ -89,21 +89,9 @@ export default function SummaryCard() {
   // Scroll value (for future use)
   const scrollY = useRef(new Animated.Value(0)).current;
 
-  // Card gradient animation
-  const colorAnim = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    Animated.loop(Animated.timing(colorAnim,{
-      toValue:1,duration:10000,useNativeDriver:false
-    })).start();
-  }, []);
-  const bgStart = colorAnim.interpolate({
-    inputRange:[0,0.5,1],
-    outputRange:['#FFB366','#769BE0','#FFB366'],
-  });
-  const bgEnd = colorAnim.interpolate({
-    inputRange:[0,0.5,1],
-    outputRange:['#A060E0','#7D6EB0','#A060E0'],
-  });
+  // Static gradient colors (Animated color not supported with native driver)
+  const bgStart = '#FFB366';
+  const bgEnd = '#A060E0';
 
   // Dummy schedule with icon pairs for animation
   const daySchedule: ClassItem[] = [
@@ -141,12 +129,13 @@ export default function SummaryCard() {
 
   useEffect(() => {
     classAnims.forEach((anim, i) => {
-        Animated.timing(anim, {
-          toValue: 1,
-          duration: 400,
-          delay: i * 100,
-          useNativeDriver: false,
-        }).start();
+        Animated.timing(
+          anim,
+          Object.assign(
+            { toValue: 1, duration: 400, delay: i * 100 },
+            { useNativeDriver: true }
+          )
+        ).start();
     });
   }, [classAnims]);
 
