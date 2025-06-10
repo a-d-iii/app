@@ -267,7 +267,6 @@ export default function Card({
             style={styles.gradient}
           >
             <BlobPattern />
-            <View style={[styles.darkenOverlay, { backgroundColor: 'rgba(0,0,0,0.25)' }]} />
 
             {/* BACK-SIDE SCHEDULE */}
             <View style={styles.contentContainer}>
@@ -279,7 +278,10 @@ export default function Card({
                   const past = isClassOver(cls.time);
                   return (
                     <View key={idx} style={styles.backRow}>
+                      <Text style={styles.backTime} numberOfLines={1}>{cls.time}</Text>
+
                       <Text style={styles.backTime}>{cls.time}</Text>
+
                       <Text style={[styles.backTitle, past && styles.pastTitle]}>{display}</Text>
                     </View>
                   );
@@ -527,7 +529,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.3)',
+
     backgroundColor: 'rgba(0,0,0,0.25)',
+
     zIndex: 3,
   },
   backHeader: {
@@ -551,7 +555,10 @@ const styles = StyleSheet.create({
   backTime: {
     fontSize: 16,
     color: '#e0f0ff',
+    width: 110,
+
     width: 90,
+
     fontWeight: '600',
     marginRight: 8,
   },
