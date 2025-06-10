@@ -1,43 +1,33 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useUser } from '../context/UserContext';
 
-const ICON_CHOICES = [
-  'person-circle',
-  'happy',
-  'cafe',
-  'planet',
-  'school',
-];
-
 export default function Profile() {
-  const { icon, setIcon } = useUser();
+  const { icon } = useUser();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
-      <View style={styles.preview}>
-        <Ionicons name={icon as any} size={80} color="#333" />
+      <View style={styles.avatarWrap}>
+        <Ionicons name={icon as any} size={96} color="#fff" />
       </View>
-      <Text style={styles.subtitle}>Choose your icon</Text>
-      <FlatList
-        data={ICON_CHOICES}
-        horizontal
-        keyExtractor={(item) => item}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[styles.iconOption, item === icon && styles.selected]}
-            onPress={() => setIcon(item)}
-          >
-            <Ionicons name={item as any} size={40} color="#333" />
-          </TouchableOpacity>
-        )}
-      />
-      <View style={styles.details}>
-        <Text style={styles.detailText}>Name: Adithyaa</Text>
-        <Text style={styles.detailText}>Email: adithyaa@example.com</Text>
+      <Text style={styles.name}>Adithyaa</Text>
+
+      <View style={styles.infoRow}>
+        <Ionicons name="mail-outline" size={20} color="#555" style={styles.infoIcon} />
+        <Text style={styles.infoText}>adithyaa@example.com</Text>
+      </View>
+      <View style={styles.infoRow}>
+        <Ionicons name="call-outline" size={20} color="#555" style={styles.infoIcon} />
+        <Text style={styles.infoText}>+1 (123) 456-7890</Text>
+      </View>
+      <View style={styles.infoRow}>
+        <Ionicons name="person-outline" size={20} color="#555" style={styles.infoIcon} />
+        <Text style={styles.infoText}>Student ID: 21BCE1234</Text>
+      </View>
+      <View style={styles.infoRow}>
+        <Ionicons name="school-outline" size={20} color="#555" style={styles.infoIcon} />
+        <Text style={styles.infoText}>Department: Computer Science</Text>
       </View>
     </View>
   );
@@ -47,35 +37,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
+    padding: 24,
+    alignItems: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    marginBottom: 12,
-  },
-  preview: {
+  avatarWrap: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#ccc',
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
   },
-  subtitle: {
-    fontSize: 18,
-    marginBottom: 8,
+  name: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#333',
+    marginBottom: 24,
   },
-  iconOption: {
-    padding: 8,
-    marginRight: 12,
-    borderRadius: 8,
-    backgroundColor: '#eee',
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
   },
-  selected: {
-    backgroundColor: '#ddd',
+  infoIcon: {
+    marginRight: 8,
   },
-  details: {
-    marginTop: 24,
-  },
-  detailText: {
+  infoText: {
     fontSize: 16,
-    marginBottom: 4,
+    color: '#555',
   },
 });
