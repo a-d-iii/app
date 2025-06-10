@@ -1,6 +1,6 @@
 // src/components/CardCarousel.tsx
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Animated,
   StyleSheet,
@@ -68,16 +68,15 @@ export default function CardCarousel({
     })
   ).current;
 
-  useEffect(() => {
-    const listener = scrollX.addListener(({ value }) => {
-      const newIndex = Math.round(value / SCREEN_WIDTH);
-      if (newIndex !== activeIndex) {
-        setActiveIndex(newIndex);
-        onIndexChange?.(newIndex);
-      }
-    });
-    return () => scrollX.removeListener(listener);
-  }, [scrollX, activeIndex, onIndexChange]);
+  // Update active index as user scrolls
+  const handleScroll = (e: any) => {
+    const value = e.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(value / SCREEN_WIDTH);
+    if (newIndex !== activeIndex) {
+      setActiveIndex(newIndex);
+      onIndexChange?.(newIndex);
+    }
+  };
 
   const dotTranslate = scrollX.interpolate({
     inputRange: [0, SCREEN_WIDTH * (cards.length - 1)],
@@ -96,7 +95,10 @@ export default function CardCarousel({
         scrollEventThrottle={16}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
+          {
+            useNativeDriver: true, // avoid mutating the event object on JS thread
+            listener: handleScroll,
+          }
         )}
       >
         {cards.map((c, i) => (

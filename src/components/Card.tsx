@@ -119,7 +119,7 @@ export default function Card({
     Animated.timing(flipAnim, {
       toValue: flipped ? 0 : 180,
       duration: 350,
-      useNativeDriver: false,
+      useNativeDriver: true,
       easing: Easing.inOut(Easing.ease),
     }).start(() => setFlipped(!flipped));
   };
@@ -342,7 +342,7 @@ function Raindrops() {
             duration: speed,
             delay,
             easing: Easing.linear,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }).start(({ finished }) => {
           if (finished) {
             const newSpeed = 1800 + Math.random() * 800;
@@ -353,7 +353,7 @@ function Raindrops() {
                 duration: newSpeed,
                 delay: newDelay,
                 easing: Easing.linear,
-                useNativeDriver: false,
+                useNativeDriver: true,
               }).start(({ finished: f2 }) => {
               if (f2) loop();
             });

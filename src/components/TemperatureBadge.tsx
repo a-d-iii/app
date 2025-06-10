@@ -47,13 +47,13 @@ export default function TemperatureBadge({
           toValue: 1,
           duration: 3000,
           easing: Easing.inOut(Easing.ease),
-          useNativeDriver: false, // run on JS thread
+          useNativeDriver: true,
         }),
         Animated.timing(humidityAnim, {
           toValue: 0,
           duration: 3000,
           easing: Easing.inOut(Easing.ease),
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ])
     );
