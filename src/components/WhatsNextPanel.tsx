@@ -18,6 +18,7 @@ import {
   Pressable,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MEALS } from '../data/meals';
 import type { Meal } from '../data/meals';
 
@@ -51,6 +52,7 @@ type Props = {
 const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
   ({ isVisible, onDismiss }: Props, ref: React.ForwardedRef<WhatsNextPanelHandle>) => {
     const navigation = useNavigation();
+    const insets = useSafeAreaInsets();
 
     // Animated value: 0 = hidden above, 1 = fully visible
     const slide = useRef(new Animated.Value(isVisible ? 1 : 0)).current;
@@ -163,11 +165,13 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
         style={[
           styles.container,
           {
+            paddingTop: insets.top,
+            height: PANEL_HEIGHT + insets.top,
             transform: [
               {
                 translateY: slide.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [-PANEL_HEIGHT, 0],
+                  outputRange: [-PANEL_HEIGHT - insets.top, 0],
                   extrapolate: 'clamp',
                 }),
               },
@@ -183,12 +187,17 @@ const WhatsNextPanel = forwardRef<WhatsNextPanelHandle, Props>(
 
         <View style={styles.content}>
           <Text style={styles.header}>What’s Next</Text>
-          <Text style={styles.mealName}>{nextMealName}</Text>
-          <Text style={styles.mealTime}>{nextRange}</Text>
-          <Text style={styles.countdown}>Starts in {countdown}</Text>
 
-          <Text style={styles.sectionHeader}>Menu:</Text>
-          <Text style={styles.menuText}>{menuItems.join(', ')}</Text>
+          <View style={styles.section}>
+            <Text style={styles.mealName}>{nextMealName}</Text>
+            <Text style={styles.mealTime}>{nextRange}</Text>
+            <Text style={styles.countdown}>Starts in {countdown}</Text>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionHeader}>Menu</Text>
+            <Text style={styles.menuText}>{menuItems.join(', ')}</Text>
+          </View>
         </View>
 
         <Pressable
@@ -245,11 +254,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flex: 1,
   },
+  section: {
+    backgroundColor: '#f9f9f9',
+    borderColor: '#eee',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+  },
   header: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 8,
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 12,
+    color: '#222',
   },
   mealName: {
     fontSize: 16,
