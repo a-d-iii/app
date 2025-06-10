@@ -141,12 +141,12 @@ export default function SummaryCard() {
 
   useEffect(() => {
     classAnims.forEach((anim, i) => {
-      Animated.timing(anim, {
-        toValue: 1,
-        duration: 400,
-        delay: i * 100,
-        useNativeDriver: true,
-      }).start();
+        Animated.timing(anim, {
+          toValue: 1,
+          duration: 400,
+          delay: i * 100,
+          useNativeDriver: false,
+        }).start();
     });
   }, [classAnims]);
 
