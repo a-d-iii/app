@@ -380,7 +380,8 @@ const styles = StyleSheet.create({
 
   menuGrid: { flexDirection:'row', flexWrap:'wrap', justifyContent:'space-between' },
   menuBox:  {
-    width:(width - 16*3)/2,
+    // use percentage width for more flexible two-column layout
+    width: '48%',
     backgroundColor:'#fff',
     borderRadius:12,
     padding:12,
