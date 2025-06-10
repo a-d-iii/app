@@ -6,6 +6,7 @@ export type Meal = {
   endMinute: number;
   items: string[];
   highlights?: string[]; // special dishes shown vertically
+
 };
 
 export const MEALS: Meal[] = [
@@ -17,6 +18,7 @@ export const MEALS: Meal[] = [
     endMinute: 0,
     items: ['Upma', 'Poha', 'Idli', 'Paratha', 'Aloo Bhaji', 'Chai'],
     highlights: ['Masala Dosa'],
+
   },
   {
     name: 'Lunch',
@@ -25,6 +27,7 @@ export const MEALS: Meal[] = [
     endHour: 14,
     endMinute: 0,
     items: ['Veg Biryani', 'Dal Makhani', 'Mixed Veg', 'Roti', 'Salad'],
+
     highlights: ['Gulab Jamun'],
   },
   {
@@ -35,6 +38,7 @@ export const MEALS: Meal[] = [
     endMinute: 0,
     items: ['Tea', 'Coffee', 'Puffs', 'Cookies'],
     highlights: ['Samosa'],
+
   },
   {
     name: 'Dinner',
@@ -44,5 +48,6 @@ export const MEALS: Meal[] = [
     endMinute: 0,
     items: ['Paneer Butter Masala', 'Chapati', 'Dal Tadka', 'Rice', 'Raita'],
     highlights: ['Ice Cream'],
+
   },
 ];
