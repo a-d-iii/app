@@ -265,7 +265,7 @@ export default function FoodMenuScreen({ navigation }: any) {
                 })}
             </Animated.View>
           );
-          })}
+
         </ScrollView>
       </View>
       <View style={styles.summaryBar}>
