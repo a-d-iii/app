@@ -14,7 +14,8 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import CameraModal from './CameraModal';
+import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RatingModal from './RatingModal';
 import TemperatureBadge from './TemperatureBadge';
@@ -126,7 +127,6 @@ export default function Card({
   // Choose painterly gradient
   const gradientColors = GRADIENTS[index % GRADIENTS.length];
 
-  const [cameraVisible, setCameraVisible] = useState(false);
 
   const handleCapture = async (uri: string) => {
     const timestamp = Date.now();
@@ -137,6 +137,18 @@ export default function Card({
     arr.push({ uri, timestamp });
     parsed[classId] = arr;
     await AsyncStorage.setItem('photosByClass', JSON.stringify(parsed));
+  };
+
+  const openSystemCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    const { status: mediaStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted' || mediaStatus !== 'granted') return;
+
+    const result = await ImagePicker.launchCameraAsync();
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const asset = await MediaLibrary.createAssetAsync(result.assets[0].uri);
+      handleCapture(asset.uri);
+    }
   };
 
   // Submit rating
@@ -212,7 +224,7 @@ export default function Card({
             <View style={styles.buttonBar}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => setCameraVisible(true)}
+                onPress={openSystemCamera}
                 activeOpacity={0.7}
               >
                 <Ionicons name="camera" size={20} color="#fff" />
@@ -278,6 +290,13 @@ export default function Card({
                       >
                         {display}
                       </Text>
+
+                      <Text style={styles.backTime} numberOfLines={1}>{cls.time}</Text>
+
+                      <Text style={styles.backTime}>{cls.time}</Text>
+
+                      <Text style={[styles.backTitle, past && styles.pastTitle]}>{display}</Text>
+
                     </View>
                   );
                 })}
@@ -293,11 +312,6 @@ export default function Card({
         onClose={() => setShowRatingModal(false)}
         onSubmit={submitRating}
         initialRating={currentRating}
-      />
-      <CameraModal
-        visible={cameraVisible}
-        onClose={() => setCameraVisible(false)}
-        onCapture={handleCapture}
       />
     </View>
   );
@@ -525,6 +539,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.3)',
+
+    paddingVertical: 16,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+
+    backgroundColor: 'rgba(0,0,0,0.25)',
+
+
     zIndex: 3,
   },
   backHeader: {
@@ -547,12 +570,24 @@ const styles = StyleSheet.create({
   },
   bulletIcon: {
     marginRight: 8,
+
+    marginVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.2)',
+    paddingBottom: 4,
+
   },
   backTime: {
     fontSize: 18,
     color: '#e0f0ff',
     width: 110,
     fontWeight: '700',
+
+
+    width: 90,
+
+    fontWeight: '600',
+
     marginRight: 8,
   },
   backTitle: {

@@ -8,8 +8,10 @@ import {
   Dimensions,
   FlatList,
   Image,
-  TouchableOpacity,
+  Platform,
+  StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 
@@ -65,7 +67,7 @@ export default function GalleryScreen() {
   const classIds = Object.keys(photosByClass);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.heading}>Gallery</Text>
 
       <View style={styles.pickerWrap}>
@@ -95,12 +97,16 @@ export default function GalleryScreen() {
           contentContainerStyle={{ paddingBottom: 16 }}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
   heading: {
     fontSize: 22,
     fontWeight: '700',
