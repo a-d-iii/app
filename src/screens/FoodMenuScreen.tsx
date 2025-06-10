@@ -1,6 +1,6 @@
 // src/screens/FoodMenuScreen.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,9 @@ import {
   ScrollView,
   TouchableOpacity,
   Animated,
+  PanResponder,
+  GestureResponderEvent,
+  PanResponderGestureState,
   StatusBar,
   Platform,
   Dimensions,
@@ -28,6 +31,8 @@ const MEAL_ICONS: { [name: string]: string } = {
   Dinner: 'moon-outline',
 };
 
+const MEAL_COLORS = ['#fce4ec', '#e3f2fd', '#fffde7', '#e8f5e9'];
+
 // Pad numbers to two digits without relying on ES2017 String.padStart
 function pad(n: number): string {
   return n < 10 ? `0${n}` : `${n}`;
@@ -42,10 +47,19 @@ type Favorites = { [key: string]: boolean };
 
 export default function FoodMenuScreen({ navigation }: any) {
   const today = new Date();
-  const dateLabel = today.toLocaleDateString('en-US', {
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
+  const dateLabel = selectedDate.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'short',
     day: 'numeric',
+  });
+
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 15);
+  const calendarDates = Array.from({ length: 31 }, (_, i) => {
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+    return d;
   });
 
   const [ratings, setRatings] = useState<Ratings>({});
@@ -126,26 +140,72 @@ export default function FoodMenuScreen({ navigation }: any) {
     await AsyncStorage.setItem('mealFavorites', JSON.stringify(updated));
   };
 
+  const swipeResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => false,
+      onMoveShouldSetPanResponder: (
+        _e: GestureResponderEvent,
+        g: PanResponderGestureState
+      ) => Math.abs(g.dx) > 20 && Math.abs(g.dx) > Math.abs(g.dy),
+      onPanResponderRelease: (_e, g) => {
+        if (Math.abs(g.dx) > 50) {
+          setSelectedDate((prev) => {
+            const n = new Date(prev);
+            n.setDate(prev.getDate() + (g.dx > 0 ? 1 : -1));
+            return n;
+          });
+        }
+      },
+      onPanResponderTerminationRequest: () => false,
+    })
+  ).current;
+
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeAreaView style={styles.root} {...swipeResponder.panHandlers}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.backText}>← Back</Text>
-        </TouchableOpacity>
         <View style={styles.headerTextWrap} pointerEvents="none">
           <Text style={styles.title}>Full Day’s Menu</Text>
           <Text style={styles.dateLabel}>{dateLabel}</Text>
         </View>
       </View>
-      <ScrollView contentContainerStyle={styles.content}>
-        {MEALS.map((meal) => {
-          const timer = timers[meal.name] || '';
-          const status = statuses[meal.name];
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.calendarRow}
+        contentContainerStyle={styles.calendarContent}
+      >
+        {calendarDates.map((d) => {
+          const isSelected =
+            d.toDateString() === selectedDate.toDateString();
           return (
-            <Animated.View
+            <TouchableOpacity
+              key={d.toDateString()}
+              style={styles.calendarDay}
+              onPress={() => setSelectedDate(d)}
+            >
+              <Text style={styles.calendarDayOfWeek}>
+                {d.toLocaleDateString('en-US', { weekday: 'short' })}
+              </Text>
+              <View
+                style={[styles.dateOval, isSelected && styles.calendarSelected]}
+              >
+                <Text style={styles.calendarDate}>{d.getDate()}</Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+      <View style={styles.menuWrapper}>
+        <ScrollView contentContainerStyle={styles.content}>
+          {MEALS.map((meal, idx) => {
+            const timer = timers[meal.name] || '';
+            const status = statuses[meal.name];
+            return (
+              <Animated.View
               key={meal.name}
               style={[
                 styles.mealBlock,
+                { backgroundColor: MEAL_COLORS[idx % MEAL_COLORS.length] },
                 status === 'ongoing' && styles.ongoing,
                 status === 'next' && styles.next,
               ]}
@@ -171,15 +231,26 @@ export default function FoodMenuScreen({ navigation }: any) {
                 return (
                   <View key={key} style={styles.highlightRow}>
                     <Text style={styles.highlightText}>{item}</Text>
-                    <TouchableOpacity onPress={() => toggleFavorite(key)} style={styles.favoriteButton}>
+                    {ratings[key] ? (
+                      <Text style={styles.ratingDisplay}>{ratings[key]}★</Text>
+                    ) : null}
+                    <TouchableOpacity
+                      onPress={() => toggleFavorite(key)}
+                      style={styles.favoriteButton}
+                    >
                       <Ionicons
                         name={favorites[key] ? 'heart' : 'heart-outline'}
                         size={18}
                         color={favorites[key] ? '#e91e63' : '#666'}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => openModal(key)} style={styles.rateButton}>
-                      <Text style={styles.rateText}>{ratings[key] ? `${ratings[key]}★` : 'Rate'}</Text>
+                    <TouchableOpacity
+                      onPress={() => openModal(key)}
+                      style={styles.rateButton}
+                    >
+                      <Text style={styles.rateText}>
+                        {ratings[key] ? 'Edit' : 'Rate'}
+                      </Text>
                     </TouchableOpacity>
                     {modalItem === key && (
                       <RatingModal
@@ -191,11 +262,18 @@ export default function FoodMenuScreen({ navigation }: any) {
                     )}
                   </View>
                 );
-              })}
+              })
             </Animated.View>
           );
-        })}
-      </ScrollView>
+        })
+        </ScrollView>
+      </View>
+      <View style={styles.summaryBar}>
+        <Text style={styles.summaryText}>
+          {selectedDate.toLocaleDateString('en-US', { month: 'long' })} Food
+          Summary
+        </Text>
+      </View>
     </SafeAreaView>
   );
 }
@@ -219,11 +297,6 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
   },
-  backText: {
-    fontSize: 16,
-    color: '#007bff',
-    marginRight: 12,
-  },
   title: {
     fontSize: 18,
     fontWeight: '600',
@@ -231,6 +304,12 @@ const styles = StyleSheet.create({
   dateLabel: {
     fontSize: 14,
     color: '#666',
+  },
+  menuWrapper: {
+    margin: 16,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   content: {
     padding: 16,
@@ -240,6 +319,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginVertical: 8,
     width: '100%',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#f9f9f9',
   },
   ongoing: {
     backgroundColor: '#e8f5e9',
@@ -287,6 +369,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
   },
+  ratingDisplay: {
+    marginLeft: 4,
+    fontSize: 12,
+    color: '#ff9800',
+  },
   favoriteButton: {
     marginHorizontal: 6,
   },
@@ -299,5 +386,46 @@ const styles = StyleSheet.create({
   rateText: {
     color: '#fff',
     fontSize: 12,
+  },
+  summaryBar: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    paddingVertical: 8,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  summaryText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+  },
+  calendarRow: {
+    paddingVertical: 8,
+  },
+  calendarContent: {
+    paddingHorizontal: 8,
+  },
+  calendarDay: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+  },
+  dateOval: {
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 12,
+    backgroundColor: '#f0f0f0',
+  },
+  calendarSelected: {
+    backgroundColor: '#d0d0d0',
+  },
+  calendarDayOfWeek: {
+    fontSize: 12,
+    color: '#555',
+  },
+  calendarDate: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
