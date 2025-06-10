@@ -39,10 +39,13 @@ function SocialScreen() {
 // Import those here:
 import MoreRootScreen from './src/screens/MoreRootScreen';
 import GalleryScreen from './src/screens/GalleryScreen';
+import Profile from './src/screens/Profile';
+import { UserProvider } from './src/context/UserContext';
 
 type RootStackParamList = {
   MainTabs: undefined;
   FoodMenuScreen: undefined;
+  Profile: undefined;
 };
 
 type TabParamList = {
@@ -118,15 +121,18 @@ function MainTabs() {
 export default function App() {
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <RootStack.Navigator screenOptions={{ headerShown: false }}>
-          <RootStack.Screen name="MainTabs" component={MainTabs} />
-          <RootStack.Screen
-            name="FoodMenuScreen"
-            component={FoodMenuScreen}
-          />
-        </RootStack.Navigator>
-      </NavigationContainer>
+      <UserProvider>
+        <NavigationContainer>
+          <RootStack.Navigator screenOptions={{ headerShown: false }}>
+            <RootStack.Screen name="MainTabs" component={MainTabs} />
+            <RootStack.Screen
+              name="FoodMenuScreen"
+              component={FoodMenuScreen}
+            />
+            <RootStack.Screen name="Profile" component={Profile} />
+          </RootStack.Navigator>
+        </NavigationContainer>
+      </UserProvider>
     </SafeAreaProvider>
   );
 }
