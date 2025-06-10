@@ -30,9 +30,18 @@ const GRADIENT_WIDTH = width * 0.9;
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 const AnimatedScrollView     = Animated.createAnimatedComponent(ScrollView);
+const AnimatedIonicon        = Animated.createAnimatedComponent(Ionicons);
 
 // Data types
-type ClassItem   = { course:string; faculty:string; start:string; end:string; room:string };
+type ClassItem   = {
+  course: string;
+  faculty: string;
+  start: string;
+  end: string;
+  room: string;
+  iconStart: string;
+  iconEnd: string;
+};
 type MealItem    = { key:string; icon:string; label:string; menu:string; start:string };
 type TaskItem    = { id:number; title:string; details:string; priority:'high'|'medium'|'low'; done:boolean };
 type InsightItem = { id:number; title:string; subtitle:string; value:string; color:string };
@@ -90,12 +99,50 @@ export default function SummaryCard() {
     outputRange:['#A060E0','#7D6EB0','#A060E0'],
   });
 
-  // Dummy schedule
+  // Dummy schedule with icon pairs for animation
   const daySchedule: ClassItem[] = [
-    { course:'DSA',        faculty:'Dr. Smith', start:'08:00', end:'09:00', room:'301' },
-    { course:'Algorithms', faculty:'Prof. Lee',  start:'09:15', end:'10:15', room:'204' },
-    { course:'Networks',   faculty:'Dr. Patel',  start:'10:30', end:'11:30', room:'Lab 2' },
+    {
+      course: 'DSA',
+      faculty: 'Dr. Smith',
+      start: '08:00',
+      end: '09:00',
+      room: '301',
+      iconStart: 'book-outline',
+      iconEnd: 'book',
+    },
+    {
+      course: 'Algorithms',
+      faculty: 'Prof. Lee',
+      start: '09:15',
+      end: '10:15',
+      room: '204',
+      iconStart: 'git-merge-outline',
+      iconEnd: 'git-merge',
+    },
+    {
+      course: 'Networks',
+      faculty: 'Dr. Patel',
+      start: '10:30',
+      end: '11:30',
+      room: 'Lab 2',
+      iconStart: 'wifi-outline',
+      iconEnd: 'wifi',
+    },
   ];
+
+  // Animations for timetable boxes
+  const classAnims = useRef(daySchedule.map(() => new Animated.Value(0))).current;
+
+  useEffect(() => {
+    classAnims.forEach((anim, i) => {
+      Animated.timing(anim, {
+        toValue: 1,
+        duration: 400,
+        delay: i * 100,
+        useNativeDriver: true,
+      }).start();
+    });
+  }, [classAnims]);
 
   const toggleTask = (id:number) =>
     setTasks(prev => prev.map(t=> t.id===id?{...t,done:!t.done}:t));
@@ -195,14 +242,82 @@ export default function SummaryCard() {
           </TouchableOpacity>
         </View>
         {daySchedule.map((cls, idx) => {
-          const [h1,m1] = cls.start.split(':').map(Number);
-          const [h2,m2] = cls.end.split(':').map(Number);
-          const s = new Date(); s.setHours(h1,m1);
-          const e = new Date(); e.setHours(h2,m2);
-          const hrs = ((e.getTime()-s.getTime())/3600000).toFixed(1);
-          const tstr = s.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+          const [h1, m1] = cls.start.split(':').map(Number);
+          const [h2, m2] = cls.end.split(':').map(Number);
+          const s = new Date();
+          s.setHours(h1, m1);
+          const e = new Date();
+          e.setHours(h2, m2);
+          const hrs = ((e.getTime() - s.getTime()) / 3600000).toFixed(1);
+          const tstr = s.toLocaleTimeString('it-IT', {
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+
+          const iconColor = classAnims[idx].interpolate({
+            inputRange: [0, 1],
+            outputRange: ['#FF6A00', '#6C5CE7'],
+          });
+
           return (
-            <View key={idx} style={styles.classBox}>
+            <Animated.View
+              key={idx}
+              style={[
+                styles.classBox,
+                {
+                  opacity: classAnims[idx],
+                  transform: [
+                    {
+                      translateY: classAnims[idx].interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [20, 0],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
+              <View style={styles.classIcon}>
+                <AnimatedIonicon
+                  name={cls.iconStart as any}
+                  size={22}
+                  style={{
+                    position: 'absolute',
+                    opacity: classAnims[idx].interpolate({
+                      inputRange: [0, 0.5, 1],
+                      outputRange: [1, 0, 0],
+                    }),
+                    color: iconColor,
+                    transform: [
+                      {
+                        scale: classAnims[idx].interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [1.2, 0.8],
+                        }),
+                      },
+                    ],
+                  }}
+                />
+                <AnimatedIonicon
+                  name={cls.iconEnd as any}
+                  size={22}
+                  style={{
+                    opacity: classAnims[idx].interpolate({
+                      inputRange: [0, 0.5, 1],
+                      outputRange: [0, 0, 1],
+                    }),
+                    color: iconColor,
+                    transform: [
+                      {
+                        scale: classAnims[idx].interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0.8, 1.2],
+                        }),
+                      },
+                    ],
+                  }}
+                />
+              </View>
               <View style={styles.classLeft}>
                 <Text style={styles.courseText}>{cls.course}</Text>
                 <Text style={styles.facultyText}>{cls.faculty}</Text>
@@ -212,7 +327,7 @@ export default function SummaryCard() {
                 <Text style={styles.hoursText}>{hrs}h</Text>
                 <Text style={styles.roomText}>{cls.room}</Text>
               </View>
-            </View>
+            </Animated.View>
           );
         })}
 
@@ -379,6 +494,12 @@ const styles = StyleSheet.create({
     shadowOpacity:0.05,
     shadowOffset:{width:0,height:0.5},
     shadowRadius:2,
+  },
+  classIcon: {
+    width: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
   },
   classLeft:   { flex:1 },
   courseText:  { fontSize:14, fontWeight:'600', color:'#333' },
