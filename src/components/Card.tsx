@@ -535,19 +535,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 24,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
-
     paddingVertical: 16,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.3)',
-
     backgroundColor: 'rgba(0,0,0,0.25)',
-
-
     zIndex: 3,
   },
   backHeader: {
@@ -582,12 +574,6 @@ const styles = StyleSheet.create({
     color: '#e0f0ff',
     width: 110,
     fontWeight: '700',
-
-
-    width: 90,
-
-    fontWeight: '600',
-
     marginRight: 8,
   },
   backTitle: {
