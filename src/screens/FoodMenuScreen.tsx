@@ -10,6 +10,7 @@ import {
   Animated,
   StatusBar,
   Platform,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,6 +18,8 @@ import RatingModal from '../components/RatingModal';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { MEALS } from '../data/meals';
+
+const { width } = Dimensions.get('window');
 
 const MEAL_ICONS: { [name: string]: string } = {
   Breakfast: 'cafe-outline',
@@ -231,12 +234,17 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   mealBlock: {
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 12,
-    marginBottom: 12,
+    marginVertical: 8,
+    marginHorizontal: 4,
+    width: (width - 16 * 3) / 2,
   },
   ongoing: {
     backgroundColor: '#e8f5e9',
