@@ -26,7 +26,6 @@ export default function CameraModal({ visible, onClose, onCapture }: CameraModal
       const photo = await cameraRef.current.takePictureAsync();
       const asset = await MediaLibrary.createAssetAsync(photo.uri);
       onCapture(asset.uri);
-      onClose();
     }
   };
 
@@ -40,7 +39,7 @@ export default function CameraModal({ visible, onClose, onCapture }: CameraModal
             ref={cameraRef}
             style={StyleSheet.absoluteFill}
             facing="back"
-            autofocus="on"
+            autoFocus="on"
           />
         )}
         <View style={styles.bottomBar}>
