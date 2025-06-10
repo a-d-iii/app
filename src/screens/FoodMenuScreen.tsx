@@ -1,6 +1,6 @@
 // src/screens/FoodMenuScreen.tsx
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -14,24 +14,24 @@ import {
   StatusBar,
   Platform,
   Dimensions,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import RatingModal from '../components/RatingModal';
-import Ionicons from '@expo/vector-icons/Ionicons';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import RatingModal from "../components/RatingModal";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { MEALS } from '../data/meals';
+import { MEALS } from "../data/meals";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const MEAL_ICONS: { [name: string]: string } = {
-  Breakfast: 'cafe-outline',
-  Lunch: 'restaurant-outline',
-  Snacks: 'fast-food-outline',
-  Dinner: 'moon-outline',
+  Breakfast: "cafe-outline",
+  Lunch: "restaurant-outline",
+  Snacks: "fast-food-outline",
+  Dinner: "moon-outline",
 };
 
-const MEAL_COLORS = ['#fce4ec', '#e3f2fd', '#fffde7', '#e8f5e9'];
+const MEAL_COLORS = ["#fce4ec", "#e3f2fd", "#fffde7", "#e8f5e9"];
 
 // Pad numbers to two digits without relying on ES2017 String.padStart
 function pad(n: number): string {
@@ -48,10 +48,10 @@ type Favorites = { [key: string]: boolean };
 export default function FoodMenuScreen({ navigation }: any) {
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(today);
-  const dateLabel = selectedDate.toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'short',
-    day: 'numeric',
+  const dateLabel = selectedDate.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
   });
 
   const startDate = new Date();
@@ -64,15 +64,17 @@ export default function FoodMenuScreen({ navigation }: any) {
 
   const [ratings, setRatings] = useState<Ratings>({});
   const [timers, setTimers] = useState<{ [name: string]: string }>({});
-  const [statuses, setStatuses] = useState<{ [name: string]: 'ongoing' | 'next' | 'later' }>({});
+  const [statuses, setStatuses] = useState<{
+    [name: string]: "ongoing" | "next" | "later";
+  }>({});
   const [modalItem, setModalItem] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Favorites>({});
 
   useEffect(() => {
-    AsyncStorage.getItem('mealRatings').then((raw) => {
+    AsyncStorage.getItem("mealRatings").then((raw) => {
       if (raw) setRatings(JSON.parse(raw));
     });
-    AsyncStorage.getItem('mealFavorites').then((raw) => {
+    AsyncStorage.getItem("mealFavorites").then((raw) => {
       if (raw) setFavorites(JSON.parse(raw));
     });
   }, []);
@@ -92,15 +94,15 @@ export default function FoodMenuScreen({ navigation }: any) {
         start.setHours(m.startHour, m.startMinute, 0, 0);
         end.setHours(m.endHour, m.endMinute, 0, 0);
 
-        let status: 'ongoing' | 'next' | 'later' = 'later';
-        if (now >= start && now < end) status = 'ongoing';
-        else if (idx === nextIdx) status = 'next';
+        let status: "ongoing" | "next" | "later" = "later";
+        if (now >= start && now < end) status = "ongoing";
+        else if (idx === nextIdx) status = "next";
 
         const toStart = start.getTime() - now.getTime();
         const toEnd = end.getTime() - now.getTime();
         const pad2 = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 
-        let label = '';
+        let label = "";
         if (toStart > 0) {
           const secs = Math.floor(toStart / 1000);
           const hrs = Math.floor(secs / 3600);
@@ -114,7 +116,7 @@ export default function FoodMenuScreen({ navigation }: any) {
           const s = secs % 60;
           label = `${pad2(hrs)}:${pad2(mins)}:${pad2(s)} left`;
         } else {
-          label = 'Ended';
+          label = "Ended";
         }
 
         setTimers((t) => ({ ...t, [m.name]: label }));
@@ -131,13 +133,13 @@ export default function FoodMenuScreen({ navigation }: any) {
   const submitRating = async (itemKey: string, rating: number) => {
     const updated = { ...ratings, [itemKey]: rating };
     setRatings(updated);
-    await AsyncStorage.setItem('mealRatings', JSON.stringify(updated));
+    await AsyncStorage.setItem("mealRatings", JSON.stringify(updated));
   };
 
   const toggleFavorite = async (itemKey: string) => {
     const updated = { ...favorites, [itemKey]: !favorites[itemKey] };
     setFavorites(updated);
-    await AsyncStorage.setItem('mealFavorites', JSON.stringify(updated));
+    await AsyncStorage.setItem("mealFavorites", JSON.stringify(updated));
   };
 
   const swipeResponder = useRef(
@@ -145,7 +147,7 @@ export default function FoodMenuScreen({ navigation }: any) {
       onStartShouldSetPanResponder: () => false,
       onMoveShouldSetPanResponder: (
         _e: GestureResponderEvent,
-        g: PanResponderGestureState
+        g: PanResponderGestureState,
       ) => Math.abs(g.dx) > 20 && Math.abs(g.dx) > Math.abs(g.dy),
       onPanResponderRelease: (_e, g) => {
         if (Math.abs(g.dx) > 50) {
@@ -157,7 +159,7 @@ export default function FoodMenuScreen({ navigation }: any) {
         }
       },
       onPanResponderTerminationRequest: () => false,
-    })
+    }),
   ).current;
 
   return (
@@ -175,8 +177,7 @@ export default function FoodMenuScreen({ navigation }: any) {
         contentContainerStyle={styles.calendarContent}
       >
         {calendarDates.map((d) => {
-          const isSelected =
-            d.toDateString() === selectedDate.toDateString();
+          const isSelected = d.toDateString() === selectedDate.toDateString();
           return (
             <TouchableOpacity
               key={d.toDateString()}
@@ -184,7 +185,7 @@ export default function FoodMenuScreen({ navigation }: any) {
               onPress={() => setSelectedDate(d)}
             >
               <Text style={styles.calendarDayOfWeek}>
-                {d.toLocaleDateString('en-US', { weekday: 'short' })}
+                {d.toLocaleDateString("en-US", { weekday: "short" })}
               </Text>
               <View
                 style={[styles.dateOval, isSelected && styles.calendarSelected]}
@@ -198,79 +199,82 @@ export default function FoodMenuScreen({ navigation }: any) {
       <View style={styles.menuWrapper}>
         <ScrollView contentContainerStyle={styles.content}>
           {MEALS.map((meal, idx) => {
-            const timer = timers[meal.name] || '';
+            const timer = timers[meal.name] || "";
             const status = statuses[meal.name];
             return (
               <Animated.View
-              key={meal.name}
-              style={[
-                styles.mealBlock,
-                { backgroundColor: MEAL_COLORS[idx % MEAL_COLORS.length] },
-                status === 'ongoing' && styles.ongoing,
-                status === 'next' && styles.next,
-              ]}
-            >
-              <View style={styles.mealHeaderRow}>
-                <View style={styles.mealHeaderLeft}>
-                  <Ionicons
-                    name={MEAL_ICONS[meal.name]}
-                    size={18}
-                    color="#333"
-                    style={styles.mealIcon}
-                  />
-                  <Text style={styles.mealHeader}>{meal.name}</Text>
-                </View>
-                <Text style={styles.timer}>{timer}</Text>
-              </View>
-              <Text style={styles.timeRange}>
-                {formatTime(meal.startHour, meal.startMinute)} – {formatTime(meal.endHour, meal.endMinute)}
-              </Text>
-              <Text style={styles.mealItems}>{meal.items.join(', ')}</Text>
-                {meal.highlights?.map((item) => {
-                const key = `${meal.name}-${item}`;
-                return (
-                  <View key={key} style={styles.highlightRow}>
-                    <Text style={styles.highlightText}>{item}</Text>
-                    {ratings[key] ? (
-                      <Text style={styles.ratingDisplay}>{ratings[key]}★</Text>
-                    ) : null}
-                    <TouchableOpacity
-                      onPress={() => toggleFavorite(key)}
-                      style={styles.favoriteButton}
-                    >
-                      <Ionicons
-                        name={favorites[key] ? 'heart' : 'heart-outline'}
-                        size={18}
-                        color={favorites[key] ? '#e91e63' : '#666'}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => openModal(key)}
-                      style={styles.rateButton}
-                    >
-                      <Text style={styles.rateText}>
-                        {ratings[key] ? 'Edit' : 'Rate'}
-                      </Text>
-                    </TouchableOpacity>
-                    {modalItem === key && (
-                      <RatingModal
-                        visible={true}
-                        onClose={closeModal}
-                        onSubmit={(r) => submitRating(key, r)}
-                        initialRating={ratings[key]}
-                      />
-                    )}
+                key={meal.name}
+                style={[
+                  styles.mealBlock,
+                  { backgroundColor: MEAL_COLORS[idx % MEAL_COLORS.length] },
+                  status === "ongoing" && styles.ongoing,
+                  status === "next" && styles.next,
+                ]}
+              >
+                <View style={styles.mealHeaderRow}>
+                  <View style={styles.mealHeaderLeft}>
+                    <Ionicons
+                      name={MEAL_ICONS[meal.name]}
+                      size={18}
+                      color="#333"
+                      style={styles.mealIcon}
+                    />
+                    <Text style={styles.mealHeader}>{meal.name}</Text>
                   </View>
-                );
+                  <Text style={styles.timer}>{timer}</Text>
+                </View>
+                <Text style={styles.timeRange}>
+                  {formatTime(meal.startHour, meal.startMinute)} –{" "}
+                  {formatTime(meal.endHour, meal.endMinute)}
+                </Text>
+                <Text style={styles.mealItems}>{meal.items.join(", ")}</Text>
+                {meal.highlights?.map((item) => {
+                  const key = `${meal.name}-${item}`;
+                  return (
+                    <View key={key} style={styles.highlightRow}>
+                      <Text style={styles.highlightText}>{item}</Text>
+                      {ratings[key] ? (
+                        <Text style={styles.ratingDisplay}>
+                          {ratings[key]}★
+                        </Text>
+                      ) : null}
+                      <TouchableOpacity
+                        onPress={() => toggleFavorite(key)}
+                        style={styles.favoriteButton}
+                      >
+                        <Ionicons
+                          name={favorites[key] ? "heart" : "heart-outline"}
+                          size={18}
+                          color={favorites[key] ? "#e91e63" : "#666"}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => openModal(key)}
+                        style={styles.rateButton}
+                      >
+                        <Text style={styles.rateText}>
+                          {ratings[key] ? "Edit" : "Rate"}
+                        </Text>
+                      </TouchableOpacity>
+                      {modalItem === key && (
+                        <RatingModal
+                          visible={true}
+                          onClose={closeModal}
+                          onSubmit={(r) => submitRating(key, r)}
+                          initialRating={ratings[key]}
+                        />
+                      )}
+                    </View>
+                  );
                 })}
-            </Animated.View>
-          );
-
+              </Animated.View>
+            );
+          })}
         </ScrollView>
       </View>
       <View style={styles.summaryBar}>
         <Text style={styles.summaryText}>
-          {selectedDate.toLocaleDateString('en-US', { month: 'long' })} Food
+          {selectedDate.toLocaleDateString("en-US", { month: "long" })} Food
           Summary
         </Text>
       </View>
@@ -281,124 +285,124 @@ export default function FoodMenuScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#faf8f2',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: "#faf8f2",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
-    borderBottomColor: '#ddd',
+    borderBottomColor: "#ddd",
     borderBottomWidth: 1,
   },
   headerTextWrap: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   dateLabel: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   menuWrapper: {
     margin: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   content: {
     padding: 16,
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   mealBlock: {
     paddingVertical: 12,
     marginVertical: 8,
-    width: '100%',
+    width: "100%",
     borderRadius: 8,
     paddingHorizontal: 12,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
   },
   ongoing: {
-    backgroundColor: '#e8f5e9',
+    backgroundColor: "#e8f5e9",
   },
   next: {
-    backgroundColor: '#fff8e1',
+    backgroundColor: "#fff8e1",
   },
   mealHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   mealHeaderLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   mealIcon: {
     marginRight: 4,
   },
   mealHeader: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   timer: {
     fontSize: 12,
-    color: '#d9534f',
+    color: "#d9534f",
   },
   timeRange: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
     marginBottom: 4,
   },
   mealItems: {
     fontSize: 14,
-    color: '#444',
+    color: "#444",
     lineHeight: 20,
   },
   highlightRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 6,
   },
   highlightText: {
     flex: 1,
     fontSize: 14,
-    color: '#333',
+    color: "#333",
   },
   ratingDisplay: {
     marginLeft: 4,
     fontSize: 12,
-    color: '#ff9800',
+    color: "#ff9800",
   },
   favoriteButton: {
     marginHorizontal: 6,
   },
   rateButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: "#007bff",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
   },
   rateText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 12,
   },
   summaryBar: {
     marginHorizontal: 16,
     marginBottom: 16,
     paddingVertical: 8,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: "#e0e0e0",
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   summaryText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
   },
   calendarRow: {
     paddingVertical: 8,
@@ -409,23 +413,23 @@ const styles = StyleSheet.create({
   calendarDay: {
     paddingVertical: 8,
     paddingHorizontal: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   dateOval: {
     paddingHorizontal: 10,
     paddingVertical: 2,
     borderRadius: 12,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
   },
   calendarSelected: {
-    backgroundColor: '#d0d0d0',
+    backgroundColor: "#d0d0d0",
   },
   calendarDayOfWeek: {
     fontSize: 12,
-    color: '#555',
+    color: "#555",
   },
   calendarDate: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
