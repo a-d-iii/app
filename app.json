@@ -12,15 +12,31 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+
+    // ↓ Update this section:
+    "androidNavigationBar": {
+      "visible": true,
+      "backgroundColor": "#121212",    // dark shade behind Home/Recents/Back
+      "barStyle": "light-content"      // makes the system icons white
+    },
+
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "App needs your location to show local temperature."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      // ← Remove or comment out edgeToEdgeEnabled entirely:
+      // "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.vitstudentapp",
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
