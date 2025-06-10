@@ -1,6 +1,6 @@
 // src/screens/Home.tsx
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   SafeAreaView,
   View,
@@ -16,7 +16,6 @@ import useWeather from '../hooks/useWeather';
 import CardCarousel from '../components/CardCarousel';
 import WhatsNextPanel, { WhatsNextPanelHandle } from '../components/WhatsNextPanel';
 import BottomPanel, { BottomPanelHandle } from '../components/BottomPanel';
-import { GRADIENTS } from '../components/Card';
 
 const BASE_CARDS = [
   { id: '1', title: 'ECE1001 @ Lab 3',    time: '08:00 – 08:50' },
@@ -29,19 +28,6 @@ const BASE_CARDS = [
 const OVERVIEW_ITEM = { id: 'overview', title: '', time: '' };
 
 type PanelState = 'none' | 'top' | 'bottom' | 'closing';
-
-function lightenHex(hex: string, amount = 0.5) {
-  const h = hex.replace('#', '');
-  const num = parseInt(h, 16);
-  let r = (num >> 16) & 0xff;
-  let g = (num >> 8) & 0xff;
-  let b = num & 0xff;
-  r = Math.round(r + (255 - r) * amount);
-  g = Math.round(g + (255 - g) * amount);
-  b = Math.round(b + (255 - b) * amount);
-  const newColor = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-  return `#${newColor}`;
-}
 
 export default function Home() {
   const [panel, setPanel] = useState<PanelState>('none');
@@ -108,16 +94,6 @@ export default function Home() {
   ).current;
 
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [bgColor, setBgColor] = useState<string>('#f0f0f0');
-
-  useEffect(() => {
-    if (activeIndex > 0) {
-      const gradientIndex = activeIndex - 1;
-      const primary = GRADIENTS[gradientIndex]?.[0] || '#000000';
-      const lighter = lightenHex(primary, 0.6);
-      setBgColor(lighter);
-    }
-  }, [activeIndex]);
 
   const allCards = [OVERVIEW_ITEM, ...BASE_CARDS];
 
@@ -146,8 +122,7 @@ export default function Home() {
       style={[
         styles.root,
         {
-          // Use bgColor only on class cards; summary stays transparent
-          backgroundColor: activeIndex > 0 ? bgColor : 'transparent',
+          backgroundColor: '#f0f0f0',
           paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         },
       ]}
