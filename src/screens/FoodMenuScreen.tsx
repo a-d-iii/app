@@ -150,14 +150,15 @@ export default function FoodMenuScreen({ navigation }: any) {
         g: PanResponderGestureState,
       ) => Math.abs(g.dx) > 20 && Math.abs(g.dx) > Math.abs(g.dy),
       onPanResponderRelease: (_e, g) => {
-        if (g.dx <= -50) {
+        const { dx, vx } = g;
+        if (dx <= -50 && vx <= 0) {
           // Swiping left - move forward one day
           setSelectedDate((prev) => {
             const n = new Date(prev);
             n.setDate(prev.getDate() + 1);
             return n;
           });
-        } else if (g.dx >= 50) {
+        } else if (dx >= 50 && vx >= 0) {
           // Swiping right - move back one day
           setSelectedDate((prev) => {
             const n = new Date(prev);
