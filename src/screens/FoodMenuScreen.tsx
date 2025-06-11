@@ -18,8 +18,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LayoutAnimation, UIManager } from "react-native";
+
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
+
 import RatingModal from "../components/RatingModal";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -225,6 +227,7 @@ export default function FoodMenuScreen({ navigation }: any) {
     } catch (e) {
       console.error("Failed to import menu", e);
     }
+
   };
 
   const swipeResponder = useRef(
@@ -288,7 +291,9 @@ export default function FoodMenuScreen({ navigation }: any) {
                 <Text
                   style={[
                     styles.calendarDate,
-                    isSelected ? styles.calendarDateSelected : styles.calendarDateNormal,
+                    isSelected
+                      ? styles.calendarDateSelected
+                      : styles.calendarDateNormal,
                   ]}
                 >
                   {d.getDate()}
