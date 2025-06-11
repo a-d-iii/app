@@ -20,6 +20,7 @@ import RatingModal from '../components/RatingModal';
 // Load the bundled menu as an offline fallback so the screen always has data
 // even when network requests fail.
 import localMenu from '../../monthly-menu-may-2025.json';
+import fetchWithTimeout from '../utils/fetchWithTimeout';
 
 const MENU_URL =
   'https://raw.githubusercontent.com/a-d-iii/app/main/monthly-menu-may-2025.json';
@@ -84,7 +85,7 @@ export default function FoodMenuScreen() {
         if (cached) {
           setMenu(JSON.parse(cached));
         }
-        const resp = await fetch(MENU_URL);
+        const resp = await fetchWithTimeout(MENU_URL, {}, 5000);
         if (resp.ok) {
           const json = await resp.json();
           setMenu(json);

@@ -14,6 +14,7 @@ import type { Meal } from '../data/meals';
 
 // Fallback data bundled with the app for offline use
 import localMenu from '../../monthly-menu-may-2025.json';
+import fetchWithTimeout from '../utils/fetchWithTimeout';
 
 
 
@@ -52,7 +53,7 @@ export default function MonthlyMenuScreen() {
         if (cached) {
           setMenu(JSON.parse(cached));
         }
-        const resp = await fetch(MENU_URL);
+        const resp = await fetchWithTimeout(MENU_URL, {}, 5000);
         if (resp.ok) {
           const json = await resp.json();
           setMenu(json);
