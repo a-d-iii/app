@@ -1,0 +1,2024 @@
+{
+  "2025-05-01": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Poori",
+        "Potato Masala",
+        "Bhaji",
+        "Semiya Upma",
+        "Coconut Chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Boiled Egg"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Roti",
+        "Aloo Carrot cauliflower gravy",
+        "Amaranthus Dal",
+        "White Rice",
+        "Deep Fry (65 style)",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Banana Bajji"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Dosakaya Pappu",
+        "Dondakaya Curry",
+        "White Rice",
+        "Pickle",
+        "Rasam",
+        "Milk",
+        "Curd",
+        "Coffee Powder",
+        "Fruits"
+      ]
+    }
+  ],
+  "2025-05-02": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Karam podi dosa (3 nos)",
+        "Pav Bhaji",
+        "Coconut Chutney",
+        "Sambar",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Egg Bhurji"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Veg pulao",
+        "Brinjal kara curry",
+        "Sambar",
+        "Dal Maharani",
+        "Beetroot Chana poriyal",
+        "White rice",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Sambar Vada (2 pcs)"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Lacha Paratha (2)",
+        "Veg Shahi Paneer",
+        "Bottle Gourd Kootu",
+        "White Rice",
+        "Curd",
+        "Rasam",
+        "Fruits",
+        "Coffee Powder",
+        "Milk"
+      ]
+    }
+  ],
+  "2025-05-03": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Mysore Bonda (3 pcs)",
+        "Carrot Upma",
+        "Groundnut Chutney",
+        "Sambar",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Omelet"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Dal Punjabi Roti",
+        "Veg Fried Rice",
+        "Gobi Manchurian (3 pcs)",
+        "White Rice",
+        "Sambar",
+        "Pickle",
+        "Milk"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Ginger Tea"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Chukka kura pappu",
+        "Aloo capsicum curry",
+        "Sambhar",
+        "White rice",
+        "Fruits",
+        "Coffee Powder",
+        "Milk",
+        "Lemon pickle"
+      ]
+    }
+  ],
+  "2025-05-04": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Aloo Paratha (2)",
+        "Upma",
+        "Lemon Ginger Chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Egg Podimas"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Chicken Dum Biryani (NV) / Paneer Dum Vegetable Biryani (Veg)",
+        "Chicken Gravy / Veg Gravy",
+        "White Rice",
+        "Rasam",
+        "Poori",
+        "Onion Raitha"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Ice Cream Bar or Cup",
+        "Tea",
+        "Coffee"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Bhindi do pyaza gravy",
+        "Sambhar",
+        "White rice",
+        "Fruits",
+        "Coffee Powder",
+        "Milk",
+        "Lemon pickle"
+      ]
+    }
+  ],
+  "2025-05-05": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Idli",
+        "Bhatura",
+        "Pongal",
+        "Ground nut chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Boiled Egg"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Phulka",
+        "Mixed veg",
+        "Kadai veg",
+        "White rice",
+        "Dal",
+        "Rasam",
+        "Mango pickle",
+        "Curd"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Bread toast + Jam",
+        "Banana poriyal",
+        "Buttermilk",
+        "Fryums",
+        "Sweet",
+        "Boondi laddu",
+        "Mango pickle"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Paneer Butter Masala / Chicken Butter Masala",
+        "Dal Tadka",
+        "Rasam",
+        "White Rice",
+        "Curd",
+        "Fruits",
+        "Pickle",
+        "Milk",
+        "Coffee Powder",
+        "Onions"
+      ]
+    }
+  ],
+  "2025-05-06": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Masala Dosa",
+        "Vada Pav",
+        "Coconut Chutney",
+        "Sambar",
+        "Toasted Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Bisibele Bath",
+        "Rajma Masala",
+        "Cabbage beans carrot poriyal",
+        "White rice",
+        "Tomato Rasam",
+        "Buttermilk"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Samosa",
+        "Mushroom biryani",
+        "Veg kurma",
+        "Tomato Egg Curry (NV)",
+        "Rice",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Kadai Paneer",
+        "White Rice",
+        "Radish Kara Curry",
+        "Kolambu",
+        "Curd"
+      ]
+    }
+  ],
+  "2025-05-07": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Set Dosa",
+        "Veg semiya upma",
+        "Sambar",
+        "Chutney",
+        "Brown Bread + Butter + Jam",
+        "Coffee Powder",
+        "Tea",
+        "Milk",
+        "NV - Egg Podimas"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Andhra style chicken fry (NV)",
+        "Veg Chapatha",
+        "White Rice",
+        "Dal",
+        "Onion Raitha"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Aloo bhaji",
+        "Gobi 65"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Lauki Channa Masala",
+        "Masala Dal",
+        "White Rice",
+        "Sambar",
+        "Milk",
+        "Curd",
+        "Coffee Powder",
+        "Fruits"
+      ]
+    }
+  ],
+  "2025-05-08": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Poori",
+        "Potato Masala",
+        "Bhaji",
+        "Semiya Upma",
+        "Coconut Chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Boiled Egg"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Roti",
+        "Aloo Carrot cauliflower gravy",
+        "Amaranthus Dal",
+        "White Rice",
+        "Deep Fry (65 style)",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Banana Bajji"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Dosakaya Pappu",
+        "Dondakaya Curry",
+        "White Rice",
+        "Pickle",
+        "Rasam",
+        "Milk",
+        "Curd",
+        "Coffee Powder",
+        "Fruits"
+      ]
+    }
+  ],
+  "2025-05-09": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Karam podi dosa (3 nos)",
+        "Pav Bhaji",
+        "Coconut Chutney",
+        "Sambar",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Egg Bhurji"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Veg pulao",
+        "Brinjal kara curry",
+        "Sambar",
+        "Dal Maharani",
+        "Beetroot Chana poriyal",
+        "White rice",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Sambar Vada (2 pcs)"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Lacha Paratha (2)",
+        "Veg Shahi Paneer",
+        "Bottle Gourd Kootu",
+        "White Rice",
+        "Curd",
+        "Rasam",
+        "Fruits",
+        "Coffee Powder",
+        "Milk"
+      ]
+    }
+  ],
+  "2025-05-10": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Mysore Bonda (3 pcs)",
+        "Carrot Upma",
+        "Groundnut Chutney",
+        "Sambar",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Omelet"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Dal Punjabi Roti",
+        "Veg Fried Rice",
+        "Gobi Manchurian (3 pcs)",
+        "White Rice",
+        "Sambar",
+        "Pickle",
+        "Milk"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Ginger Tea"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Chukka kura pappu",
+        "Aloo capsicum curry",
+        "Sambhar",
+        "White rice",
+        "Fruits",
+        "Coffee Powder",
+        "Milk",
+        "Lemon pickle"
+      ]
+    }
+  ],
+  "2025-05-11": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Aloo Paratha (2)",
+        "Upma",
+        "Lemon Ginger Chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Egg Podimas"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Chicken Dum Biryani (NV) / Paneer Dum Vegetable Biryani (Veg)",
+        "Chicken Gravy / Veg Gravy",
+        "White Rice",
+        "Rasam",
+        "Poori",
+        "Onion Raitha"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Ice Cream Bar or Cup",
+        "Tea",
+        "Coffee"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Bhindi do pyaza gravy",
+        "Sambhar",
+        "White rice",
+        "Fruits",
+        "Coffee Powder",
+        "Milk",
+        "Lemon pickle"
+      ]
+    }
+  ],
+  "2025-05-12": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Idli",
+        "Bhatura",
+        "Pongal",
+        "Ground nut chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Boiled Egg"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Phulka",
+        "Mixed veg",
+        "Kadai veg",
+        "White rice",
+        "Dal",
+        "Rasam",
+        "Mango pickle",
+        "Curd"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Bread toast + Jam",
+        "Banana poriyal",
+        "Buttermilk",
+        "Fryums",
+        "Sweet",
+        "Boondi laddu",
+        "Mango pickle"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Paneer Butter Masala / Chicken Butter Masala",
+        "Dal Tadka",
+        "Rasam",
+        "White Rice",
+        "Curd",
+        "Fruits",
+        "Pickle",
+        "Milk",
+        "Coffee Powder",
+        "Onions"
+      ]
+    }
+  ],
+  "2025-05-13": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Masala Dosa",
+        "Vada Pav",
+        "Coconut Chutney",
+        "Sambar",
+        "Toasted Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Bisibele Bath",
+        "Rajma Masala",
+        "Cabbage beans carrot poriyal",
+        "White rice",
+        "Tomato Rasam",
+        "Buttermilk"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Samosa",
+        "Mushroom biryani",
+        "Veg kurma",
+        "Tomato Egg Curry (NV)",
+        "Rice",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Kadai Paneer",
+        "White Rice",
+        "Radish Kara Curry",
+        "Kolambu",
+        "Curd"
+      ]
+    }
+  ],
+  "2025-05-14": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Set Dosa",
+        "Veg semiya upma",
+        "Sambar",
+        "Chutney",
+        "Brown Bread + Butter + Jam",
+        "Coffee Powder",
+        "Tea",
+        "Milk",
+        "NV - Egg Podimas"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Andhra style chicken fry (NV)",
+        "Veg Chapatha",
+        "White Rice",
+        "Dal",
+        "Onion Raitha"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Aloo bhaji",
+        "Gobi 65"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Lauki Channa Masala",
+        "Masala Dal",
+        "White Rice",
+        "Sambar",
+        "Milk",
+        "Curd",
+        "Coffee Powder",
+        "Fruits"
+      ]
+    }
+  ],
+  "2025-05-15": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Poori",
+        "Potato Masala",
+        "Bhaji",
+        "Semiya Upma",
+        "Coconut Chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Boiled Egg"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Roti",
+        "Aloo Carrot cauliflower gravy",
+        "Amaranthus Dal",
+        "White Rice",
+        "Deep Fry (65 style)",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Banana Bajji"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Dosakaya Pappu",
+        "Dondakaya Curry",
+        "White Rice",
+        "Pickle",
+        "Rasam",
+        "Milk",
+        "Curd",
+        "Coffee Powder",
+        "Fruits"
+      ]
+    }
+  ],
+  "2025-05-16": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Karam podi dosa (3 nos)",
+        "Pav Bhaji",
+        "Coconut Chutney",
+        "Sambar",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Egg Bhurji"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Veg pulao",
+        "Brinjal kara curry",
+        "Sambar",
+        "Dal Maharani",
+        "Beetroot Chana poriyal",
+        "White rice",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Sambar Vada (2 pcs)"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Lacha Paratha (2)",
+        "Veg Shahi Paneer",
+        "Bottle Gourd Kootu",
+        "White Rice",
+        "Curd",
+        "Rasam",
+        "Fruits",
+        "Coffee Powder",
+        "Milk"
+      ]
+    }
+  ],
+  "2025-05-17": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Mysore Bonda (3 pcs)",
+        "Carrot Upma",
+        "Groundnut Chutney",
+        "Sambar",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Omelet"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Dal Punjabi Roti",
+        "Veg Fried Rice",
+        "Gobi Manchurian (3 pcs)",
+        "White Rice",
+        "Sambar",
+        "Pickle",
+        "Milk"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Ginger Tea"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Chukka kura pappu",
+        "Aloo capsicum curry",
+        "Sambhar",
+        "White rice",
+        "Fruits",
+        "Coffee Powder",
+        "Milk",
+        "Lemon pickle"
+      ]
+    }
+  ],
+  "2025-05-18": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Aloo Paratha (2)",
+        "Upma",
+        "Lemon Ginger Chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Egg Podimas"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Chicken Dum Biryani (NV) / Paneer Dum Vegetable Biryani (Veg)",
+        "Chicken Gravy / Veg Gravy",
+        "White Rice",
+        "Rasam",
+        "Poori",
+        "Onion Raitha"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Ice Cream Bar or Cup",
+        "Tea",
+        "Coffee"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Bhindi do pyaza gravy",
+        "Sambhar",
+        "White rice",
+        "Fruits",
+        "Coffee Powder",
+        "Milk",
+        "Lemon pickle"
+      ]
+    }
+  ],
+  "2025-05-19": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Idli",
+        "Bhatura",
+        "Pongal",
+        "Ground nut chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Boiled Egg"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Phulka",
+        "Mixed veg",
+        "Kadai veg",
+        "White rice",
+        "Dal",
+        "Rasam",
+        "Mango pickle",
+        "Curd"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Bread toast + Jam",
+        "Banana poriyal",
+        "Buttermilk",
+        "Fryums",
+        "Sweet",
+        "Boondi laddu",
+        "Mango pickle"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Paneer Butter Masala / Chicken Butter Masala",
+        "Dal Tadka",
+        "Rasam",
+        "White Rice",
+        "Curd",
+        "Fruits",
+        "Pickle",
+        "Milk",
+        "Coffee Powder",
+        "Onions"
+      ]
+    }
+  ],
+  "2025-05-20": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Masala Dosa",
+        "Vada Pav",
+        "Coconut Chutney",
+        "Sambar",
+        "Toasted Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Bisibele Bath",
+        "Rajma Masala",
+        "Cabbage beans carrot poriyal",
+        "White rice",
+        "Tomato Rasam",
+        "Buttermilk"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Samosa",
+        "Mushroom biryani",
+        "Veg kurma",
+        "Tomato Egg Curry (NV)",
+        "Rice",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Kadai Paneer",
+        "White Rice",
+        "Radish Kara Curry",
+        "Kolambu",
+        "Curd"
+      ]
+    }
+  ],
+  "2025-05-21": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Set Dosa",
+        "Veg semiya upma",
+        "Sambar",
+        "Chutney",
+        "Brown Bread + Butter + Jam",
+        "Coffee Powder",
+        "Tea",
+        "Milk",
+        "NV - Egg Podimas"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Andhra style chicken fry (NV)",
+        "Veg Chapatha",
+        "White Rice",
+        "Dal",
+        "Onion Raitha"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Aloo bhaji",
+        "Gobi 65"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Lauki Channa Masala",
+        "Masala Dal",
+        "White Rice",
+        "Sambar",
+        "Milk",
+        "Curd",
+        "Coffee Powder",
+        "Fruits"
+      ]
+    }
+  ],
+  "2025-05-22": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Poori",
+        "Potato Masala",
+        "Bhaji",
+        "Semiya Upma",
+        "Coconut Chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Boiled Egg"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Roti",
+        "Aloo Carrot cauliflower gravy",
+        "Amaranthus Dal",
+        "White Rice",
+        "Deep Fry (65 style)",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Banana Bajji"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Dosakaya Pappu",
+        "Dondakaya Curry",
+        "White Rice",
+        "Pickle",
+        "Rasam",
+        "Milk",
+        "Curd",
+        "Coffee Powder",
+        "Fruits"
+      ]
+    }
+  ],
+  "2025-05-23": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Karam podi dosa (3 nos)",
+        "Pav Bhaji",
+        "Coconut Chutney",
+        "Sambar",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Egg Bhurji"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Veg pulao",
+        "Brinjal kara curry",
+        "Sambar",
+        "Dal Maharani",
+        "Beetroot Chana poriyal",
+        "White rice",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Sambar Vada (2 pcs)"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Lacha Paratha (2)",
+        "Veg Shahi Paneer",
+        "Bottle Gourd Kootu",
+        "White Rice",
+        "Curd",
+        "Rasam",
+        "Fruits",
+        "Coffee Powder",
+        "Milk"
+      ]
+    }
+  ],
+  "2025-05-24": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Mysore Bonda (3 pcs)",
+        "Carrot Upma",
+        "Groundnut Chutney",
+        "Sambar",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Omelet"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Dal Punjabi Roti",
+        "Veg Fried Rice",
+        "Gobi Manchurian (3 pcs)",
+        "White Rice",
+        "Sambar",
+        "Pickle",
+        "Milk"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Ginger Tea"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Chukka kura pappu",
+        "Aloo capsicum curry",
+        "Sambhar",
+        "White rice",
+        "Fruits",
+        "Coffee Powder",
+        "Milk",
+        "Lemon pickle"
+      ]
+    }
+  ],
+  "2025-05-25": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Aloo Paratha (2)",
+        "Upma",
+        "Lemon Ginger Chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Egg Podimas"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Chicken Dum Biryani (NV) / Paneer Dum Vegetable Biryani (Veg)",
+        "Chicken Gravy / Veg Gravy",
+        "White Rice",
+        "Rasam",
+        "Poori",
+        "Onion Raitha"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Ice Cream Bar or Cup",
+        "Tea",
+        "Coffee"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Bhindi do pyaza gravy",
+        "Sambhar",
+        "White rice",
+        "Fruits",
+        "Coffee Powder",
+        "Milk",
+        "Lemon pickle"
+      ]
+    }
+  ],
+  "2025-05-26": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Idli",
+        "Bhatura",
+        "Pongal",
+        "Ground nut chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Boiled Egg"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Phulka",
+        "Mixed veg",
+        "Kadai veg",
+        "White rice",
+        "Dal",
+        "Rasam",
+        "Mango pickle",
+        "Curd"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Bread toast + Jam",
+        "Banana poriyal",
+        "Buttermilk",
+        "Fryums",
+        "Sweet",
+        "Boondi laddu",
+        "Mango pickle"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Paneer Butter Masala / Chicken Butter Masala",
+        "Dal Tadka",
+        "Rasam",
+        "White Rice",
+        "Curd",
+        "Fruits",
+        "Pickle",
+        "Milk",
+        "Coffee Powder",
+        "Onions"
+      ]
+    }
+  ],
+  "2025-05-27": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Masala Dosa",
+        "Vada Pav",
+        "Coconut Chutney",
+        "Sambar",
+        "Toasted Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Bisibele Bath",
+        "Rajma Masala",
+        "Cabbage beans carrot poriyal",
+        "White rice",
+        "Tomato Rasam",
+        "Buttermilk"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Samosa",
+        "Mushroom biryani",
+        "Veg kurma",
+        "Tomato Egg Curry (NV)",
+        "Rice",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Kadai Paneer",
+        "White Rice",
+        "Radish Kara Curry",
+        "Kolambu",
+        "Curd"
+      ]
+    }
+  ],
+  "2025-05-28": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Set Dosa",
+        "Veg semiya upma",
+        "Sambar",
+        "Chutney",
+        "Brown Bread + Butter + Jam",
+        "Coffee Powder",
+        "Tea",
+        "Milk",
+        "NV - Egg Podimas"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Andhra style chicken fry (NV)",
+        "Veg Chapatha",
+        "White Rice",
+        "Dal",
+        "Onion Raitha"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Aloo bhaji",
+        "Gobi 65"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Lauki Channa Masala",
+        "Masala Dal",
+        "White Rice",
+        "Sambar",
+        "Milk",
+        "Curd",
+        "Coffee Powder",
+        "Fruits"
+      ]
+    }
+  ],
+  "2025-05-29": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Poori",
+        "Potato Masala",
+        "Bhaji",
+        "Semiya Upma",
+        "Coconut Chutney",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Boiled Egg"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Roti",
+        "Aloo Carrot cauliflower gravy",
+        "Amaranthus Dal",
+        "White Rice",
+        "Deep Fry (65 style)",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Banana Bajji"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Dosakaya Pappu",
+        "Dondakaya Curry",
+        "White Rice",
+        "Pickle",
+        "Rasam",
+        "Milk",
+        "Curd",
+        "Coffee Powder",
+        "Fruits"
+      ]
+    }
+  ],
+  "2025-05-30": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Karam podi dosa (3 nos)",
+        "Pav Bhaji",
+        "Coconut Chutney",
+        "Sambar",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Egg Bhurji"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Veg pulao",
+        "Brinjal kara curry",
+        "Sambar",
+        "Dal Maharani",
+        "Beetroot Chana poriyal",
+        "White rice",
+        "Rasam"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Sambar Vada (2 pcs)"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Lacha Paratha (2)",
+        "Veg Shahi Paneer",
+        "Bottle Gourd Kootu",
+        "White Rice",
+        "Curd",
+        "Rasam",
+        "Fruits",
+        "Coffee Powder",
+        "Milk"
+      ]
+    }
+  ],
+  "2025-05-31": [
+    {
+      "name": "Breakfast",
+      "startHour": 7,
+      "startMinute": 0,
+      "endHour": 8,
+      "endMinute": 30,
+      "items": [
+        "Mysore Bonda (3 pcs)",
+        "Carrot Upma",
+        "Groundnut Chutney",
+        "Sambar",
+        "Bread + Butter + Jam",
+        "Tea",
+        "Coffee Powder",
+        "Milk",
+        "NV - Omelet"
+      ]
+    },
+    {
+      "name": "Lunch",
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 14,
+      "endMinute": 30,
+      "items": [
+        "Dal Punjabi Roti",
+        "Veg Fried Rice",
+        "Gobi Manchurian (3 pcs)",
+        "White Rice",
+        "Sambar",
+        "Pickle",
+        "Milk"
+      ]
+    },
+    {
+      "name": "Snacks",
+      "startHour": 16,
+      "startMinute": 0,
+      "endHour": 17,
+      "endMinute": 30,
+      "items": [
+        "Ginger Tea"
+      ]
+    },
+    {
+      "name": "Dinner",
+      "startHour": 19,
+      "startMinute": 0,
+      "endHour": 21,
+      "endMinute": 30,
+      "items": [
+        "Chapathi",
+        "Chukka kura pappu",
+        "Aloo capsicum curry",
+        "Sambhar",
+        "White rice",
+        "Fruits",
+        "Coffee Powder",
+        "Milk",
+        "Lemon pickle"
+      ]
+    }
+  ]
+}
