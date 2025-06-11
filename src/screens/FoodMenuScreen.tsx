@@ -410,11 +410,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
- 
-    backgroundColor: '#faf0e6',
- 
-    backgroundColor: '#fff',
- 
+
+    backgroundColor: '#007bff',
+
     borderTopColor: '#ddd',
     borderTopWidth: StyleSheet.hairlineWidth,
     paddingVertical: 8,
@@ -424,10 +422,9 @@ const styles = StyleSheet.create({
   },
   monthButton: {
     flexDirection: 'row',
-    backgroundColor: '#007bff',
+
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 20,
     alignItems: 'center',
   },
   monthButtonText: {
