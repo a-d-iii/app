@@ -15,6 +15,7 @@ type RatingModalProps = {
   onClose: () => void;
   onSubmit: (rating: number) => void;
   initialRating?: number;
+  prompt?: string;
 };
 
 export default function RatingModal({
@@ -22,6 +23,7 @@ export default function RatingModal({
   onClose,
   onSubmit,
   initialRating = 0,
+  prompt = 'Rate this Class',
 }: RatingModalProps) {
   const [rating, setRating] = useState<number>(initialRating);
 
@@ -29,7 +31,7 @@ export default function RatingModal({
     <Modal transparent animationType="fade" visible={visible}>
       <View style={styles.backdrop}>
         <View style={styles.modalContainer}>
-          <Text style={styles.prompt}>Rate this Class</Text>
+          <Text style={styles.prompt}>{prompt}</Text>
           <View style={styles.starsRow}>
             {[1, 2, 3, 4, 5].map((i) => (
               <TouchableOpacity
