@@ -194,9 +194,15 @@ export default function FoodMenuScreen() {
               {
                 transform: [
                   {
-                    translateY: topIconAnim.interpolate({
+                    scale: topIconAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [0, -5],
+                      outputRange: [1, 1.15],
+                    }),
+                  },
+                  {
+                    rotate: topIconAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['0deg', '-10deg'],
                     }),
                   },
                 ],
@@ -224,11 +230,17 @@ export default function FoodMenuScreen() {
                 <View style={styles.mealTitleRow}>
                   <Animated.View
                     style={{
-                      transform: [
+                  transform: [
                         {
-                          translateY: iconAnim.interpolate({
+                          scale: iconAnim.interpolate({
                             inputRange: [0, 1],
-                            outputRange: [0, -3],
+                            outputRange: [1, 1.2],
+                          }),
+                        },
+                        {
+                          rotate: iconAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: ['0deg', '8deg'],
                           }),
                         },
                       ],
@@ -242,12 +254,12 @@ export default function FoodMenuScreen() {
                     />
                   </Animated.View>
                   <Text style={styles.mealTitle}>{m.name}</Text>
-                </View>
-                <View style={styles.mealHeaderRight}>
                   <Text style={styles.timing}>{`${formatTime(
                     m.startHour,
                     m.startMinute
                   )} - ${formatTime(m.endHour, m.endMinute)}`}</Text>
+                </View>
+                <View style={styles.mealHeaderRight}>
                   <View style={styles.statusRow}>
                     <Ionicons
                       name={status.icon as any}
@@ -291,6 +303,15 @@ export default function FoodMenuScreen() {
         initialRating={ratingMeal ? ratings[ratingMeal] || 0 : 0}
         prompt="Rate this Meal"
       />
+      <View style={styles.monthBar}>
+        <TouchableOpacity
+          style={styles.monthButton}
+          onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
+        >
+          <Ionicons name="calendar" size={16} color="#fff" />
+          <Text style={styles.monthButtonText}>View Full Month</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -302,7 +323,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 16,
-    paddingBottom: 32,
+    paddingBottom: 80,
   },
   heading: {
     fontSize: 22,
@@ -361,6 +382,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  monthBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderTopColor: '#ddd',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    paddingVertical: 8,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  monthButton: {
+    flexDirection: 'row',
+    backgroundColor: '#007bff',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  monthButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    marginLeft: 6,
+  },
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -417,6 +464,6 @@ const styles = StyleSheet.create({
   },
   timing: {
     color: '#333',
-    marginRight: 8,
+    marginLeft: 8,
   },
 });
