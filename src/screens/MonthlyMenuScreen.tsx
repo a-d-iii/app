@@ -81,17 +81,6 @@ export default function MonthlyMenuScreen() {
             viewPosition: 0,
           });
         }
- 
-      const sectionIndex = Math.floor(idx / 7);
-      const itemIndex = idx % 7;
-      setTimeout(() => {
-        listRef.current?.scrollToLocation({
-          sectionIndex,
-          itemIndex,
-          animated: false,
-          viewPosition: 0,
-        });
- 
       }, 0);
     }
   }, [loading, menu]);
@@ -172,7 +161,7 @@ export default function MonthlyMenuScreen() {
               <Text style={styles.mealItems}>{m.items.join(', ')}</Text>
             </View>
           );
-        })}
+        })
       </View>
     );
   };
