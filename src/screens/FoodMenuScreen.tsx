@@ -179,21 +179,6 @@ export default function FoodMenuScreen() {
     }
   };
 
-  const mealIcon = (name: string) => {
-    switch (name.toLowerCase()) {
-      case 'breakfast':
-        return 'cafe';
-      case 'lunch':
-        return 'fast-food';
-      case 'snacks':
-        return 'pizza';
-      case 'dinner':
-        return 'restaurant';
-      default:
-        return 'fast-food';
-    }
-  };
-
   const showSummary = () => {
     navigation.navigate('FoodSummaryScreen' as never);
   };
@@ -201,74 +186,6 @@ export default function FoodMenuScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.container}>
- 
-        <Text style={styles.heading}>Today's Menu</Text>
-        <View style={styles.dateChip}>
-          <Text style={styles.dateChipText}>{dayLabel}</Text>
-        </View>
-        {meals.map((m, idx) => {
-          const isEnded = countdown(m) === 'Ended';
-          return (
-            <View
-              key={m.name}
-              style={[
-                styles.mealBlock,
-                { backgroundColor: mealColors[idx % mealColors.length] },
-                isEnded && styles.mealBlockEnded,
-              ]}
-            >
-              <View style={styles.mealHeader}>
-                <View style={styles.mealTitleRow}>
-                  <Ionicons
-                    name={mealIcon(m.name)}
-                    size={16}
-                    color="#fff"
-                    style={styles.mealIcon}
-                  />
-                  <Text style={styles.mealTitle}>{m.name}</Text>
-                </View>
-                <View style={styles.mealHeaderRight}>
-                  {isEnded ? (
-                    <View style={styles.statusRow}>
-                      <Ionicons name="checkmark-circle" size={16} color="green" />
-                      <Text style={styles.statusText}>Done</Text>
-                    </View>
-                  ) : (
-                    <View style={styles.statusRow}>
-                      <Ionicons name="time-outline" size={16} color="#d00" />
-                      <Text style={styles.statusText}>{countdown(m)}</Text>
-                    </View>
-                  )}
-                  <Pressable onPress={() => toggleLike(m.name)} style={styles.likeBtn}>
-                    <Ionicons
-                      name={likes[m.name] ? 'heart' : 'heart-outline'}
-                      size={20}
-                      color={likes[m.name] ? 'red' : 'black'}
-                    />
-                  </Pressable>
-                </View>
-              </View>
-              <Text style={styles.timing}>{`${formatTime(m.startHour, m.startMinute)} - ${formatTime(m.endHour, m.endMinute)}`}</Text>
-              <Text style={styles.mealItems}>{m.items.join(', ')}</Text>
-              <Pressable
-                style={styles.rateButton}
-                onPress={() => setRatingMeal(m.name)}
-              >
-                <Ionicons name="star" size={16} color="#fff" />
-                <Text style={styles.rateButtonText}>
-                  {ratings[m.name] ? `${ratings[m.name]}★` : 'Rate'}
-                </Text>
-              </Pressable>
-            </View>
-          );
-        })}
- 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
-        >
-          <Text style={styles.buttonText}>View Full Month</Text>
-        </TouchableOpacity>
         <View style={styles.titleRow}>
           <Text style={styles.heading}>Today's Menu</Text>
           <Animated.View
@@ -455,15 +372,6 @@ const styles = StyleSheet.create({
   },
   likeBtn: {
     marginLeft: 8,
- 
-  },
-  likeBtn: {
-    marginLeft: 8,
-  },
-  timing: {
-    color: '#333',
-    marginBottom: 4,
- 
   },
   mealItems: {
     color: '#555',
