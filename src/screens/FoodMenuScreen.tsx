@@ -40,13 +40,31 @@ export default function FoodMenuScreen() {
   const todayKey = new Date().toISOString().slice(0, 10);
   const meals = menu?.[todayKey];
 
+
   if (loading || !meals) {
+
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" />
       </View>
     );
   }
+
+
+  if (!meals) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.message}>No menu found for today.</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
+        >
+          <Text style={styles.buttonText}>View Full Month</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -97,5 +115,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: '600',
+
+  },
+  message: {
+    fontSize: 16,
+    marginBottom: 12,
+
   },
 });
