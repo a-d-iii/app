@@ -29,8 +29,8 @@ import { MEALS } from "../data/meals";
 
 const { width } = Dimensions.get("window");
 const DAY_WIDTH = 72;
-
-const CONTENT_PADDING = 8; // matches styles.calendarContent
+// Horizontal padding on the calendar so the selected date can sit in the centre
+const SIDE_PADDING = width / 2 - DAY_WIDTH / 2;
 
 if (
   Platform.OS === "android" &&
@@ -91,6 +91,10 @@ export default function FoodMenuScreen({ navigation }: any) {
   const dayWidth = DAY_WIDTH;
 
   const calendarRef = useRef<ScrollView>(null);
+  const menuAnim = useRef(new Animated.Value(0)).current;
+  const prevDateIdx = useRef(
+    calendarDates.findIndex((d) => d.toDateString() === today.toDateString()),
+  );
 
   useEffect(() => {
     AsyncStorage.getItem("mealRatings").then((raw) => {
@@ -175,8 +179,18 @@ export default function FoodMenuScreen({ navigation }: any) {
       (d) => d.toDateString() === selectedDate.toDateString(),
     );
     if (idx >= 0) {
-      const x = idx * dayWidth + CONTENT_PADDING - width / 2 + dayWidth / 2;
+      // Scroll so the selected date sits in the center of the screen
+      const x = idx * dayWidth;
       calendarRef.current?.scrollTo({ x, animated: true });
+
+      const dir = idx >= prevDateIdx.current ? 1 : -1;
+      menuAnim.setValue(dir * width);
+      Animated.timing(menuAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+      prevDateIdx.current = idx;
     }
   }, [selectedDate]);
 
@@ -267,7 +281,7 @@ export default function FoodMenuScreen({ navigation }: any) {
         style={styles.calendarRow}
         contentContainerStyle={[
           styles.calendarContent,
-          { paddingHorizontal: width / 2 - DAY_WIDTH / 2 },
+          { paddingHorizontal: SIDE_PADDING },
         ]}
       >
         {calendarDates.map((d) => {
@@ -299,7 +313,7 @@ export default function FoodMenuScreen({ navigation }: any) {
           );
         })}
       </ScrollView>
-      <View style={styles.menuWrapper}>
+      <Animated.View style={[styles.menuWrapper, { transform: [{ translateX: menuAnim }] }]}>
         <ScrollView contentContainerStyle={styles.content}>
           {mealsForDay.map((meal, idx) => {
             const timer = timers[meal.name] || "";
@@ -374,7 +388,7 @@ export default function FoodMenuScreen({ navigation }: any) {
             );
           })}
         </ScrollView>
-      </View>
+      </Animated.View>
       <View style={styles.summaryBar}>
         <Text style={styles.summaryText}>
           {selectedDate.toLocaleDateString("en-US", { month: "long" })} Food
