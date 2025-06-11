@@ -7,17 +7,13 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Animated,
-  PanResponder,
-  GestureResponderEvent,
-  PanResponderGestureState,
+  FlatList,
   StatusBar,
   Platform,
   Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LayoutAnimation, UIManager } from "react-native";
 
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
@@ -31,14 +27,6 @@ const { width } = Dimensions.get("window");
 const DAY_WIDTH = 72;
 // Horizontal padding on the calendar so the selected date can sit in the centre
 const SIDE_PADDING = width / 2 - DAY_WIDTH / 2;
-
-if (
-  Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
-
 
 const MEAL_ICONS: { [name: string]: string } = {
   Breakfast: "cafe-outline",
@@ -91,8 +79,7 @@ export default function FoodMenuScreen({ navigation }: any) {
   const dayWidth = DAY_WIDTH;
 
   const calendarRef = useRef<ScrollView>(null);
-  const menuAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(0)).current;
+  const menuListRef = useRef<FlatList<Date>>(null);
   const prevDateIdx = useRef(
     calendarDates.findIndex((d) => d.toDateString() === today.toDateString()),
   );
@@ -173,8 +160,6 @@ export default function FoodMenuScreen({ navigation }: any) {
     await AsyncStorage.setItem("mealFavorites", JSON.stringify(updated));
   };
 
-  const dateKey = selectedDate.toISOString().slice(0, 10);
-  const mealsForDay = monthlyMenu[dateKey] || MEALS;
 
   useEffect(() => {
     const idx = calendarDates.findIndex(
@@ -185,13 +170,6 @@ export default function FoodMenuScreen({ navigation }: any) {
       const x = idx * dayWidth;
       calendarRef.current?.scrollTo({ x, animated: true });
 
-      const dir = idx >= prevDateIdx.current ? 1 : -1;
-      menuAnim.setValue(dir * width);
-      Animated.timing(menuAnim, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
       prevDateIdx.current = idx;
 
     }
@@ -216,41 +194,14 @@ export default function FoodMenuScreen({ navigation }: any) {
     fetchRemoteMenu();
   }, []);
 
-  const animateDateChange = (delta: number, newDate?: Date) => {
-    Animated.timing(slideAnim, {
-      toValue: delta < 0 ? width : -width,
-      duration: 200,
-      useNativeDriver: true,
-    }).start(() => {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      if (newDate) {
-        setSelectedDate(newDate);
-      } else {
-        setSelectedDate((prev) => {
-          const n = new Date(prev);
-          n.setDate(prev.getDate() + delta);
-          return n;
-        });
-      }
-      slideAnim.setValue(delta < 0 ? -width : width);
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
-    });
-  };
-
   const setDate = (d: Date) => {
-    const currentIdx = calendarDates.findIndex(
-      (dt) => dt.toDateString() === selectedDate.toDateString(),
-    );
     const newIdx = calendarDates.findIndex(
       (dt) => dt.toDateString() === d.toDateString(),
     );
-    const delta = newIdx - currentIdx;
-    if (delta === 0) return;
-    animateDateChange(delta, d);
+    if (newIdx >= 0) {
+      menuListRef.current?.scrollToIndex({ index: newIdx, animated: true });
+      setSelectedDate(d);
+    }
   };
 
   const importMenu = async () => {
@@ -268,35 +219,8 @@ export default function FoodMenuScreen({ navigation }: any) {
 
   };
 
-  const swipeResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: (
-        _e: GestureResponderEvent,
-        g: PanResponderGestureState,
-      ) => Math.abs(g.dx) > Math.abs(g.dy),
-      onPanResponderMove: (_e, g) => {
-        slideAnim.setValue(g.dx);
-      },
-      onPanResponderRelease: (_e, g) => {
-        const { dx } = g;
-        if (dx <= -50) {
-          animateDateChange(1);
-        } else if (dx >= 50) {
-          animateDateChange(-1);
-        } else {
-          Animated.spring(slideAnim, {
-            toValue: 0,
-            useNativeDriver: true,
-          }).start();
-        }
-      },
-      onPanResponderTerminationRequest: () => false,
-    }),
-  ).current;
-
   return (
-    <SafeAreaView style={styles.root} {...swipeResponder.panHandlers}>
+    <SafeAreaView style={styles.root}>
       <View style={styles.header}>
         <TouchableOpacity onPress={importMenu} style={styles.importButton}>
           <Ionicons name="cloud-upload-outline" size={20} color="#333" />
@@ -306,11 +230,11 @@ export default function FoodMenuScreen({ navigation }: any) {
           <Text style={styles.dateLabel}>{dateLabel}</Text>
         </View>
       </View>
-      <Animated.ScrollView
+      <ScrollView
         ref={calendarRef}
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={[styles.calendarRow, { transform: [{ translateX: slideAnim }] }]}
+        style={styles.calendarRow}
         contentContainerStyle={[
           styles.calendarContent,
           { paddingHorizontal: SIDE_PADDING },
@@ -344,83 +268,99 @@ export default function FoodMenuScreen({ navigation }: any) {
             </TouchableOpacity>
           );
         })}
-      </Animated.ScrollView>
-      <Animated.View style={[styles.menuWrapper, { transform: [{ translateX: slideAnim }] }]}>
-        <ScrollView contentContainerStyle={styles.content}>
-          {mealsForDay.map((meal, idx) => {
-            const timer = timers[meal.name] || "";
-            const status = statuses[meal.name];
+      </ScrollView>
+      <View style={styles.menuWrapper}>
+        <FlatList
+          ref={menuListRef}
+          data={calendarDates}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          initialScrollIndex={prevDateIdx.current}
+          keyExtractor={(d) => d.toISOString()}
+          getItemLayout={(_d, index) => ({ length: width, offset: width * index, index })}
+          onMomentumScrollEnd={(e) => {
+            const idx = Math.round(e.nativeEvent.contentOffset.x / width);
+            const d = calendarDates[idx];
+            if (d) setSelectedDate(d);
+          }}
+          renderItem={({ item }) => {
+            const dateKey = item.toISOString().slice(0, 10);
+            const dayMeals = monthlyMenu[dateKey] || MEALS;
             return (
-              <Animated.View
-                key={meal.name}
-                style={[
-                  styles.mealBlock,
-                  { backgroundColor: MEAL_COLORS[idx % MEAL_COLORS.length] },
-                  status === "ongoing" && styles.ongoing,
-                  status === "next" && styles.next,
-                ]}
-              >
-                <View style={styles.mealHeaderRow}>
-                  <View style={styles.mealHeaderLeft}>
-                    <Ionicons
-                      name={MEAL_ICONS[meal.name]}
-                      size={18}
-                      color="#333"
-                      style={styles.mealIcon}
-                    />
-                    <Text style={styles.mealHeader}>{meal.name}</Text>
-                  </View>
-                  <Text style={styles.timer}>{timer}</Text>
-                </View>
-                <Text style={styles.timeRange}>
-                  {formatTime(meal.startHour, meal.startMinute)} –{" "}
-                  {formatTime(meal.endHour, meal.endMinute)}
-                </Text>
-                <Text style={styles.mealItems}>{meal.items.join(", ")}</Text>
-                {meal.highlights?.map((item) => {
-                  const key = `${meal.name}-${item}`;
-                  return (
-                    <View key={key} style={styles.highlightRow}>
-                      <Text style={styles.highlightText}>{item}</Text>
-                      {ratings[key] ? (
-                        <Text style={styles.ratingDisplay}>
-                          {ratings[key]}★
-                        </Text>
-                      ) : null}
-                      <TouchableOpacity
-                        onPress={() => toggleFavorite(key)}
-                        style={styles.favoriteButton}
+              <View style={{ width }}>
+                <ScrollView contentContainerStyle={styles.content}>
+                  {dayMeals.map((meal, idx) => {
+                    const timer = timers[meal.name] || "";
+                    const status = statuses[meal.name];
+                    return (
+                      <View
+                        key={meal.name}
+                        style={[
+                          styles.mealBlock,
+                          { backgroundColor: MEAL_COLORS[idx % MEAL_COLORS.length] },
+                          status === "ongoing" && styles.ongoing,
+                          status === "next" && styles.next,
+                        ]}
                       >
-                        <Ionicons
-                          name={favorites[key] ? "heart" : "heart-outline"}
-                          size={18}
-                          color={favorites[key] ? "#e91e63" : "#666"}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => openModal(key)}
-                        style={styles.rateButton}
-                      >
-                        <Text style={styles.rateText}>
-                          {ratings[key] ? "Edit" : "Rate"}
+                        <View style={styles.mealHeaderRow}>
+                          <View style={styles.mealHeaderLeft}>
+                            <Ionicons
+                              name={MEAL_ICONS[meal.name]}
+                              size={18}
+                              color="#333"
+                              style={styles.mealIcon}
+                            />
+                            <Text style={styles.mealHeader}>{meal.name}</Text>
+                          </View>
+                          <Text style={styles.timer}>{timer}</Text>
+                        </View>
+                        <Text style={styles.timeRange}>
+                          {formatTime(meal.startHour, meal.startMinute)} –{' '}
+                          {formatTime(meal.endHour, meal.endMinute)}
                         </Text>
-                      </TouchableOpacity>
-                      {modalItem === key && (
-                        <RatingModal
-                          visible={true}
-                          onClose={closeModal}
-                          onSubmit={(r) => submitRating(key, r)}
-                          initialRating={ratings[key]}
-                        />
-                      )}
-                    </View>
-                  );
-                })}
-              </Animated.View>
+                        <Text style={styles.mealItems}>{meal.items.join(', ')}</Text>
+                        {meal.highlights?.map((item) => {
+                          const key = `${meal.name}-${item}`;
+                          return (
+                            <View key={key} style={styles.highlightRow}>
+                              <Text style={styles.highlightText}>{item}</Text>
+                              {ratings[key] ? (
+                                <Text style={styles.ratingDisplay}>{ratings[key]}★</Text>
+                              ) : null}
+                              <TouchableOpacity
+                                onPress={() => toggleFavorite(key)}
+                                style={styles.favoriteButton}
+                              >
+                                <Ionicons
+                                  name={favorites[key] ? 'heart' : 'heart-outline'}
+                                  size={18}
+                                  color={favorites[key] ? '#e91e63' : '#666'}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => openModal(key)} style={styles.rateButton}>
+                                <Text style={styles.rateText}>{ratings[key] ? 'Edit' : 'Rate'}</Text>
+                              </TouchableOpacity>
+                              {modalItem === key && (
+                                <RatingModal
+                                  visible={true}
+                                  onClose={closeModal}
+                                  onSubmit={(r) => submitRating(key, r)}
+                                  initialRating={ratings[key]}
+                                />
+                              )}
+                            </View>
+                          );
+                        })}
+                      </View>
+                    );
+                  })}
+                </ScrollView>
+              </View>
             );
-          })}
-        </ScrollView>
-      </Animated.View>
+          }}
+        />
+      </View>
       <View style={styles.summaryBar}>
         <Text style={styles.summaryText}>
           {selectedDate.toLocaleDateString("en-US", { month: "long" })} Food
