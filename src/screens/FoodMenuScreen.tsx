@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import {
   View,
   Text,
@@ -12,18 +13,30 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Meal } from '../data/meals';
 import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { Meal } from '../data/meals';
+import { useNavigation } from '@react-navigation/native';
+
 // Load the bundled menu as an offline fallback so the screen always has data
 // even when network requests fail.
 import localMenu from '../../monthly-menu-may-2025.json';
 
+
 const MENU_URL =
   'https://raw.githubusercontent.com/a-d-iii/app/main/monthly-menu-may-2025.json';
+
+
+const MENU_URL = 'https://raw.githubusercontent.com/a-d-iii/app/main/monthly-menu-may-2025.json';
+
+
 
 interface MonthlyMenu {
   [date: string]: Meal[];
 }
 
 export default function FoodMenuScreen() {
+
   // Start with the bundled menu so something is shown immediately
   const [menu, setMenu] = useState<MonthlyMenu>(localMenu as MonthlyMenu);
   const [loading, setLoading] = useState(true);
@@ -69,6 +82,39 @@ export default function FoodMenuScreen() {
   const meals = menu?.[todayKey];
 
   if (loading) {
+
+
+  // Start with the bundled menu so something is shown immediately
+  const [menu, setMenu] = useState<MonthlyMenu>(localMenu as MonthlyMenu);
+  const [loading, setLoading] = useState(true);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const loadMenu = async () => {
+      try {
+        const cached = await AsyncStorage.getItem('monthlyMenu');
+        if (cached) {
+          setMenu(JSON.parse(cached));
+        }
+        const resp = await fetch(MENU_URL);
+        if (resp.ok) {
+          const json = await resp.json();
+          setMenu(json);
+          await AsyncStorage.setItem('monthlyMenu', JSON.stringify(json));
+        }
+      } catch (e) {
+        console.error('Failed to load menu', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadMenu();
+  }, []);
+
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const meals = menu?.[todayKey];
+
+  if (loading) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" />
@@ -89,6 +135,35 @@ export default function FoodMenuScreen() {
       </View>
     );
   }
+
+
+
+
+  if (loading || !meals) {
+
+
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+
+  if (!meals) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.message}>No menu found for today.</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
+        >
+          <Text style={styles.buttonText}>View Full Month</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
 
   const toggleLike = (name: string) => {
     setLikes(prev => ({ ...prev, [name]: !prev[name] }));
@@ -128,6 +203,16 @@ export default function FoodMenuScreen() {
           </View>
           <Text style={styles.timing}>{`${formatTime(m.startHour, m.startMinute)} - ${formatTime(m.endHour, m.endMinute)}`}</Text>
           <Text style={styles.countdown}>Ends in: {countdown(m)}</Text>
+
+
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.dateHeader}>{todayKey}</Text>
+      {meals.map(m => (
+        <View key={m.name} style={styles.mealBlock}>
+          <Text style={styles.mealTitle}>{m.name}</Text>
+
           <Text style={styles.mealItems}>{m.items.join(', ')}</Text>
         </View>
       ))}
@@ -144,16 +229,19 @@ export default function FoodMenuScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+
   },
   heading: {
     fontSize: 22,
     fontWeight: '700',
     marginBottom: 4,
+
   },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   dateHeader: {
     fontSize: 18,
     fontWeight: '600',
+
     marginBottom: 16,
   },
   mealBlock: {
@@ -169,7 +257,12 @@ const styles = StyleSheet.create({
   mealHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+
+    marginBottom: 12,
+  },
+  mealBlock: {
+    marginBottom: 12,
+
   },
   mealTitle: {
     fontSize: 16,
@@ -182,6 +275,7 @@ const styles = StyleSheet.create({
   countdown: {
     color: '#d00',
     marginBottom: 4,
+
   },
   mealItems: {
     color: '#555',
@@ -196,9 +290,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: '600',
+
   },
   message: {
     fontSize: 16,
     marginBottom: 12,
+
   },
 });
