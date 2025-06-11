@@ -29,8 +29,8 @@ import { MEALS } from "../data/meals";
 
 const { width } = Dimensions.get("window");
 const DAY_WIDTH = 72;
-
-const CONTENT_PADDING = 8; // matches styles.calendarContent
+// Horizontal padding on the calendar so the selected date can sit in the centre
+const SIDE_PADDING = width / 2 - DAY_WIDTH / 2;
 
 if (
   Platform.OS === "android" &&
@@ -175,7 +175,8 @@ export default function FoodMenuScreen({ navigation }: any) {
       (d) => d.toDateString() === selectedDate.toDateString(),
     );
     if (idx >= 0) {
-      const x = idx * dayWidth + CONTENT_PADDING - width / 2 + dayWidth / 2;
+      // Scroll so the selected date sits in the center of the screen
+      const x = idx * dayWidth;
       calendarRef.current?.scrollTo({ x, animated: true });
     }
   }, [selectedDate]);
@@ -267,7 +268,7 @@ export default function FoodMenuScreen({ navigation }: any) {
         style={styles.calendarRow}
         contentContainerStyle={[
           styles.calendarContent,
-          { paddingHorizontal: width / 2 - DAY_WIDTH / 2 },
+          { paddingHorizontal: SIDE_PADDING },
         ]}
       >
         {calendarDates.map((d) => {
