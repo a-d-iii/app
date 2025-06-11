@@ -23,10 +23,11 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { MEALS } from "../data/meals";
 
-const { width } = Dimensions.get("window");
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const ITEM_WIDTH = SCREEN_WIDTH - 32; // account for horizontal margin on wrapper
 const DAY_WIDTH = 72;
 // Horizontal padding on the calendar so the selected date can sit in the centre
-const SIDE_PADDING = width / 2 - DAY_WIDTH / 2;
+const SIDE_PADDING = SCREEN_WIDTH / 2 - DAY_WIDTH / 2;
 
 const MEAL_ICONS: { [name: string]: string } = {
   Breakfast: "cafe-outline",
@@ -278,9 +279,9 @@ export default function FoodMenuScreen({ navigation }: any) {
           showsHorizontalScrollIndicator={false}
           initialScrollIndex={prevDateIdx.current}
           keyExtractor={(d) => d.toISOString()}
-          getItemLayout={(_d, index) => ({ length: width, offset: width * index, index })}
+          getItemLayout={(_d, index) => ({ length: ITEM_WIDTH, offset: ITEM_WIDTH * index, index })}
           onMomentumScrollEnd={(e) => {
-            const idx = Math.round(e.nativeEvent.contentOffset.x / width);
+            const idx = Math.round(e.nativeEvent.contentOffset.x / ITEM_WIDTH);
             const d = calendarDates[idx];
             if (d) setSelectedDate(d);
           }}
@@ -288,7 +289,7 @@ export default function FoodMenuScreen({ navigation }: any) {
             const dateKey = item.toISOString().slice(0, 10);
             const dayMeals = monthlyMenu[dateKey] || MEALS;
             return (
-              <View style={{ width }}>
+              <View style={{ width: ITEM_WIDTH }}>
                 <ScrollView contentContainerStyle={styles.content}>
                   {dayMeals.map((meal, idx) => {
                     const timer = timers[meal.name] || "";
