@@ -264,7 +264,10 @@ export default function FoodMenuScreen({ navigation }: any) {
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.calendarRow}
-        contentContainerStyle={styles.calendarContent}
+        contentContainerStyle={[
+          styles.calendarContent,
+          { paddingHorizontal: width / 2 - dayWidth / 2 },
+        ]}
       >
         {calendarDates.map((d) => {
           const isSelected = d.toDateString() === selectedDate.toDateString();
@@ -523,16 +526,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dateOval: {
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    borderRadius: 24,
     backgroundColor: "#000",
   },
   calendarSelected: {
     backgroundColor: "#fff",
     borderWidth: 2,
     borderColor: "#000",
-    transform: [{ scale: 1.2 }],
   },
   calendarDayOfWeek: {
     fontSize: 14,
