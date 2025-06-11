@@ -87,7 +87,8 @@ export default function FoodMenuScreen({ navigation }: any) {
   const [modalItem, setModalItem] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Favorites>({});
   const [monthlyMenu, setMonthlyMenu] = useState<MonthlyMenu>({});
-  const [dayWidth, setDayWidth] = useState(DAY_WIDTH);
+  // Use a constant day width so each date cell has the same size
+  const dayWidth = DAY_WIDTH;
 
   const calendarRef = useRef<ScrollView>(null);
 
@@ -177,7 +178,7 @@ export default function FoodMenuScreen({ navigation }: any) {
       const x = idx * dayWidth + CONTENT_PADDING - width / 2 + dayWidth / 2;
       calendarRef.current?.scrollTo({ x, animated: true });
     }
-  }, [selectedDate, dayWidth]);
+  }, [selectedDate]);
 
   // Fetch monthly menu from remote URL on first load
   const MENU_URL = "https://example.com/monthly-menu.json";
@@ -266,7 +267,7 @@ export default function FoodMenuScreen({ navigation }: any) {
         style={styles.calendarRow}
         contentContainerStyle={[
           styles.calendarContent,
-          { paddingHorizontal: width / 2 - dayWidth / 2 },
+          { paddingHorizontal: width / 2 - DAY_WIDTH / 2 },
         ]}
       >
         {calendarDates.map((d) => {
@@ -276,11 +277,6 @@ export default function FoodMenuScreen({ navigation }: any) {
               key={d.toDateString()}
               style={styles.calendarDay}
               onPress={() => setDate(d)}
-              onLayout={
-                dayWidth === DAY_WIDTH
-                  ? (e) => setDayWidth(e.nativeEvent.layout.width)
-                  : undefined
-              }
             >
               <Text style={styles.calendarDayOfWeek}>
                 {d.toLocaleDateString("en-US", { weekday: "short" })}
@@ -521,14 +517,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   calendarDay: {
+    width: DAY_WIDTH,
     paddingVertical: 8,
-    paddingHorizontal: 12,
     alignItems: "center",
   },
   dateOval: {
-    paddingHorizontal: 8,
-    paddingVertical: 12,
-    borderRadius: 24,
+    width: 44,
+    height: 36,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#000",
   },
   calendarSelected: {
