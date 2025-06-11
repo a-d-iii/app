@@ -161,7 +161,7 @@ export default function MonthlyMenuScreen() {
               <Text style={styles.mealItems}>{m.items.join(', ')}</Text>
             </View>
           );
-        })
+        })}
       </View>
     );
   };
