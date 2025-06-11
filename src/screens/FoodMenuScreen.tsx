@@ -210,8 +210,6 @@ export default function FoodMenuScreen() {
                     translateY: topIconAnim.interpolate({
                       inputRange: [0, 1],
                       outputRange: [0, -4],
-=======                       inputRange: [0, 1],
-                      outputRange: [1, 1.15],
                     }),
                   },
                   {
