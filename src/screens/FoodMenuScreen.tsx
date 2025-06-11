@@ -1,539 +1,204 @@
-// src/screens/FoodMenuScreen.tsx
-
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  FlatList,
-  StatusBar,
-  Platform,
-  Dimensions,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+  ActivityIndicator,
+  Pressable,
+} from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { Meal } from '../data/meals';
+import { useNavigation } from '@react-navigation/native';
+// Load the bundled menu as an offline fallback so the screen always has data
+// even when network requests fail.
+import localMenu from '../../monthly-menu-may-2025.json';
 
-import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
+const MENU_URL =
+  'https://raw.githubusercontent.com/a-d-iii/app/main/monthly-menu-may-2025.json';
 
-import RatingModal from "../components/RatingModal";
-import Ionicons from "@expo/vector-icons/Ionicons";
-
-import { MEALS } from "../data/meals";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const ITEM_WIDTH = SCREEN_WIDTH - 32; // account for horizontal margin on wrapper
-const DAY_WIDTH = 72;
-// Horizontal padding on the calendar so the selected date can sit in the centre
-const SIDE_PADDING = SCREEN_WIDTH / 2 - DAY_WIDTH / 2;
-
-const MEAL_ICONS: { [name: string]: string } = {
-  Breakfast: "cafe-outline",
-  Lunch: "restaurant-outline",
-  Snacks: "fast-food-outline",
-  Dinner: "moon-outline",
-};
-
-const MEAL_COLORS = ["#fce4ec", "#e3f2fd", "#fffde7", "#e8f5e9"];
-
-// Pad numbers to two digits without relying on ES2017 String.padStart
-function pad(n: number): string {
-  return n < 10 ? `0${n}` : `${n}`;
+interface MonthlyMenu {
+  [date: string]: Meal[];
 }
 
-function formatTime(h: number, m: number) {
-  return `${pad(h)}:${pad(m)}`;
-}
+export default function FoodMenuScreen() {
+  // Start with the bundled menu so something is shown immediately
+  const [menu, setMenu] = useState<MonthlyMenu>(localMenu as MonthlyMenu);
+  const [loading, setLoading] = useState(true);
+  const [likes, setLikes] = useState<Record<string, boolean>>({});
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const navigation = useNavigation();
 
-type Ratings = { [key: string]: number };
-type Favorites = { [key: string]: boolean };
-type MonthlyMenu = { [date: string]: typeof MEALS };
-
-export default function FoodMenuScreen({ navigation }: any) {
-  const today = new Date();
-  const [selectedDate, setSelectedDate] = useState<Date>(today);
-  const dateLabel = selectedDate.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "short",
-    day: "numeric",
-  });
-
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - 15);
-  const calendarDates = Array.from({ length: 31 }, (_, i) => {
-    const d = new Date(startDate);
-    d.setDate(startDate.getDate() + i);
-    return d;
-  });
-
-  const [ratings, setRatings] = useState<Ratings>({});
-  const [timers, setTimers] = useState<{ [name: string]: string }>({});
-  const [statuses, setStatuses] = useState<{
-    [name: string]: "ongoing" | "next" | "later";
-  }>({});
-  const [modalItem, setModalItem] = useState<string | null>(null);
-  const [favorites, setFavorites] = useState<Favorites>({});
-  const [monthlyMenu, setMonthlyMenu] = useState<MonthlyMenu>({});
-  // Use a constant day width so each date cell has the same size
-  const dayWidth = DAY_WIDTH;
-
-  const calendarRef = useRef<ScrollView>(null);
-  const menuListRef = useRef<FlatList<Date>>(null);
-  const prevDateIdx = useRef(
-    calendarDates.findIndex((d) => d.toDateString() === today.toDateString()),
-  );
-
-
+  // Update current time every second so countdowns refresh
   useEffect(() => {
-    AsyncStorage.getItem("mealRatings").then((raw) => {
-      if (raw) setRatings(JSON.parse(raw));
-    });
-    AsyncStorage.getItem("mealFavorites").then((raw) => {
-      if (raw) setFavorites(JSON.parse(raw));
-    });
-    AsyncStorage.getItem("monthlyMenu").then((raw) => {
-      if (raw) setMonthlyMenu(JSON.parse(raw));
-    });
-  }, []);
-
-  useEffect(() => {
-    const updateTimers = () => {
-      const now = new Date();
-      let nextIdx = -1;
-      MEALS.forEach((m, idx) => {
-        const start = new Date();
-        start.setHours(m.startHour, m.startMinute, 0, 0);
-        if (start > now && nextIdx === -1) nextIdx = idx;
-      });
-      MEALS.forEach((m, idx) => {
-        const start = new Date();
-        const end = new Date();
-        start.setHours(m.startHour, m.startMinute, 0, 0);
-        end.setHours(m.endHour, m.endMinute, 0, 0);
-
-        let status: "ongoing" | "next" | "later" = "later";
-        if (now >= start && now < end) status = "ongoing";
-        else if (idx === nextIdx) status = "next";
-
-        const toStart = start.getTime() - now.getTime();
-        const toEnd = end.getTime() - now.getTime();
-        const pad2 = (n: number) => (n < 10 ? `0${n}` : `${n}`);
-
-        let label = "";
-        if (toStart > 0) {
-          const secs = Math.floor(toStart / 1000);
-          const hrs = Math.floor(secs / 3600);
-          const mins = Math.floor((secs % 3600) / 60);
-          const s = secs % 60;
-          label = `${pad2(hrs)}:${pad2(mins)}:${pad2(s)} to start`;
-        } else if (toEnd > 0) {
-          const secs = Math.floor(toEnd / 1000);
-          const hrs = Math.floor(secs / 3600);
-          const mins = Math.floor((secs % 3600) / 60);
-          const s = secs % 60;
-          label = `${pad2(hrs)}:${pad2(mins)}:${pad2(s)} left`;
-        } else {
-          label = "Ended";
-        }
-
-        setTimers((t) => ({ ...t, [m.name]: label }));
-        setStatuses((s2) => ({ ...s2, [m.name]: status }));
-      });
-    };
-    updateTimers();
-    const id = setInterval(updateTimers, 1000);
+    const id = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  const openModal = (itemKey: string) => setModalItem(itemKey);
-  const closeModal = () => setModalItem(null);
-  const submitRating = async (itemKey: string, rating: number) => {
-    const updated = { ...ratings, [itemKey]: rating };
-    setRatings(updated);
-    await AsyncStorage.setItem("mealRatings", JSON.stringify(updated));
-  };
-
-  const toggleFavorite = async (itemKey: string) => {
-    const updated = { ...favorites, [itemKey]: !favorites[itemKey] };
-    setFavorites(updated);
-    await AsyncStorage.setItem("mealFavorites", JSON.stringify(updated));
-  };
-
-
   useEffect(() => {
-    const idx = calendarDates.findIndex(
-      (d) => d.toDateString() === selectedDate.toDateString(),
-    );
-    if (idx >= 0) {
-      // Scroll so the selected date sits in the center of the screen
-      const x = idx * dayWidth;
-      calendarRef.current?.scrollTo({ x, animated: true });
-
-      prevDateIdx.current = idx;
-
-    }
-  }, [selectedDate]);
-
-  // Fetch monthly menu from remote URL on first load
-  const MENU_URL = "https://example.com/monthly-menu.json";
-
-  useEffect(() => {
-    const fetchRemoteMenu = async () => {
+    const loadMenu = async () => {
       try {
+        const cached = await AsyncStorage.getItem('monthlyMenu');
+        if (cached) {
+          setMenu(JSON.parse(cached));
+        }
         const resp = await fetch(MENU_URL);
         if (resp.ok) {
-          const data = await resp.json();
-          setMonthlyMenu(data);
-          await AsyncStorage.setItem("monthlyMenu", JSON.stringify(data));
+          const json = await resp.json();
+          setMenu(json);
+          await AsyncStorage.setItem('monthlyMenu', JSON.stringify(json));
         }
       } catch (e) {
-        console.error("Failed to fetch remote menu", e);
+        console.error('Failed to load menu', e);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchRemoteMenu();
+    loadMenu();
   }, []);
 
-  const setDate = (d: Date) => {
-    const newIdx = calendarDates.findIndex(
-      (dt) => dt.toDateString() === d.toDateString(),
+  const today = new Date();
+  const todayKey = today.toISOString().slice(0, 10);
+  const dayLabel = today.toLocaleDateString(undefined, {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
+  const meals = menu?.[todayKey];
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" />
+      </View>
     );
-    if (newIdx >= 0) {
-      menuListRef.current?.scrollToIndex({ index: newIdx, animated: true });
-      setSelectedDate(d);
-    }
+  }
+
+  if (!meals) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.message}>No menu found for today.</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
+        >
+          <Text style={styles.buttonText}>View Full Month</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  const toggleLike = (name: string) => {
+    setLikes(prev => ({ ...prev, [name]: !prev[name] }));
   };
 
-  const importMenu = async () => {
-    try {
-      const res = await DocumentPicker.getDocumentAsync({ type: "application/json" });
-      if (res.canceled) return;
-      const uri = res.assets[0].uri;
-      const content = await FileSystem.readAsStringAsync(uri, { encoding: "utf8" });
-      const parsed = JSON.parse(content);
-      setMonthlyMenu(parsed);
-      await AsyncStorage.setItem("monthlyMenu", content);
-    } catch (e) {
-      console.error("Failed to import menu", e);
-    }
+  const formatTime = (hour: number, minute: number) =>
+    `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
 
+  const countdown = (m: Meal) => {
+    const end = new Date(today);
+    end.setHours(m.endHour, m.endMinute, 0, 0);
+    const diff = end.getTime() - currentTime.getTime();
+    if (diff <= 0) return 'Ended';
+    const hrs = Math.floor(diff / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    return `${hrs.toString().padStart(2, '0')}:${mins
+      .toString()
+      .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
-    <SafeAreaView style={styles.root}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={importMenu} style={styles.importButton}>
-          <Ionicons name="cloud-upload-outline" size={20} color="#333" />
-        </TouchableOpacity>
-        <View style={styles.headerTextWrap} pointerEvents="none">
-          <Text style={styles.title}>Full Day’s Menu</Text>
-          <Text style={styles.dateLabel}>{dateLabel}</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.heading}>Today's Menu</Text>
+      <Text style={styles.dateHeader}>{dayLabel}</Text>
+      {meals.map(m => (
+        <View key={m.name} style={styles.mealBlock}>
+          <View style={styles.mealHeader}>
+            <Text style={styles.mealTitle}>{m.name}</Text>
+            <Pressable onPress={() => toggleLike(m.name)}>
+              <Ionicons
+                name={likes[m.name] ? 'heart' : 'heart-outline'}
+                size={20}
+                color={likes[m.name] ? 'red' : 'black'}
+              />
+            </Pressable>
+          </View>
+          <Text style={styles.timing}>{`${formatTime(m.startHour, m.startMinute)} - ${formatTime(m.endHour, m.endMinute)}`}</Text>
+          <Text style={styles.countdown}>Ends in: {countdown(m)}</Text>
+          <Text style={styles.mealItems}>{m.items.join(', ')}</Text>
         </View>
-      </View>
-      <ScrollView
-        ref={calendarRef}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.calendarRow}
-        contentContainerStyle={[
-          styles.calendarContent,
-          { paddingHorizontal: SIDE_PADDING },
-        ]}
+      ))}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
       >
-        {calendarDates.map((d) => {
-          const isSelected = d.toDateString() === selectedDate.toDateString();
-          return (
-            <TouchableOpacity
-              key={d.toDateString()}
-              style={styles.calendarDay}
-              onPress={() => setDate(d)}
-            >
-              <Text style={styles.calendarDayOfWeek}>
-                {d.toLocaleDateString("en-US", { weekday: "short" })}
-              </Text>
-              <View
-                style={[styles.dateOval, isSelected && styles.calendarSelected]}
-              >
-                <Text
-                  style={[
-                    styles.calendarDate,
-                    isSelected
-                      ? styles.calendarDateSelected
-                      : styles.calendarDateNormal,
-                  ]}
-                >
-                  {d.getDate()}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
-      <View style={styles.menuWrapper}>
-        <FlatList
-          ref={menuListRef}
-          data={calendarDates}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          initialScrollIndex={prevDateIdx.current}
-          keyExtractor={(d) => d.toISOString()}
-          getItemLayout={(_d, index) => ({ length: ITEM_WIDTH, offset: ITEM_WIDTH * index, index })}
-          onMomentumScrollEnd={(e) => {
-            const idx = Math.round(e.nativeEvent.contentOffset.x / ITEM_WIDTH);
-            const d = calendarDates[idx];
-            if (d) setSelectedDate(d);
-          }}
-          renderItem={({ item }) => {
-            const dateKey = item.toISOString().slice(0, 10);
-            const dayMeals = monthlyMenu[dateKey] || MEALS;
-            return (
-              <View style={{ width: ITEM_WIDTH }}>
-                <ScrollView contentContainerStyle={styles.content}>
-                  {dayMeals.map((meal, idx) => {
-                    const timer = timers[meal.name] || "";
-                    const status = statuses[meal.name];
-                    return (
-                      <View
-                        key={meal.name}
-                        style={[
-                          styles.mealBlock,
-                          { backgroundColor: MEAL_COLORS[idx % MEAL_COLORS.length] },
-                          status === "ongoing" && styles.ongoing,
-                          status === "next" && styles.next,
-                        ]}
-                      >
-                        <View style={styles.mealHeaderRow}>
-                          <View style={styles.mealHeaderLeft}>
-                            <Ionicons
-                              name={MEAL_ICONS[meal.name]}
-                              size={18}
-                              color="#333"
-                              style={styles.mealIcon}
-                            />
-                            <Text style={styles.mealHeader}>{meal.name}</Text>
-                          </View>
-                          <Text style={styles.timer}>{timer}</Text>
-                        </View>
-                        <Text style={styles.timeRange}>
-                          {formatTime(meal.startHour, meal.startMinute)} –{' '}
-                          {formatTime(meal.endHour, meal.endMinute)}
-                        </Text>
-                        <Text style={styles.mealItems}>{meal.items.join(', ')}</Text>
-                        {meal.highlights?.map((item) => {
-                          const key = `${meal.name}-${item}`;
-                          return (
-                            <View key={key} style={styles.highlightRow}>
-                              <Text style={styles.highlightText}>{item}</Text>
-                              {ratings[key] ? (
-                                <Text style={styles.ratingDisplay}>{ratings[key]}★</Text>
-                              ) : null}
-                              <TouchableOpacity
-                                onPress={() => toggleFavorite(key)}
-                                style={styles.favoriteButton}
-                              >
-                                <Ionicons
-                                  name={favorites[key] ? 'heart' : 'heart-outline'}
-                                  size={18}
-                                  color={favorites[key] ? '#e91e63' : '#666'}
-                                />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => openModal(key)} style={styles.rateButton}>
-                                <Text style={styles.rateText}>{ratings[key] ? 'Edit' : 'Rate'}</Text>
-                              </TouchableOpacity>
-                              {modalItem === key && (
-                                <RatingModal
-                                  visible={true}
-                                  onClose={closeModal}
-                                  onSubmit={(r) => submitRating(key, r)}
-                                  initialRating={ratings[key]}
-                                />
-                              )}
-                            </View>
-                          );
-                        })}
-                      </View>
-                    );
-                  })}
-                </ScrollView>
-              </View>
-            );
-          }}
-        />
-      </View>
-      <View style={styles.summaryBar}>
-        <Text style={styles.summaryText}>
-          {selectedDate.toLocaleDateString("en-US", { month: "long" })} Food
-          Summary
-        </Text>
-      </View>
-    </SafeAreaView>
+        <Text style={styles.buttonText}>View Full Month</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: "#faf8f2",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
+  container: {
     padding: 16,
-    // Removed bottom border for a cleaner look
   },
-  headerTextWrap: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    alignItems: "center",
+  heading: {
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 4,
   },
-  title: {
+  centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  dateHeader: {
     fontSize: 18,
-    fontWeight: "600",
-  },
-  dateLabel: {
-    fontSize: 14,
-    color: "#666",
-  },
-  menuWrapper: {
-    margin: 16,
-    borderRadius: 12,
-    overflow: "hidden",
-  },
-  content: {
-    padding: 16,
-    flexDirection: "column",
+    fontWeight: '600',
+    marginBottom: 16,
   },
   mealBlock: {
-    paddingVertical: 12,
-    marginVertical: 8,
-    width: "100%",
+    backgroundColor: '#fff',
+    padding: 12,
     borderRadius: 8,
-    paddingHorizontal: 12,
-    backgroundColor: "#f9f9f9",
-  },
-  ongoing: {
-    backgroundColor: "#e8f5e9",
-  },
-  next: {
-    backgroundColor: "#fff8e1",
-  },
-  mealHeaderRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  mealHeaderLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  mealIcon: {
-    marginRight: 4,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   mealHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  mealTitle: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
-  timer: {
-    fontSize: 12,
-    color: "#d9534f",
+  timing: {
+    color: '#333',
+    marginBottom: 4,
   },
-  timeRange: {
-    fontSize: 12,
-    color: "#666",
+  countdown: {
+    color: '#d00',
     marginBottom: 4,
   },
   mealItems: {
-    fontSize: 14,
-    color: "#444",
-    lineHeight: 20,
+    color: '#555',
   },
-  highlightRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 6,
-  },
-  highlightText: {
-    flex: 1,
-    fontSize: 14,
-    color: "#333",
-  },
-  ratingDisplay: {
-    marginLeft: 4,
-    fontSize: 12,
-    color: "#ff9800",
-  },
-  favoriteButton: {
-    marginHorizontal: 6,
-  },
-  rateButton: {
-    backgroundColor: "#007bff",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  rateText: {
-    color: "#fff",
-    fontSize: 12,
-  },
-  summaryBar: {
-    marginHorizontal: 16,
-    marginBottom: 16,
-    paddingVertical: 8,
-    backgroundColor: "#e0e0e0",
+  button: {
+    marginTop: 20,
+    padding: 12,
     borderRadius: 8,
-    alignItems: "center",
+    backgroundColor: '#007bff',
+    alignItems: 'center',
   },
-  summaryText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#333",
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
   },
-  calendarRow: {
-    paddingVertical: 8,
-  },
-  importButton: {
-    position: "absolute",
-    right: 16,
-    zIndex: 1,
-  },
-  calendarContent: {
-    paddingHorizontal: 8,
-  },
-  calendarDay: {
-    width: DAY_WIDTH,
-    paddingVertical: 8,
-    alignItems: "center",
-  },
-  dateOval: {
-    width: 44,
-    height: 36,
-    borderRadius: 22,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#000",
-  },
-  calendarSelected: {
-    backgroundColor: "#fff",
-    borderWidth: 2,
-    borderColor: "#000",
-  },
-  calendarDayOfWeek: {
-    fontSize: 14,
-    color: "#555",
-  },
-  calendarDate: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  calendarDateNormal: {
-    color: "#fff",
-  },
-  calendarDateSelected: {
-    color: "#000",
-    fontSize: 20,
+  message: {
+    fontSize: 16,
+    marginBottom: 12,
   },
 });
