@@ -422,6 +422,7 @@ const styles = StyleSheet.create({
   },
   monthButton: {
     flexDirection: 'row',
+
     paddingHorizontal: 16,
     paddingVertical: 8,
     alignItems: 'center',
