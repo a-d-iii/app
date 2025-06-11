@@ -91,6 +91,10 @@ export default function FoodMenuScreen({ navigation }: any) {
   const dayWidth = DAY_WIDTH;
 
   const calendarRef = useRef<ScrollView>(null);
+  const menuAnim = useRef(new Animated.Value(0)).current;
+  const prevDateIdx = useRef(
+    calendarDates.findIndex((d) => d.toDateString() === today.toDateString()),
+  );
 
   useEffect(() => {
     AsyncStorage.getItem("mealRatings").then((raw) => {
@@ -178,6 +182,15 @@ export default function FoodMenuScreen({ navigation }: any) {
       // Scroll so the selected date sits in the center of the screen
       const x = idx * dayWidth;
       calendarRef.current?.scrollTo({ x, animated: true });
+
+      const dir = idx >= prevDateIdx.current ? 1 : -1;
+      menuAnim.setValue(dir * width);
+      Animated.timing(menuAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+      prevDateIdx.current = idx;
     }
   }, [selectedDate]);
 
@@ -300,7 +313,7 @@ export default function FoodMenuScreen({ navigation }: any) {
           );
         })}
       </ScrollView>
-      <View style={styles.menuWrapper}>
+      <Animated.View style={[styles.menuWrapper, { transform: [{ translateX: menuAnim }] }]}>
         <ScrollView contentContainerStyle={styles.content}>
           {mealsForDay.map((meal, idx) => {
             const timer = timers[meal.name] || "";
@@ -375,7 +388,7 @@ export default function FoodMenuScreen({ navigation }: any) {
             );
           })}
         </ScrollView>
-      </View>
+      </Animated.View>
       <View style={styles.summaryBar}>
         <Text style={styles.summaryText}>
           {selectedDate.toLocaleDateString("en-US", { month: "long" })} Food
