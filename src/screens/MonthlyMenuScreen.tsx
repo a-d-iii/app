@@ -19,12 +19,20 @@ import localMenu from '../../monthly-menu-may-2025.json';
 
 const MENU_URL = 'https://raw.githubusercontent.com/a-d-iii/app/main/monthly-menu-may-2025.json';
 
+const WEEK_COLORS = ['#f0e4d7', '#e7f0d7', '#d7e8f0', '#f0d7e8'];
+const DAY_COLORS = ['#e5d7cb', '#dce5cb', '#cbdce5', '#e5cbdc'];
+
 
 interface MonthlyMenu {
   [date: string]: Meal[];
 }
 
-type WeekSection = { title: string; data: { date: string; meals: Meal[] }[] };
+type WeekSection = {
+  title: string;
+  color: string;
+  dayColor: string;
+  data: { date: string; meals: Meal[] }[];
+};
 
 export default function MonthlyMenuScreen() {
 
@@ -37,8 +45,6 @@ export default function MonthlyMenuScreen() {
   const listRef = useRef<SectionList<any>>(null);
  
   const scrollTarget = useRef<{ sectionIndex: number; itemIndex: number }>();
- 
-
   useEffect(() => {
     const loadMenu = async () => {
       try {
@@ -68,7 +74,7 @@ export default function MonthlyMenuScreen() {
     const dates = Object.keys(menu).sort();
     const idx = dates.indexOf(todayKey);
     if (idx >= 0) {
- 
+
       scrollTarget.current = {
         sectionIndex: Math.floor(idx / 7),
         itemIndex: idx % 7,
@@ -97,17 +103,20 @@ export default function MonthlyMenuScreen() {
     }, 50);
   };
  
-  const toWeeks = (): WeekSection[] => {
 
+  const toWeeks = (): WeekSection[] => {
     if (!menu) return [];
 
     const dates = Object.keys(menu).sort();
     const weeks: WeekSection[] = [];
     for (let i = 0; i < dates.length; i += 7) {
       const slice = dates.slice(i, i + 7);
+      const index = weeks.length;
       weeks.push({
-        title: `Week ${weeks.length + 1}`,
-        data: slice.map(d => ({ date: d, meals: menu[d] }))
+        title: `Week ${index + 1}`,
+        color: WEEK_COLORS[index % WEEK_COLORS.length],
+        dayColor: DAY_COLORS[index % DAY_COLORS.length],
+        data: slice.map((d) => ({ date: d, meals: menu[d] })),
       });
     }
     return weeks;
@@ -127,7 +136,9 @@ export default function MonthlyMenuScreen() {
     return (
       <View
         style={[
-          styles.dayBlock,
+          styles.dayBlock, 
+          { backgroundColor: section.dayColor },
+ 
           isPast && styles.pastDay,
           index === 0 && styles.firstDay,
           index === section.data.length - 1 && styles.lastDay,
@@ -182,7 +193,16 @@ export default function MonthlyMenuScreen() {
         keyExtractor={(item) => item.date}
         renderItem={({ item, index, section }) =>
           renderDay(item, index, section as WeekSection)
-        }
+        } 
+        renderSectionHeader={({ section }) => (
+          <View style={[styles.weekHeaderContainer, { backgroundColor: section.dayColor }] }>
+            <View style={styles.weekLabel}>
+              <Text style={styles.sectionHeader}>{section.title}</Text>
+            </View>
+          </View>
+        )}
+        onScrollToIndexFailed={handleScrollToIndexFailed}
+ 
         renderSectionHeader={({ section: { title } }) => (
           <View style={styles.weekHeader}>
             <Text style={styles.sectionHeader}>{title}</Text>
@@ -190,6 +210,7 @@ export default function MonthlyMenuScreen() {
         )}
  
         onScrollToIndexFailed={handleScrollToIndexFailed}
+ 
  
         SectionSeparatorComponent={() => <View style={{ height: 12 }} />}
         stickySectionHeadersEnabled={false}
@@ -199,7 +220,15 @@ export default function MonthlyMenuScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
+  safe: { flex: 1, backgroundColor: '#f2f2f2' },
+  centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  listContent: { padding: 12 },
+  weekHeaderContainer: {
+    marginHorizontal: 4,
+    marginBottom: 4,
+    padding: 8,
+ 
   safe: { flex: 1, backgroundColor: '#f9f9f9' },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   listContent: { padding: 12 },
@@ -207,10 +236,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#e6e6e6',
     padding: 8,
     marginHorizontal: 4,
+ 
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     alignItems: 'center',
+  }, 
+  weekLabel: {
+    backgroundColor: '#000',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 20,
   },
+  sectionHeader: {
+    fontWeight: '600',
+    fontSize: 20,
+    color: '#fff',
+  },
+  dayBlock: {
+ 
   sectionHeader: {
     fontWeight: '600',
     fontSize: 18,
@@ -218,12 +261,16 @@ const styles = StyleSheet.create({
   },
   dayBlock: {
     backgroundColor: '#dcdcdc',
+ 
     padding: 12,
     marginHorizontal: 4,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#bbb',
-  },
+  }, 
+  firstDay: { borderTopLeftRadius: 12, borderTopRightRadius: 12, marginTop: 4 },
+ 
   firstDay: { borderTopLeftRadius: 12, borderTopRightRadius: 12 },
+ 
   lastDay: {
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
