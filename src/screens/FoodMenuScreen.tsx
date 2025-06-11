@@ -91,8 +91,11 @@ export default function FoodMenuScreen({ navigation }: any) {
   const dayWidth = DAY_WIDTH;
 
   const calendarRef = useRef<ScrollView>(null);
-  // slideAnim drives the horizontal movement for swipe gestures
-  const slideAnim = useRef(new Animated.Value(0)).current;
+  const menuAnim = useRef(new Animated.Value(0)).current;
+  const prevDateIdx = useRef(
+    calendarDates.findIndex((d) => d.toDateString() === today.toDateString()),
+  );
+
 
   useEffect(() => {
     AsyncStorage.getItem("mealRatings").then((raw) => {
@@ -179,7 +182,17 @@ export default function FoodMenuScreen({ navigation }: any) {
     if (idx >= 0) {
       // Scroll so the selected date sits in the center of the screen
       const x = idx * dayWidth;
-      calendarRef.current?.scrollTo({ x, animated: false });
+      calendarRef.current?.scrollTo({ x, animated: true });
+
+      const dir = idx >= prevDateIdx.current ? 1 : -1;
+      menuAnim.setValue(dir * width);
+      Animated.timing(menuAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+      prevDateIdx.current = idx;
+
     }
   }, [selectedDate]);
 
