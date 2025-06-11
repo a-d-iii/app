@@ -167,13 +167,13 @@ export default function FoodMenuScreen() {
   const mealIcon = (name: string) => {
     switch (name.toLowerCase()) {
       case 'breakfast':
-        return 'cafe';
+        return 'sunny';
       case 'lunch':
-        return 'fast-food';
+        return 'fish';
       case 'snacks':
-        return 'pizza';
+        return 'ice-cream';
       case 'dinner':
-        return 'restaurant';
+        return 'moon';
       default:
         return 'fast-food';
     }
@@ -195,6 +195,7 @@ export default function FoodMenuScreen() {
                 transform: [
                   {
                     scale: topIconAnim.interpolate({
+ 
                       inputRange: [0, 1],
                       outputRange: [1, 1.15],
                     }),
@@ -205,11 +206,26 @@ export default function FoodMenuScreen() {
                       outputRange: ['0deg', '-10deg'],
                     }),
                   },
+                  {
+                    translateY: topIconAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, -4],
+=======                       inputRange: [0, 1],
+                      outputRange: [1, 1.15],
+                    }),
+                  },
+                  {
+                    rotate: topIconAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['0deg', '-10deg'],
+ 
+                    }),
+                  },
                 ],
               },
             ]}
           >
-            <Ionicons name="fast-food" size={24} color="#ff8c00" />
+          <Ionicons name="restaurant" size={24} color="#ff6347" />
           </Animated.View>
         </View>
         <View style={styles.dateChip}>
@@ -236,7 +252,14 @@ export default function FoodMenuScreen() {
                             inputRange: [0, 1],
                             outputRange: [1, 1.2],
                           }),
+                        }, 
+                        {
+                          rotate: iconAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: ['0deg', '8deg'],
+                          }),
                         },
+ 
                         {
                           rotate: iconAnim.interpolate({
                             inputRange: [0, 1],
@@ -346,9 +369,10 @@ const styles = StyleSheet.create({
   },
   mealBlock: {
     backgroundColor: '#fff',
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 20,
     borderRadius: 8,
-    marginBottom: 12,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -387,7 +411,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+ 
+    backgroundColor: '#faf0e6',
+ 
     backgroundColor: '#fff',
+ 
     borderTopColor: '#ddd',
     borderTopWidth: StyleSheet.hairlineWidth,
     paddingVertical: 8,
@@ -396,7 +424,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   monthButton: {
-    flexDirection: 'row',
+    flexDirection: 'row', 
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  monthButtonText: {
+    color: '#ff8c00',
+ 
     backgroundColor: '#007bff',
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -405,6 +440,7 @@ const styles = StyleSheet.create({
   },
   monthButtonText: {
     color: '#fff',
+ 
     fontWeight: '600',
     marginLeft: 6,
   },
