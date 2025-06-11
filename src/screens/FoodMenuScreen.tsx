@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Pressable,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -118,12 +117,23 @@ export default function FoodMenuScreen() {
       .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const mealIcon = (name: string) => {
+    switch (name.toLowerCase()) {
+      case 'breakfast':
+        return 'cafe';
+      case 'lunch':
+        return 'fast-food';
+      case 'snacks':
+        return 'pizza';
+      case 'dinner':
+        return 'restaurant';
+      default:
+        return 'fast-food';
+    }
+  };
+
   const showSummary = () => {
-    if (!meals) return;
-    const summary = meals
-      .map(meal => `${meal.name}: ${meal.items.join(', ')}`)
-      .join('\n');
-    Alert.alert("Today's Summary", summary);
+    navigation.navigate('FoodSummaryScreen' as never);
   };
 
   return (
@@ -133,38 +143,62 @@ export default function FoodMenuScreen() {
         <View style={styles.dateChip}>
           <Text style={styles.dateChipText}>{dayLabel}</Text>
         </View>
-        {meals.map((m, idx) => (
-        <View
-          key={m.name}
-          style={[
-            styles.mealBlock,
-            { backgroundColor: mealColors[idx % mealColors.length] },
-          ]}
-        >
-          <View style={styles.mealHeader}>
-            <Text style={styles.mealTitle}>{m.name}</Text>
-            <Pressable onPress={() => toggleLike(m.name)}>
-              <Ionicons
-                name={likes[m.name] ? 'heart' : 'heart-outline'}
-                size={20}
-                color={likes[m.name] ? 'red' : 'black'}
-              />
-            </Pressable>
-          </View>
-          <Text style={styles.timing}>{`${formatTime(m.startHour, m.startMinute)} - ${formatTime(m.endHour, m.endMinute)}`}</Text>
-          <Text style={styles.countdown}>Ends in: {countdown(m)}</Text>
-          <Text style={styles.mealItems}>{m.items.join(', ')}</Text>
-          <Pressable
-            style={styles.rateButton}
-            onPress={() => setRatingMeal(m.name)}
-          >
-            <Ionicons name="star" size={16} color="#fff" />
-            <Text style={styles.rateButtonText}>
-              {ratings[m.name] ? `${ratings[m.name]}★` : 'Rate'}
-            </Text>
-          </Pressable>
-        </View>
-        ))}
+        {meals.map((m, idx) => {
+          const isEnded = countdown(m) === 'Ended';
+          return (
+            <View
+              key={m.name}
+              style={[
+                styles.mealBlock,
+                { backgroundColor: mealColors[idx % mealColors.length] },
+                isEnded && styles.mealBlockEnded,
+              ]}
+            >
+              <View style={styles.mealHeader}>
+                <View style={styles.mealTitleRow}>
+                  <Ionicons
+                    name={mealIcon(m.name)}
+                    size={16}
+                    color="#fff"
+                    style={styles.mealIcon}
+                  />
+                  <Text style={styles.mealTitle}>{m.name}</Text>
+                </View>
+                <View style={styles.mealHeaderRight}>
+                  {isEnded ? (
+                    <View style={styles.statusRow}>
+                      <Ionicons name="checkmark-circle" size={16} color="green" />
+                      <Text style={styles.statusText}>Done</Text>
+                    </View>
+                  ) : (
+                    <View style={styles.statusRow}>
+                      <Ionicons name="time-outline" size={16} color="#d00" />
+                      <Text style={styles.statusText}>{countdown(m)}</Text>
+                    </View>
+                  )}
+                  <Pressable onPress={() => toggleLike(m.name)} style={styles.likeBtn}>
+                    <Ionicons
+                      name={likes[m.name] ? 'heart' : 'heart-outline'}
+                      size={20}
+                      color={likes[m.name] ? 'red' : 'black'}
+                    />
+                  </Pressable>
+                </View>
+              </View>
+              <Text style={styles.timing}>{`${formatTime(m.startHour, m.startMinute)} - ${formatTime(m.endHour, m.endMinute)}`}</Text>
+              <Text style={styles.mealItems}>{m.items.join(', ')}</Text>
+              <Pressable
+                style={styles.rateButton}
+                onPress={() => setRatingMeal(m.name)}
+              >
+                <Ionicons name="star" size={16} color="#fff" />
+                <Text style={styles.rateButtonText}>
+                  {ratings[m.name] ? `${ratings[m.name]}★` : 'Rate'}
+                </Text>
+              </Pressable>
+            </View>
+          );
+        })}
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
@@ -201,6 +235,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     marginBottom: 4,
+    textAlign: 'center',
   },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   dateChip: {
@@ -225,21 +260,48 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  mealBlockEnded: {
+    opacity: 0.6,
+  },
   mealHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  mealTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  mealIcon: {
+    marginRight: 6,
+  },
   mealTitle: {
     fontSize: 16,
     fontWeight: '600',
+    color: '#fff',
+    backgroundColor: '#333',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 12,
+  },
+  mealHeaderRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  statusText: {
+    marginLeft: 4,
+    color: '#333',
+    fontSize: 12,
+  },
+  likeBtn: {
+    marginLeft: 8,
   },
   timing: {
     color: '#333',
-    marginBottom: 4,
-  },
-  countdown: {
-    color: '#d00',
     marginBottom: 4,
   },
   mealItems: {
@@ -264,11 +326,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 12,
     borderRadius: 8,
-    backgroundColor: '#007bff',
+    backgroundColor: '#ccc',
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
+    color: '#000',
     fontWeight: '600',
   },
   message: {
