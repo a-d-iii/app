@@ -7,11 +7,14 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Pressable,
+  Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Meal } from '../data/meals';
 import { useNavigation } from '@react-navigation/native';
+import RatingModal from '../components/RatingModal';
 // Load the bundled menu as an offline fallback so the screen always has data
 // even when network requests fail.
 import localMenu from '../../monthly-menu-may-2025.json';
@@ -28,6 +31,8 @@ export default function FoodMenuScreen() {
   const [menu, setMenu] = useState<MonthlyMenu>(localMenu as MonthlyMenu);
   const [loading, setLoading] = useState(true);
   const [likes, setLikes] = useState<Record<string, boolean>>({});
+  const [ratings, setRatings] = useState<Record<string, number>>({});
+  const [ratingMeal, setRatingMeal] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const navigation = useNavigation();
 
@@ -67,6 +72,7 @@ export default function FoodMenuScreen() {
     day: 'numeric',
   });
   const meals = menu?.[todayKey];
+  const mealColors = ['#ffeef0', '#eef7ff', '#e8fff0', '#fff5e0'];
 
   if (loading) {
     return (
@@ -112,12 +118,29 @@ export default function FoodMenuScreen() {
       .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const showSummary = () => {
+    if (!meals) return;
+    const summary = meals
+      .map(meal => `${meal.name}: ${meal.items.join(', ')}`)
+      .join('\n');
+    Alert.alert("Today's Summary", summary);
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>Today's Menu</Text>
-      <Text style={styles.dateHeader}>{dayLabel}</Text>
-      {meals.map(m => (
-        <View key={m.name} style={styles.mealBlock}>
+    <SafeAreaView style={styles.safe}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.heading}>Today's Menu</Text>
+        <View style={styles.dateChip}>
+          <Text style={styles.dateChipText}>{dayLabel}</Text>
+        </View>
+        {meals.map((m, idx) => (
+        <View
+          key={m.name}
+          style={[
+            styles.mealBlock,
+            { backgroundColor: mealColors[idx % mealColors.length] },
+          ]}
+        >
           <View style={styles.mealHeader}>
             <Text style={styles.mealTitle}>{m.name}</Text>
             <Pressable onPress={() => toggleLike(m.name)}>
@@ -131,21 +154,48 @@ export default function FoodMenuScreen() {
           <Text style={styles.timing}>{`${formatTime(m.startHour, m.startMinute)} - ${formatTime(m.endHour, m.endMinute)}`}</Text>
           <Text style={styles.countdown}>Ends in: {countdown(m)}</Text>
           <Text style={styles.mealItems}>{m.items.join(', ')}</Text>
+          <Pressable
+            style={styles.rateButton}
+            onPress={() => setRatingMeal(m.name)}
+          >
+            <Ionicons name="star" size={16} color="#fff" />
+            <Text style={styles.rateButtonText}>
+              {ratings[m.name] ? `${ratings[m.name]}★` : 'Rate'}
+            </Text>
+          </Pressable>
         </View>
-      ))}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
-      >
-        <Text style={styles.buttonText}>View Full Month</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        ))}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
+        >
+          <Text style={styles.buttonText}>View Full Month</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={showSummary}>
+          <Text style={styles.buttonText}>Food Summary</Text>
+        </TouchableOpacity>
+      </ScrollView>
+      <RatingModal
+        visible={!!ratingMeal}
+        onClose={() => setRatingMeal(null)}
+        onSubmit={(r) =>
+          ratingMeal && setRatings((prev) => ({ ...prev, [ratingMeal]: r }))
+        }
+        initialRating={ratingMeal ? ratings[ratingMeal] || 0 : 0}
+        prompt="Rate this Meal"
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   container: {
     padding: 16,
+    paddingBottom: 32,
   },
   heading: {
     fontSize: 22,
@@ -153,10 +203,17 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  dateHeader: {
-    fontSize: 18,
-    fontWeight: '600',
+  dateChip: {
+    alignSelf: 'center',
+    backgroundColor: '#000',
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 20,
     marginBottom: 16,
+  },
+  dateChipText: {
+    color: '#fff',
+    fontWeight: '600',
   },
   mealBlock: {
     backgroundColor: '#fff',
@@ -187,6 +244,21 @@ const styles = StyleSheet.create({
   },
   mealItems: {
     color: '#555',
+  },
+  rateButton: {
+    flexDirection: 'row',
+    backgroundColor: '#007bff',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    marginTop: 8,
+  },
+  rateButtonText: {
+    color: '#fff',
+    marginLeft: 4,
+    fontWeight: '600',
   },
   button: {
     marginTop: 20,
