@@ -96,6 +96,7 @@ export default function FoodMenuScreen({ navigation }: any) {
     calendarDates.findIndex((d) => d.toDateString() === today.toDateString()),
   );
 
+
   useEffect(() => {
     AsyncStorage.getItem("mealRatings").then((raw) => {
       if (raw) setRatings(JSON.parse(raw));
@@ -191,6 +192,7 @@ export default function FoodMenuScreen({ navigation }: any) {
         useNativeDriver: true,
       }).start();
       prevDateIdx.current = idx;
+
     }
   }, [selectedDate]);
 
@@ -213,18 +215,41 @@ export default function FoodMenuScreen({ navigation }: any) {
     fetchRemoteMenu();
   }, []);
 
-  const changeDate = (delta: number) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setSelectedDate((prev) => {
-      const n = new Date(prev);
-      n.setDate(prev.getDate() + delta);
-      return n;
+  const animateDateChange = (delta: number, newDate?: Date) => {
+    Animated.timing(slideAnim, {
+      toValue: delta < 0 ? width : -width,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      if (newDate) {
+        setSelectedDate(newDate);
+      } else {
+        setSelectedDate((prev) => {
+          const n = new Date(prev);
+          n.setDate(prev.getDate() + delta);
+          return n;
+        });
+      }
+      slideAnim.setValue(delta < 0 ? -width : width);
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
     });
   };
 
   const setDate = (d: Date) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setSelectedDate(d);
+    const currentIdx = calendarDates.findIndex(
+      (dt) => dt.toDateString() === selectedDate.toDateString(),
+    );
+    const newIdx = calendarDates.findIndex(
+      (dt) => dt.toDateString() === d.toDateString(),
+    );
+    const delta = newIdx - currentIdx;
+    if (delta === 0) return;
+    animateDateChange(delta, d);
   };
 
   const importMenu = async () => {
@@ -244,19 +269,25 @@ export default function FoodMenuScreen({ navigation }: any) {
 
   const swipeResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => false,
+      onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: (
         _e: GestureResponderEvent,
         g: PanResponderGestureState,
-      ) => Math.abs(g.dx) > 20 && Math.abs(g.dx) > Math.abs(g.dy),
+      ) => Math.abs(g.dx) > Math.abs(g.dy),
+      onPanResponderMove: (_e, g) => {
+        slideAnim.setValue(g.dx);
+      },
       onPanResponderRelease: (_e, g) => {
-        const { dx, vx } = g;
-        if (dx <= -50 && vx <= 0) {
-          // Swiping left - move forward one day
-          changeDate(1);
-        } else if (dx >= 50 && vx >= 0) {
-          // Swiping right - move back one day
-          changeDate(-1);
+        const { dx } = g;
+        if (dx <= -50) {
+          animateDateChange(1);
+        } else if (dx >= 50) {
+          animateDateChange(-1);
+        } else {
+          Animated.spring(slideAnim, {
+            toValue: 0,
+            useNativeDriver: true,
+          }).start();
         }
       },
       onPanResponderTerminationRequest: () => false,
@@ -274,11 +305,11 @@ export default function FoodMenuScreen({ navigation }: any) {
           <Text style={styles.dateLabel}>{dateLabel}</Text>
         </View>
       </View>
-      <ScrollView
+      <Animated.ScrollView
         ref={calendarRef}
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={styles.calendarRow}
+        style={[styles.calendarRow, { transform: [{ translateX: slideAnim }] }]}
         contentContainerStyle={[
           styles.calendarContent,
           { paddingHorizontal: SIDE_PADDING },
@@ -312,8 +343,8 @@ export default function FoodMenuScreen({ navigation }: any) {
             </TouchableOpacity>
           );
         })}
-      </ScrollView>
-      <Animated.View style={[styles.menuWrapper, { transform: [{ translateX: menuAnim }] }]}>
+      </Animated.ScrollView>
+      <Animated.View style={[styles.menuWrapper, { transform: [{ translateX: slideAnim }] }]}>
         <ScrollView contentContainerStyle={styles.content}>
           {mealsForDay.map((meal, idx) => {
             const timer = timers[meal.name] || "";
