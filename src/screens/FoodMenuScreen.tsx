@@ -195,6 +195,7 @@ export default function FoodMenuScreen() {
                 transform: [
                   {
                     scale: topIconAnim.interpolate({
+ 
                       inputRange: [0, 1],
                       outputRange: [1, 1.15],
                     }),
@@ -209,6 +210,15 @@ export default function FoodMenuScreen() {
                     translateY: topIconAnim.interpolate({
                       inputRange: [0, 1],
                       outputRange: [0, -4],
+=======                       inputRange: [0, 1],
+                      outputRange: [1, 1.15],
+                    }),
+                  },
+                  {
+                    rotate: topIconAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['0deg', '-10deg'],
+ 
                     }),
                   },
                 ],
@@ -242,17 +252,18 @@ export default function FoodMenuScreen() {
                             inputRange: [0, 1],
                             outputRange: [1, 1.2],
                           }),
-                        },
+                        }, 
                         {
                           rotate: iconAnim.interpolate({
                             inputRange: [0, 1],
                             outputRange: ['0deg', '8deg'],
                           }),
                         },
+ 
                         {
-                          translateY: iconAnim.interpolate({
+                          rotate: iconAnim.interpolate({
                             inputRange: [0, 1],
-                            outputRange: [0, -3],
+                            outputRange: ['0deg', '8deg'],
                           }),
                         },
                       ],
@@ -400,7 +411,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+ 
     backgroundColor: '#faf0e6',
+ 
+    backgroundColor: '#fff',
+ 
     borderTopColor: '#ddd',
     borderTopWidth: StyleSheet.hairlineWidth,
     paddingVertical: 8,
@@ -409,13 +424,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   monthButton: {
-    flexDirection: 'row',
+    flexDirection: 'row', 
     paddingHorizontal: 16,
     paddingVertical: 8,
     alignItems: 'center',
   },
   monthButtonText: {
     color: '#ff8c00',
+ 
+    backgroundColor: '#007bff',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  monthButtonText: {
+    color: '#fff',
+ 
     fontWeight: '600',
     marginLeft: 6,
   },
