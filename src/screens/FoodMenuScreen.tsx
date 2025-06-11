@@ -167,13 +167,13 @@ export default function FoodMenuScreen() {
   const mealIcon = (name: string) => {
     switch (name.toLowerCase()) {
       case 'breakfast':
-        return 'cafe';
+        return 'sunny';
       case 'lunch':
-        return 'fast-food';
+        return 'fish';
       case 'snacks':
-        return 'pizza';
+        return 'ice-cream';
       case 'dinner':
-        return 'restaurant';
+        return 'moon';
       default:
         return 'fast-food';
     }
@@ -194,16 +194,28 @@ export default function FoodMenuScreen() {
               {
                 transform: [
                   {
+                    scale: topIconAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [1, 1.15],
+                    }),
+                  },
+                  {
+                    rotate: topIconAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['0deg', '-10deg'],
+                    }),
+                  },
+                  {
                     translateY: topIconAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [0, -5],
+                      outputRange: [0, -4],
                     }),
                   },
                 ],
               },
             ]}
           >
-            <Ionicons name="fast-food" size={24} color="#ff8c00" />
+          <Ionicons name="restaurant" size={24} color="#ff6347" />
           </Animated.View>
         </View>
         <View style={styles.dateChip}>
@@ -224,7 +236,19 @@ export default function FoodMenuScreen() {
                 <View style={styles.mealTitleRow}>
                   <Animated.View
                     style={{
-                      transform: [
+                  transform: [
+                        {
+                          scale: iconAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [1, 1.2],
+                          }),
+                        },
+                        {
+                          rotate: iconAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: ['0deg', '8deg'],
+                          }),
+                        },
                         {
                           translateY: iconAnim.interpolate({
                             inputRange: [0, 1],
@@ -242,12 +266,12 @@ export default function FoodMenuScreen() {
                     />
                   </Animated.View>
                   <Text style={styles.mealTitle}>{m.name}</Text>
-                </View>
-                <View style={styles.mealHeaderRight}>
                   <Text style={styles.timing}>{`${formatTime(
                     m.startHour,
                     m.startMinute
                   )} - ${formatTime(m.endHour, m.endMinute)}`}</Text>
+                </View>
+                <View style={styles.mealHeaderRight}>
                   <View style={styles.statusRow}>
                     <Ionicons
                       name={status.icon as any}
@@ -291,6 +315,15 @@ export default function FoodMenuScreen() {
         initialRating={ratingMeal ? ratings[ratingMeal] || 0 : 0}
         prompt="Rate this Meal"
       />
+      <View style={styles.monthBar}>
+        <TouchableOpacity
+          style={styles.monthButton}
+          onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
+        >
+          <Ionicons name="calendar" size={16} color="#fff" />
+          <Text style={styles.monthButtonText}>View Full Month</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -302,7 +335,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 16,
-    paddingBottom: 32,
+    paddingBottom: 80,
   },
   heading: {
     fontSize: 22,
@@ -325,9 +358,10 @@ const styles = StyleSheet.create({
   },
   mealBlock: {
     backgroundColor: '#fff',
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 20,
     borderRadius: 8,
-    marginBottom: 12,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -360,6 +394,30 @@ const styles = StyleSheet.create({
   mealHeaderRight: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  monthBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#faf0e6',
+    borderTopColor: '#ddd',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    paddingVertical: 8,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  monthButton: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  monthButtonText: {
+    color: '#ff8c00',
+    fontWeight: '600',
+    marginLeft: 6,
   },
   statusRow: {
     flexDirection: 'row',
@@ -417,6 +475,6 @@ const styles = StyleSheet.create({
   },
   timing: {
     color: '#333',
-    marginRight: 8,
+    marginLeft: 8,
   },
 });
