@@ -22,7 +22,6 @@ export default function MonthlyMenuScreen() {
   // Use the bundled data initially so the monthly view works offline
   const [menu, setMenu] = useState<MonthlyMenu>(localMenu as MonthlyMenu);
 
-  const [menu, setMenu] = useState<MonthlyMenu | null>(null);
 
   const [loading, setLoading] = useState(true);
 
