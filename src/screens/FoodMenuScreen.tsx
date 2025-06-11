@@ -17,12 +17,15 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
 import RatingModal from "../components/RatingModal";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { MEALS } from "../data/meals";
 
 const { width } = Dimensions.get("window");
+const DAY_WIDTH = 72;
 
 const MEAL_ICONS: { [name: string]: string } = {
   Breakfast: "cafe-outline",
@@ -44,6 +47,7 @@ function formatTime(h: number, m: number) {
 
 type Ratings = { [key: string]: number };
 type Favorites = { [key: string]: boolean };
+type MonthlyMenu = { [date: string]: typeof MEALS };
 
 export default function FoodMenuScreen({ navigation }: any) {
   const today = new Date();
@@ -69,6 +73,8 @@ export default function FoodMenuScreen({ navigation }: any) {
   }>({});
   const [modalItem, setModalItem] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Favorites>({});
+  const [monthlyMenu, setMonthlyMenu] = useState<MonthlyMenu>({});
+  const calendarRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     AsyncStorage.getItem("mealRatings").then((raw) => {
@@ -76,6 +82,9 @@ export default function FoodMenuScreen({ navigation }: any) {
     });
     AsyncStorage.getItem("mealFavorites").then((raw) => {
       if (raw) setFavorites(JSON.parse(raw));
+    });
+    AsyncStorage.getItem("monthlyMenu").then((raw) => {
+      if (raw) setMonthlyMenu(JSON.parse(raw));
     });
   }, []);
 
@@ -142,6 +151,33 @@ export default function FoodMenuScreen({ navigation }: any) {
     await AsyncStorage.setItem("mealFavorites", JSON.stringify(updated));
   };
 
+  const dateKey = selectedDate.toISOString().slice(0, 10);
+  const mealsForDay = monthlyMenu[dateKey] || MEALS;
+
+  useEffect(() => {
+    const idx = calendarDates.findIndex(
+      (d) => d.toDateString() === selectedDate.toDateString(),
+    );
+    if (idx >= 0) {
+      const x = idx * DAY_WIDTH - width / 2 + DAY_WIDTH / 2;
+      calendarRef.current?.scrollTo({ x, animated: true });
+    }
+  }, [selectedDate]);
+
+  const importMenu = async () => {
+    try {
+      const res = await DocumentPicker.getDocumentAsync({ type: "application/json" });
+      if (res.canceled) return;
+      const uri = res.assets[0].uri;
+      const content = await FileSystem.readAsStringAsync(uri, { encoding: "utf8" });
+      const parsed = JSON.parse(content);
+      setMonthlyMenu(parsed);
+      await AsyncStorage.setItem("monthlyMenu", content);
+    } catch (e) {
+      console.error("Failed to import menu", e);
+    }
+  };
+
   const swipeResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => false,
@@ -174,12 +210,16 @@ export default function FoodMenuScreen({ navigation }: any) {
   return (
     <SafeAreaView style={styles.root} {...swipeResponder.panHandlers}>
       <View style={styles.header}>
+        <TouchableOpacity onPress={importMenu} style={styles.importButton}>
+          <Ionicons name="cloud-upload-outline" size={20} color="#333" />
+        </TouchableOpacity>
         <View style={styles.headerTextWrap} pointerEvents="none">
           <Text style={styles.title}>Full Day’s Menu</Text>
           <Text style={styles.dateLabel}>{dateLabel}</Text>
         </View>
       </View>
       <ScrollView
+        ref={calendarRef}
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.calendarRow}
@@ -214,7 +254,7 @@ export default function FoodMenuScreen({ navigation }: any) {
       </ScrollView>
       <View style={styles.menuWrapper}>
         <ScrollView contentContainerStyle={styles.content}>
-          {MEALS.map((meal, idx) => {
+          {mealsForDay.map((meal, idx) => {
             const timer = timers[meal.name] || "";
             const status = statuses[meal.name];
             return (
@@ -326,7 +366,6 @@ const styles = StyleSheet.create({
   },
   menuWrapper: {
     margin: 16,
-    backgroundColor: "#fff",
     borderRadius: 12,
     overflow: "hidden",
   },
@@ -421,6 +460,11 @@ const styles = StyleSheet.create({
   },
   calendarRow: {
     paddingVertical: 8,
+  },
+  importButton: {
+    position: "absolute",
+    right: 16,
+    zIndex: 1,
   },
   calendarContent: {
     paddingHorizontal: 8,
