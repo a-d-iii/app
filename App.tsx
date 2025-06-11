@@ -16,23 +16,10 @@ import Home from './src/screens/Home';
 import FoodMenuScreen from './src/screens/FoodMenuScreen';
 import MonthlyMenuScreen from './src/screens/MonthlyMenuScreen';
 import FoodSummaryScreen from './src/screens/FoodSummaryScreen';
+import PlannerScreen from './src/screens/Planner';
 
-// Placeholders or existing components for other tabs:
-function PlannerScreen() {
-  return (
-    <View style={styles.placeholder}>
-      <Text style={styles.placeholderText}>Planner Screen</Text>
-    </View>
-  );
-}
-
-function SocialScreen() {
-  return (
-    <View style={styles.placeholder}>
-      <Text style={styles.placeholderText}>Social Screen</Text>
-    </View>
-  );
-}
+// Placeholder or existing component for the Social tab
+import SocialScreen from './src/screens/Social';
 
 // ——— New files you need to create under src/screens: ———
 // src/screens/MoreRootScreen.tsx  (listing utilities, including “Gallery”)
