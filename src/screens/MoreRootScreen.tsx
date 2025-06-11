@@ -60,6 +60,9 @@ export default function MoreRootScreen() {
         renderItem={renderItem}
         keyExtractor={(item) => item.key}
         numColumns={NUM_COLUMNS}
+        // Ensure a fresh render if NUM_COLUMNS changes
+        key={`grid-${NUM_COLUMNS}`}
+
         contentContainerStyle={styles.grid}
       />
     </SafeAreaView>
