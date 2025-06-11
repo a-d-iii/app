@@ -10,6 +10,7 @@ import Planner from '../screens/Planner';
 import Social from '../screens/Social';
 import More from '../screens/More';
 import FoodMenuScreen from '../screens/FoodMenuScreen';
+import MonthlyMenuScreen from '../screens/MonthlyMenuScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,6 +39,11 @@ export default function AppNavigator() {
           name="FoodMenuScreen"
           component={FoodMenuScreen}
           options={{ title: 'Full Menu' }}
+        />
+        <Stack.Screen
+          name="MonthlyMenuScreen"
+          component={MonthlyMenuScreen}
+          options={{ title: 'Monthly Menu' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
