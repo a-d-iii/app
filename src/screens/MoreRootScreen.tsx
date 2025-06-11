@@ -9,6 +9,7 @@ import {
   FlatList,
   Platform,
   StatusBar,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -26,12 +27,15 @@ const utilities = [
   { key: 'cetc', label: 'CETC', icon: 'school-outline' },
 ];
 
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const NUM_COLUMNS = 3; // display three utilities per row
+
 export default function MoreRootScreen() {
   const navigation = useNavigation();
 
   const renderItem = ({ item }: { item: typeof utilities[0] }) => (
     <TouchableOpacity
-      style={styles.row}
+      style={styles.tile}
       onPress={() => {
         if (item.key === 'gallery') {
           navigation.navigate('Gallery' as never);
@@ -39,8 +43,8 @@ export default function MoreRootScreen() {
         // else if other keys → navigate elsewhere
       }}
     >
-      <Ionicons name={item.icon} size={24} color="#333" />
-      <Text style={styles.label}>{item.label}</Text>
+      <Ionicons name={item.icon} size={32} color="#333" />
+      <Text style={styles.tileLabel}>{item.label}</Text>
     </TouchableOpacity>
   );
 
@@ -55,7 +59,8 @@ export default function MoreRootScreen() {
         data={utilities}
         renderItem={renderItem}
         keyExtractor={(item) => item.key}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        numColumns={NUM_COLUMNS}
+        contentContainerStyle={styles.grid}
       />
     </SafeAreaView>
   );
@@ -63,19 +68,19 @@ export default function MoreRootScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  row: {
-    flexDirection: 'row',
-    padding: 16,
+  grid: {
+    paddingVertical: 16,
+  },
+  tile: {
+    width: SCREEN_WIDTH / NUM_COLUMNS,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 24,
   },
-  label: {
-    fontSize: 18,
-    marginLeft: 12,
+  tileLabel: {
+    marginTop: 8,
+    fontSize: 16,
     color: '#333',
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#eee',
-    marginLeft: 16,
+    textAlign: 'center',
   },
 });
