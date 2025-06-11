@@ -153,7 +153,8 @@ export default function FoodMenuScreen({ navigation }: any) {
         if (Math.abs(g.dx) > 50) {
           setSelectedDate((prev) => {
             const n = new Date(prev);
-            n.setDate(prev.getDate() + (g.dx > 0 ? 1 : -1));
+            // Swiping left should move forward a day and right should go back
+            n.setDate(prev.getDate() + (g.dx < 0 ? 1 : -1));
             return n;
           });
         }
@@ -190,7 +191,14 @@ export default function FoodMenuScreen({ navigation }: any) {
               <View
                 style={[styles.dateOval, isSelected && styles.calendarSelected]}
               >
-                <Text style={styles.calendarDate}>{d.getDate()}</Text>
+                <Text
+                  style={[
+                    styles.calendarDate,
+                    isSelected ? styles.calendarDateSelected : styles.calendarDateNormal,
+                  ]}
+                >
+                  {d.getDate()}
+                </Text>
               </View>
             </TouchableOpacity>
           );
@@ -292,8 +300,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
-    borderBottomColor: "#ddd",
-    borderBottomWidth: 1,
+    // Removed bottom border for a cleaner look
   },
   headerTextWrap: {
     position: "absolute",
@@ -416,20 +423,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dateOval: {
-    paddingHorizontal: 10,
-    paddingVertical: 2,
-    borderRadius: 12,
-    backgroundColor: "#f0f0f0",
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: "#000",
   },
   calendarSelected: {
-    backgroundColor: "#d0d0d0",
+    backgroundColor: "#eee",
   },
   calendarDayOfWeek: {
-    fontSize: 12,
+    fontSize: 14,
     color: "#555",
   },
   calendarDate: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
+  },
+  calendarDateNormal: {
+    color: "#fff",
+  },
+  calendarDateSelected: {
+    color: "#000",
   },
 });
