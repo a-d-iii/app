@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LayoutAnimation, UIManager } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import RatingModal from "../components/RatingModal";
@@ -26,6 +27,16 @@ import { MEALS } from "../data/meals";
 
 const { width } = Dimensions.get("window");
 const DAY_WIDTH = 72;
+
+const CONTENT_PADDING = 8; // matches styles.calendarContent
+
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
 
 const MEAL_ICONS: { [name: string]: string } = {
   Breakfast: "cafe-outline",
@@ -74,6 +85,8 @@ export default function FoodMenuScreen({ navigation }: any) {
   const [modalItem, setModalItem] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Favorites>({});
   const [monthlyMenu, setMonthlyMenu] = useState<MonthlyMenu>({});
+  const [dayWidth, setDayWidth] = useState(DAY_WIDTH);
+
   const calendarRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -159,6 +172,42 @@ export default function FoodMenuScreen({ navigation }: any) {
       (d) => d.toDateString() === selectedDate.toDateString(),
     );
     if (idx >= 0) {
+      const x = idx * dayWidth + CONTENT_PADDING - width / 2 + dayWidth / 2;
+      calendarRef.current?.scrollTo({ x, animated: true });
+    }
+  }, [selectedDate, dayWidth]);
+
+  // Fetch monthly menu from remote URL on first load
+  const MENU_URL = "https://example.com/monthly-menu.json";
+
+  useEffect(() => {
+    const fetchRemoteMenu = async () => {
+      try {
+        const resp = await fetch(MENU_URL);
+        if (resp.ok) {
+          const data = await resp.json();
+          setMonthlyMenu(data);
+          await AsyncStorage.setItem("monthlyMenu", JSON.stringify(data));
+        }
+      } catch (e) {
+        console.error("Failed to fetch remote menu", e);
+      }
+    };
+    fetchRemoteMenu();
+  }, []);
+
+  const changeDate = (delta: number) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setSelectedDate((prev) => {
+      const n = new Date(prev);
+      n.setDate(prev.getDate() + delta);
+      return n;
+    });
+  };
+
+  const setDate = (d: Date) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setSelectedDate(d);
       const x = idx * DAY_WIDTH - width / 2 + DAY_WIDTH / 2;
       calendarRef.current?.scrollTo({ x, animated: true });
     }
@@ -189,18 +238,10 @@ export default function FoodMenuScreen({ navigation }: any) {
         const { dx, vx } = g;
         if (dx <= -50 && vx <= 0) {
           // Swiping left - move forward one day
-          setSelectedDate((prev) => {
-            const n = new Date(prev);
-            n.setDate(prev.getDate() + 1);
-            return n;
-          });
+          changeDate(1);
         } else if (dx >= 50 && vx >= 0) {
           // Swiping right - move back one day
-          setSelectedDate((prev) => {
-            const n = new Date(prev);
-            n.setDate(prev.getDate() - 1);
-            return n;
-          });
+          changeDate(-1);
         }
       },
       onPanResponderTerminationRequest: () => false,
@@ -231,7 +272,12 @@ export default function FoodMenuScreen({ navigation }: any) {
             <TouchableOpacity
               key={d.toDateString()}
               style={styles.calendarDay}
-              onPress={() => setSelectedDate(d)}
+              onPress={() => setDate(d)}
+              onLayout={
+                dayWidth === DAY_WIDTH
+                  ? (e) => setDayWidth(e.nativeEvent.layout.width)
+                  : undefined
+              }
             >
               <Text style={styles.calendarDayOfWeek}>
                 {d.toLocaleDateString("en-US", { weekday: "short" })}
@@ -481,7 +527,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
   },
   calendarSelected: {
-    backgroundColor: "#eee",
+    backgroundColor: "#fff",
+    borderWidth: 2,
+    borderColor: "#000",
+    transform: [{ scale: 1.2 }],
   },
   calendarDayOfWeek: {
     fontSize: 14,
@@ -496,5 +545,6 @@ const styles = StyleSheet.create({
   },
   calendarDateSelected: {
     color: "#000",
+    fontSize: 20,
   },
 });
