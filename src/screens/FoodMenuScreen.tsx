@@ -18,6 +18,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LayoutAnimation, UIManager } from "react-native";
+
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
+
 import RatingModal from "../components/RatingModal";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -25,6 +29,7 @@ import { MEALS } from "../data/meals";
 
 const { width } = Dimensions.get("window");
 const DAY_WIDTH = 72;
+
 const CONTENT_PADDING = 8; // matches styles.calendarContent
 
 if (
@@ -33,6 +38,7 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
+
 
 const MEAL_ICONS: { [name: string]: string } = {
   Breakfast: "cafe-outline",
@@ -82,6 +88,7 @@ export default function FoodMenuScreen({ navigation }: any) {
   const [favorites, setFavorites] = useState<Favorites>({});
   const [monthlyMenu, setMonthlyMenu] = useState<MonthlyMenu>({});
   const [dayWidth, setDayWidth] = useState(DAY_WIDTH);
+
   const calendarRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -203,6 +210,24 @@ export default function FoodMenuScreen({ navigation }: any) {
   const setDate = (d: Date) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setSelectedDate(d);
+      const x = idx * DAY_WIDTH - width / 2 + DAY_WIDTH / 2;
+      calendarRef.current?.scrollTo({ x, animated: true });
+    }
+  }, [selectedDate]);
+
+  const importMenu = async () => {
+    try {
+      const res = await DocumentPicker.getDocumentAsync({ type: "application/json" });
+      if (res.canceled) return;
+      const uri = res.assets[0].uri;
+      const content = await FileSystem.readAsStringAsync(uri, { encoding: "utf8" });
+      const parsed = JSON.parse(content);
+      setMonthlyMenu(parsed);
+      await AsyncStorage.setItem("monthlyMenu", content);
+    } catch (e) {
+      console.error("Failed to import menu", e);
+    }
+
   };
 
   const swipeResponder = useRef(
@@ -229,6 +254,9 @@ export default function FoodMenuScreen({ navigation }: any) {
   return (
     <SafeAreaView style={styles.root} {...swipeResponder.panHandlers}>
       <View style={styles.header}>
+        <TouchableOpacity onPress={importMenu} style={styles.importButton}>
+          <Ionicons name="cloud-upload-outline" size={20} color="#333" />
+        </TouchableOpacity>
         <View style={styles.headerTextWrap} pointerEvents="none">
           <Text style={styles.title}>Full Day’s Menu</Text>
           <Text style={styles.dateLabel}>{dateLabel}</Text>
@@ -483,6 +511,11 @@ const styles = StyleSheet.create({
   },
   calendarRow: {
     paddingVertical: 8,
+  },
+  importButton: {
+    position: "absolute",
+    right: 16,
+    zIndex: 1,
   },
   calendarContent: {
     paddingHorizontal: 8,
