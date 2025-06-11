@@ -15,6 +15,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Home from './src/screens/Home';
 import FoodMenuScreen from './src/screens/FoodMenuScreen';
 import MonthlyMenuScreen from './src/screens/MonthlyMenuScreen';
+import FoodSummaryScreen from './src/screens/FoodSummaryScreen';
 
 // Placeholders or existing components for other tabs:
 function PlannerScreen() {
@@ -47,6 +48,7 @@ type RootStackParamList = {
   MainTabs: undefined;
   FoodMenuScreen: undefined;
   MonthlyMenuScreen: undefined;
+  FoodSummaryScreen: undefined;
   Profile: undefined;
 };
 
@@ -134,6 +136,10 @@ export default function App() {
           <RootStack.Screen
             name="MonthlyMenuScreen"
             component={MonthlyMenuScreen}
+          />
+          <RootStack.Screen
+            name="FoodSummaryScreen"
+            component={FoodSummaryScreen}
           />
           <RootStack.Screen name="Profile" component={Profile} />
           </RootStack.Navigator>
