@@ -3,7 +3,13 @@ import { View, Text, StyleSheet, SectionList, ActivityIndicator, FlatList } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Meal } from '../data/meals';
 
+// Fallback data bundled with the app for offline use
+import localMenu from '../../monthly-menu-may-2025.json';
+
+
+
 const MENU_URL = 'https://raw.githubusercontent.com/a-d-iii/app/main/monthly-menu-may-2025.json';
+
 
 interface MonthlyMenu {
   [date: string]: Meal[];
@@ -12,7 +18,12 @@ interface MonthlyMenu {
 type WeekSection = { title: string; data: { date: string; meals: Meal[] }[] };
 
 export default function MonthlyMenuScreen() {
+
+  // Use the bundled data initially so the monthly view works offline
+  const [menu, setMenu] = useState<MonthlyMenu>(localMenu as MonthlyMenu);
+
   const [menu, setMenu] = useState<MonthlyMenu | null>(null);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,7 +49,9 @@ export default function MonthlyMenuScreen() {
   }, []);
 
   const toWeeks = (): WeekSection[] => {
+
     if (!menu) return [];
+
     const dates = Object.keys(menu).sort();
     const weeks: WeekSection[] = [];
     for (let i = 0; i < dates.length; i += 7) {

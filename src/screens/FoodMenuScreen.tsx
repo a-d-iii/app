@@ -4,14 +4,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Meal } from '../data/meals';
 import { useNavigation } from '@react-navigation/native';
 
+// Load the bundled menu as an offline fallback so the screen always has data
+// even when network requests fail.
+import localMenu from '../../monthly-menu-may-2025.json';
+
+
 const MENU_URL = 'https://raw.githubusercontent.com/a-d-iii/app/main/monthly-menu-may-2025.json';
+
 
 interface MonthlyMenu {
   [date: string]: Meal[];
 }
 
 export default function FoodMenuScreen() {
-  const [menu, setMenu] = useState<MonthlyMenu | null>(null);
+
+  // Start with the bundled menu so something is shown immediately
+  const [menu, setMenu] = useState<MonthlyMenu>(localMenu as MonthlyMenu);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
@@ -40,6 +48,30 @@ export default function FoodMenuScreen() {
   const todayKey = new Date().toISOString().slice(0, 10);
   const meals = menu?.[todayKey];
 
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (!meals) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.message}>No menu found for today.</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('MonthlyMenuScreen' as never)}
+        >
+          <Text style={styles.buttonText}>View Full Month</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+
+
 
   if (loading || !meals) {
 
@@ -64,6 +96,7 @@ export default function FoodMenuScreen() {
       </View>
     );
   }
+
 
 
   return (
@@ -115,6 +148,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: '600',
+
 
   },
   message: {
