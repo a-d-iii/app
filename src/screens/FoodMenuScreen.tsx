@@ -210,10 +210,7 @@ export default function FoodMenuScreen({ navigation }: any) {
   const setDate = (d: Date) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setSelectedDate(d);
-      const x = idx * DAY_WIDTH - width / 2 + DAY_WIDTH / 2;
-      calendarRef.current?.scrollTo({ x, animated: true });
-    }
-  }, [selectedDate]);
+  };
 
   const importMenu = async () => {
     try {
