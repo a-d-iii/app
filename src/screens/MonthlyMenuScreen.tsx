@@ -35,6 +35,9 @@ export default function MonthlyMenuScreen() {
   const [loading, setLoading] = useState(true);
   const [likes, setLikes] = useState<Record<string, boolean>>({});
   const listRef = useRef<SectionList<any>>(null);
+ 
+  const scrollTarget = useRef<{ sectionIndex: number; itemIndex: number }>();
+ 
 
   useEffect(() => {
     const loadMenu = async () => {
@@ -65,6 +68,20 @@ export default function MonthlyMenuScreen() {
     const dates = Object.keys(menu).sort();
     const idx = dates.indexOf(todayKey);
     if (idx >= 0) {
+ 
+      scrollTarget.current = {
+        sectionIndex: Math.floor(idx / 7),
+        itemIndex: idx % 7,
+      };
+      setTimeout(() => {
+        if (scrollTarget.current) {
+          listRef.current?.scrollToLocation({
+            ...scrollTarget.current,
+            animated: false,
+            viewPosition: 0,
+          });
+        }
+ 
       const sectionIndex = Math.floor(idx / 7);
       const itemIndex = idx % 7;
       setTimeout(() => {
@@ -74,10 +91,23 @@ export default function MonthlyMenuScreen() {
           animated: false,
           viewPosition: 0,
         });
+ 
       }, 0);
     }
   }, [loading, menu]);
 
+ 
+  const handleScrollToIndexFailed = () => {
+    if (!scrollTarget.current) return;
+    setTimeout(() => {
+      listRef.current?.scrollToLocation({
+        ...scrollTarget.current!,
+        animated: false,
+        viewPosition: 0,
+      });
+    }, 50);
+  };
+ 
   const toWeeks = (): WeekSection[] => {
 
     if (!menu) return [];
@@ -169,6 +199,9 @@ export default function MonthlyMenuScreen() {
             <Text style={styles.sectionHeader}>{title}</Text>
           </View>
         )}
+ 
+        onScrollToIndexFailed={handleScrollToIndexFailed}
+ 
         SectionSeparatorComponent={() => <View style={{ height: 12 }} />}
         stickySectionHeadersEnabled={false}
         contentContainerStyle={styles.listContent}
