@@ -6,6 +6,13 @@ import type { Meal } from '../data/meals';
 // Fallback data bundled with the app for offline use
 import localMenu from '../../monthly-menu-may-2025.json';
 
+const MENU_URL =
+  'https://raw.githubusercontent.com/a-d-iii/app/main/monthly-menu-may-2025.json';
+
+
+// Fallback data bundled with the app for offline use
+import localMenu from '../../monthly-menu-may-2025.json';
+
 
 
 const MENU_URL = 'https://raw.githubusercontent.com/a-d-iii/app/main/monthly-menu-may-2025.json';
@@ -21,6 +28,11 @@ export default function MonthlyMenuScreen() {
 
   // Use the bundled data initially so the monthly view works offline
   const [menu, setMenu] = useState<MonthlyMenu>(localMenu as MonthlyMenu);
+
+
+  // Use the bundled data initially so the monthly view works offline
+  const [menu, setMenu] = useState<MonthlyMenu>(localMenu as MonthlyMenu);
+
 
 
   const [loading, setLoading] = useState(true);
@@ -49,7 +61,9 @@ export default function MonthlyMenuScreen() {
 
   const toWeeks = (): WeekSection[] => {
 
+
     if (!menu) return [];
+
 
     const dates = Object.keys(menu).sort();
     const weeks: WeekSection[] = [];
