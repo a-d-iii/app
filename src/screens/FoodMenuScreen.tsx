@@ -162,6 +162,8 @@ export default function FoodMenuScreen({ navigation }: any) {
           setSelectedDate((prev) => {
             const n = new Date(prev);
             n.setDate(prev.getDate() - 1);
+            // Swiping left should move forward a day and right should go back
+            n.setDate(prev.getDate() + (g.dx < 0 ? 1 : -1));
             return n;
           });
         }
