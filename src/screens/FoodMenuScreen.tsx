@@ -92,6 +92,7 @@ export default function FoodMenuScreen({ navigation }: any) {
 
   const calendarRef = useRef<ScrollView>(null);
   const menuAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current;
   const prevDateIdx = useRef(
     calendarDates.findIndex((d) => d.toDateString() === today.toDateString()),
   );
