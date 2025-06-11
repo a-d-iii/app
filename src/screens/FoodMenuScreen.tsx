@@ -423,14 +423,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   monthButton: {
-    flexDirection: 'row', 
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    alignItems: 'center',
-  },
-  monthButtonText: {
-    color: '#ff8c00',
- 
+    flexDirection: 'row',
     backgroundColor: '#007bff',
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -439,7 +432,6 @@ const styles = StyleSheet.create({
   },
   monthButtonText: {
     color: '#fff',
- 
     fontWeight: '600',
     marginLeft: 6,
   },
