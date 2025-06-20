@@ -7,7 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from '../screens/Home';
 import Planner from '../screens/Planner';
-import Social from '../screens/Social';
+import Attendance from '../screens/Attendance';
 import More from '../screens/More';
 import FoodMenuScreen from '../screens/FoodMenuScreen';
 import MonthlyMenuScreen from '../screens/MonthlyMenuScreen';
@@ -20,7 +20,7 @@ function Tabs() {
     <Tab.Navigator>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Planner" component={Planner} />
-      <Tab.Screen name="Social" component={Social} />
+      <Tab.Screen name="Attendance" component={Attendance} />
       <Tab.Screen name="More" component={More} />
     </Tab.Navigator>
   );
