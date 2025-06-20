@@ -40,11 +40,12 @@ function SubjectCard({ item, index }: { item: typeof subjects[0]; index: number 
   const fade = useRef(new Animated.Value(0)).current;
   const rain = useRef(new Animated.Value(0)).current;
   const sun = useRef(new Animated.Value(0)).current;
-
+ 
   const high = item.attendance >= 90;
   const midHigh = item.attendance >= 80 && item.attendance < 90;
   const mid = item.attendance >= 60 && item.attendance < 80;
   const low = item.attendance < 60;
+ 
 
   useEffect(() => {
     Animated.timing(fade, {
@@ -54,17 +55,21 @@ function SubjectCard({ item, index }: { item: typeof subjects[0]; index: number 
       useNativeDriver: true,
     }).start();
 
+ 
     if (high) {
       Animated.loop(
         Animated.timing(rain, {
           toValue: 1,
           duration: 2500,
+ 
           useNativeDriver: true,
         }),
       ).start();
     }
 
+ 
     if (low) {
+ 
       Animated.loop(
         Animated.timing(sun, {
           toValue: 1,
@@ -73,7 +78,9 @@ function SubjectCard({ item, index }: { item: typeof subjects[0]; index: number 
         }),
       ).start();
     }
+ 
   }, [fade, index, high, low, rain, sun]);
+ 
 
   const rainTranslate = rain.interpolate({
     inputRange: [0, 1],
@@ -88,7 +95,9 @@ function SubjectCard({ item, index }: { item: typeof subjects[0]; index: number 
   const colors = getBackgroundColors(item.attendance);
 
   const renderWeather = () => {
+ 
     if (high) {
+ 
       return (
         <>
           <Animated.Text
@@ -96,6 +105,7 @@ function SubjectCard({ item, index }: { item: typeof subjects[0]; index: number 
           >
             {"💧\n".repeat(5)}
           </Animated.Text>
+ 
           <Text style={styles.trees}>{'🌳 '.repeat(4)}</Text>
         </>
       );
@@ -123,6 +133,7 @@ function SubjectCard({ item, index }: { item: typeof subjects[0]; index: number 
       <>
         <Animated.Text style={[styles.sun, { transform: [{ rotate: sunRotate }] }]}>☀️</Animated.Text>
         <Text style={styles.dry}>{item.attendance < 30 ? '🏜️' : '🌵'}</Text>
+ 
       </>
     );
   };
