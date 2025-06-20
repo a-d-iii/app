@@ -18,8 +18,8 @@ import MonthlyMenuScreen from './src/screens/MonthlyMenuScreen';
 import FoodSummaryScreen from './src/screens/FoodSummaryScreen';
 import PlannerScreen from './src/screens/Planner';
 
-// Placeholder or existing component for the Social tab
-import SocialScreen from './src/screens/Social';
+// Component for the Attendance tab
+import AttendanceScreen from './src/screens/Attendance';
 
 // ——— New files you need to create under src/screens: ———
 // src/screens/MoreRootScreen.tsx  (listing utilities, including “Gallery”)
@@ -42,7 +42,7 @@ type RootStackParamList = {
 type TabParamList = {
   Home: undefined;
   Planner: undefined;
-  Social: undefined;
+  Attendance: undefined;
   Food: undefined;
   More: undefined;
 };
@@ -66,7 +66,7 @@ function MoreStackNavigator() {
 }
 
 /** 
- * Main Tabs: Home, Planner, Social, Food, More (wrapped in MoreStackNavigator)
+ * Main Tabs: Home, Planner, Attendance, Food, More (wrapped in MoreStackNavigator)
  */
 function MainTabs() {
   return (
@@ -80,8 +80,8 @@ function MainTabs() {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Planner') {
             iconName = focused ? 'calendar' : 'calendar-outline';
-          } else if (route.name === 'Social') {
-            iconName = focused ? 'people' : 'people-outline';
+          } else if (route.name === 'Attendance') {
+            iconName = focused ? 'checkmark-circle' : 'checkmark-circle-outline';
           } else if (route.name === 'Food') {
             iconName = focused ? 'fast-food' : 'fast-food-outline';
           } else if (route.name === 'More') {
@@ -101,7 +101,7 @@ function MainTabs() {
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Planner" component={PlannerScreen} />
-      <Tab.Screen name="Social" component={SocialScreen} />
+      <Tab.Screen name="Attendance" component={AttendanceScreen} />
       <Tab.Screen name="Food" component={FoodMenuScreen} />
       {/* Use the stack navigator for “More” */}
       <Tab.Screen name="More" component={MoreStackNavigator} />
