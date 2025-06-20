@@ -5,6 +5,7 @@ import {
   FlatList,
   Dimensions,
   Animated,
+  View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -37,6 +38,12 @@ function getBackgroundColors(percentage: number): string[] {
 
 function SubjectCard({ item, index }: { item: typeof subjects[0]; index: number }) {
   const fade = useRef(new Animated.Value(0)).current;
+  const rain = useRef(new Animated.Value(0)).current;
+  const sun = useRef(new Animated.Value(0)).current;
+
+  const isHigh = item.attendance >= 75;
+  const isLow = item.attendance < 50;
+
   useEffect(() => {
     Animated.timing(fade, {
       toValue: 1,
@@ -44,13 +51,77 @@ function SubjectCard({ item, index }: { item: typeof subjects[0]; index: number 
       delay: index * 100,
       useNativeDriver: true,
     }).start();
-  }, [fade, index]);
+
+    if (isHigh) {
+      Animated.loop(
+        Animated.timing(rain, {
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ).start();
+    }
+
+    if (isLow) {
+      Animated.loop(
+        Animated.timing(sun, {
+          toValue: 1,
+          duration: 4000,
+          useNativeDriver: true,
+        }),
+      ).start();
+    }
+  }, [fade, index, isHigh, isLow, rain, sun]);
+
+  const rainTranslate = rain.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-CARD_SIZE, CARD_SIZE],
+  });
+
+  const sunRotate = sun.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   const colors = getBackgroundColors(item.attendance);
+
+  const renderWeather = () => {
+    if (isHigh) {
+      return (
+        <>
+          <Animated.Text
+            style={[styles.rain, { transform: [{ translateY: rainTranslate }] }]}
+          >
+            {"💧\n".repeat(5)}
+          </Animated.Text>
+          <Text style={styles.trees}>🌳 🌳 🌳</Text>
+        </>
+      );
+    }
+
+    if (isLow) {
+      return (
+        <>
+          <Animated.Text style={[styles.sun, { transform: [{ rotate: sunRotate }] }]}>☀️</Animated.Text>
+          <Text style={styles.dry}>🌵</Text>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Animated.Text style={[styles.sun, { transform: [{ rotate: sunRotate }] }]}>☀️</Animated.Text>
+        <Text style={styles.trees}>🌳 🌳</Text>
+      </>
+    );
+  };
 
   return (
     <Animated.View style={[styles.card, { opacity: fade }]}>
       <LinearGradient colors={colors} style={StyleSheet.absoluteFill} />
+      <View style={styles.overlay} pointerEvents="none">
+        {renderWeather()}
+      </View>
       <Text style={styles.subject}>{item.name}</Text>
       <Text style={styles.attendance}>{item.attendance}%</Text>
     </Animated.View>
@@ -103,5 +174,31 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#333',
     textAlign: 'center',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    padding: 4,
+  },
+  rain: {
+    position: 'absolute',
+    top: 0,
+    fontSize: 16,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  sun: {
+    fontSize: 24,
+    color: '#fff',
+  },
+  trees: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#fff',
+  },
+  dry: {
+    fontSize: 20,
+    color: '#fff',
   },
 });
