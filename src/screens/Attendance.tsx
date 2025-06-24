@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   Dimensions,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -22,8 +23,8 @@ const subjects = [
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_MARGIN = 12;
-const CARD_WIDTH = (SCREEN_WIDTH - CARD_MARGIN * 3) / 2;
-const CARD_HEIGHT = 150;
+const CARD_WIDTH = (SCREEN_WIDTH - CARD_MARGIN * 3) / 2 - 8;
+const CARD_HEIGHT = 130;
 
 function getBackgroundColor(p: number): string {
   if (p >= 75) return '#c8e6c9';
@@ -40,6 +41,17 @@ function getIcon(p: number): string {
 function SubjectCard({ item }: { item: typeof subjects[0] }) {
   const bg = getBackgroundColor(item.attendance);
   const icon = getIcon(item.attendance);
+  const scale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scale, { toValue: 1.2, duration: 600, useNativeDriver: true }),
+        Animated.timing(scale, { toValue: 1, duration: 600, useNativeDriver: true }),
+      ]),
+    ).start();
+  }, [scale]);
+
   return (
     <View style={[styles.card, { backgroundColor: bg }]}>
       <View style={styles.header}>
@@ -50,7 +62,9 @@ function SubjectCard({ item }: { item: typeof subjects[0] }) {
           <Text style={styles.attendance}>{item.attendance}</Text>
           <Text style={styles.percentSymbol}>%</Text>
         </View>
-        <Ionicons name={icon as any} size={20} color="#333" style={styles.icon} />
+        <Animated.View style={{ transform: [{ scale }] }}>
+          <Ionicons name={icon as any} size={22} color="#333" style={styles.icon} />
+        </Animated.View>
       </View>
     </View>
   );
@@ -74,7 +88,7 @@ export default function Attendance() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '700',
     margin: 16,
     color: '#333',
@@ -97,7 +111,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   subject: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     color: '#333',
   },
@@ -112,12 +126,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   attendance: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: '700',
     color: '#333',
   },
   percentSymbol: {
-    fontSize: 18,
+    fontSize: 22,
     color: '#333',
     marginBottom: 4,
     marginLeft: 2,
