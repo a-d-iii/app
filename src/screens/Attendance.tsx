@@ -58,16 +58,11 @@ function SubjectCard({ item }: { item: typeof subjects[0] }) {
       ]),
     ).start();
   }, [scale]);
- 
 
-function SubjectCard({ item }: { item: typeof subjects[0] }) {
-  const bg = getBackgroundColor(item.attendance);
-  const icon = getIcon(item.attendance);
   return (
     <View style={[styles.card, { backgroundColor: bg }]}>
       <View style={styles.header}>
         <Text style={styles.subject}>{item.name}</Text>
- 
       </View>
       <View style={styles.body}>
         <View style={styles.percentWrap}>
@@ -78,7 +73,6 @@ function SubjectCard({ item }: { item: typeof subjects[0] }) {
           <Ionicons name={icon as any} size={22} color="#333" style={styles.icon} />
         </Animated.View>
       </View>
- 
     </View>
   );
 }
