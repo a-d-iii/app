@@ -25,6 +25,5 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name="com.anonymous.vitstudentapp.attendance.AttendanceActivity" android:exported="false" android:screenOrientation="portrait"/>
   </application>
 </manifest>
