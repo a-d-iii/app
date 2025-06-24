@@ -7,22 +7,24 @@ import {
   StyleSheet,
   FlatList,
   Dimensions,
- 
   Animated,
- 
+  Pressable,
+  Easing,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const subjects = [
-  { name: 'Data Structures', attendance: 95 },
-  { name: 'Operating Systems', attendance: 82 },
-  { name: 'Algorithms', attendance: 70 },
-  { name: 'Calculus', attendance: 60 },
-  { name: 'Statistics', attendance: 50 },
-  { name: 'Networking', attendance: 45 },
-  { name: 'Cyber Security', attendance: 35 },
-  { name: 'AI', attendance: 25 },
+  { name: 'Data Structures', code: 'CS201', attendance: 95 },
+  { name: 'Operating Systems', code: 'CS202', attendance: 82 },
+  { name: 'Algorithms', code: 'CS203', attendance: 70 },
+  { name: 'Calculus', code: 'MA101', attendance: 60 },
+  { name: 'Statistics', code: 'MA201', attendance: 50 },
+  { name: 'Networking', code: 'CS204', attendance: 45 },
+  { name: 'Cyber Security', code: 'CS301', attendance: 35 },
+  { name: 'AI', code: 'CS302', attendance: 25 },
+  { name: 'Database Systems', code: 'CS205', attendance: 88 },
+  { name: 'Software Engineering', code: 'CS206', attendance: 77 },
 ];
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -39,30 +41,28 @@ function getBackgroundColor(p: number): string {
 }
 
 function getIcon(p: number): string {
-  if (p >= 75) return 'checkmark-circle';
-  if (p >= 70) return 'alert-circle';
-  return 'close-circle';
+  if (p >= 75) return 'checkmark';
+  if (p >= 70) return 'warning';
+  return 'close';
 }
  
 
 function SubjectCard({ item }: { item: typeof subjects[0] }) {
   const bg = getBackgroundColor(item.attendance);
   const icon = getIcon(item.attendance);
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useRef(new Animated.Value(0.5)).current;
 
   useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(scale, { toValue: 1.2, duration: 600, useNativeDriver: true }),
-        Animated.timing(scale, { toValue: 1, duration: 600, useNativeDriver: true }),
-      ]),
-    ).start();
+    Animated.timing(scale, { toValue: 1, duration: 400, useNativeDriver: true }).start();
   }, [scale]);
 
   return (
-    <View style={[styles.card, { backgroundColor: bg }]}>
+    <Pressable
+      style={({ pressed }) => [styles.card, { backgroundColor: bg }, pressed && styles.cardPressed]}
+    >
       <View style={styles.header}>
         <Text style={styles.subject}>{item.name}</Text>
+        <Text style={styles.code}>{item.code}</Text>
       </View>
       <View style={styles.body}>
         <View style={styles.percentWrap}>
@@ -70,14 +70,34 @@ function SubjectCard({ item }: { item: typeof subjects[0] }) {
           <Text style={styles.percentSymbol}>%</Text>
         </View>
         <Animated.View style={{ transform: [{ scale }] }}>
-          <Ionicons name={icon as any} size={22} color="#333" style={styles.icon} />
+          <Ionicons name={icon as any} size={24} color="#333" style={styles.icon} />
         </Animated.View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
 export default function Attendance() {
+  const rotate = useRef(new Animated.Value(0)).current;
+  const rScale = useRef(new Animated.Value(1)).current;
+
+  const handleRefresh = () => {
+    Animated.parallel([
+      Animated.sequence([
+        Animated.timing(rScale, { toValue: 0.8, duration: 100, useNativeDriver: true }),
+        Animated.timing(rScale, { toValue: 1, duration: 100, useNativeDriver: true }),
+      ]),
+      Animated.timing(rotate, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+        easing: Easing.linear,
+      }),
+    ]).start(() => rotate.setValue(0));
+  };
+
+  const rotateInterpolate = rotate.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Attendance</Text>
@@ -88,6 +108,11 @@ export default function Attendance() {
         contentContainerStyle={styles.list}
         renderItem={({ item }) => <SubjectCard item={item} />}
       />
+      <Pressable onPress={handleRefresh} style={styles.refreshWrap}>
+        <Animated.View style={{ transform: [{ rotate: rotateInterpolate }, { scale: rScale }] }}>
+          <Ionicons name="refresh" size={28} color="#333" />
+        </Animated.View>
+      </Pressable>
     </SafeAreaView>
   );
 }
@@ -114,19 +139,28 @@ const styles = StyleSheet.create({
     margin: CARD_MARGIN / 2,
     overflow: 'hidden',
   },
+  cardPressed: {
+    opacity: 0.8,
+  },
   header: {
-    flex: 0.2,
+    flex: 0.3,
     justifyContent: 'center',
     paddingHorizontal: 8,
   },
   subject: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     color: '#333',
   },
+  code: {
+    fontSize: 14,
+    color: '#555',
+  },
   body: {
-    flex: 0.8,
+    flex: 0.7,
+    flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-end',
     paddingHorizontal: 8,
     paddingVertical: 8,
   },
@@ -135,21 +169,26 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   attendance: {
- 
-    fontSize: 36,
- 
+
+    fontSize: 42,
+
     fontWeight: '700',
     color: '#333',
   },
   percentSymbol: {
- 
-    fontSize: 22,
- 
+
+    fontSize: 26,
+
     color: '#333',
-    marginBottom: 4,
+    marginBottom: 2,
     marginLeft: 2,
   },
   icon: {
     alignSelf: 'flex-end',
+  },
+  refreshWrap: {
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
   },
 });
