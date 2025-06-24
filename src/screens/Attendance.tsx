@@ -41,15 +41,22 @@ function getBackgroundColor(p: number): string {
 }
 
 function getIcon(p: number): string {
-  if (p >= 75) return 'checkmark';
-  if (p >= 70) return 'warning';
-  return 'close';
+  if (p >= 75) return 'checkmark-circle';
+  if (p >= 70) return 'alert-circle';
+  return 'close-circle';
+}
+
+function getIconColor(p: number): string {
+  if (p >= 75) return '#2e7d32';
+  if (p >= 70) return '#f9a825';
+  return '#c62828';
 }
  
 
-function SubjectCard({ item }: { item: typeof subjects[0] }) {
+function SubjectCard({ item, isLab }: { item: typeof subjects[0]; isLab: boolean }) {
   const bg = getBackgroundColor(item.attendance);
   const icon = getIcon(item.attendance);
+  const iconColor = getIconColor(item.attendance);
   const scale = useRef(new Animated.Value(0.5)).current;
 
   useEffect(() => {
@@ -58,7 +65,12 @@ function SubjectCard({ item }: { item: typeof subjects[0] }) {
 
   return (
     <Pressable
-      style={({ pressed }) => [styles.card, { backgroundColor: bg }, pressed && styles.cardPressed]}
+      style={({ pressed }) => [
+        styles.card,
+        { backgroundColor: bg },
+        isLab && styles.labCard,
+        pressed && styles.cardPressed,
+      ]}
     >
       <View style={styles.header}>
         <Text style={styles.subject}>{item.name}</Text>
@@ -70,7 +82,7 @@ function SubjectCard({ item }: { item: typeof subjects[0] }) {
           <Text style={styles.percentSymbol}>%</Text>
         </View>
         <Animated.View style={{ transform: [{ scale }] }}>
-          <Ionicons name={icon as any} size={24} color="#333" style={styles.icon} />
+          <Ionicons name={icon as any} size={24} color={iconColor} style={styles.icon} />
         </Animated.View>
       </View>
     </Pressable>
@@ -106,11 +118,13 @@ export default function Attendance() {
         keyExtractor={(item) => item.name}
         numColumns={2}
         contentContainerStyle={styles.list}
-        renderItem={({ item }) => <SubjectCard item={item} />}
+        renderItem={({ item, index }) => (
+          <SubjectCard item={item} isLab={index >= subjects.length - 4} />
+        )}
       />
       <Pressable onPress={handleRefresh} style={styles.refreshWrap}>
         <Animated.View style={{ transform: [{ rotate: rotateInterpolate }, { scale: rScale }] }}>
-          <Ionicons name="refresh" size={28} color="#333" />
+          <Ionicons name="refresh" size={28} color="#1e3a8a" />
         </Animated.View>
       </Pressable>
     </SafeAreaView>
@@ -120,12 +134,10 @@ export default function Attendance() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   title: {
- 
     fontSize: 28,
- 
     fontWeight: '700',
     margin: 16,
-    color: '#333',
+    color: '#1e3a8a',
     textAlign: 'left',
   },
   list: {
@@ -139,6 +151,10 @@ const styles = StyleSheet.create({
     margin: CARD_MARGIN / 2,
     overflow: 'hidden',
   },
+  labCard: {
+    borderWidth: 2,
+    borderColor: '#2196f3',
+  },
   cardPressed: {
     opacity: 0.8,
   },
@@ -146,15 +162,16 @@ const styles = StyleSheet.create({
     flex: 0.3,
     justifyContent: 'center',
     paddingHorizontal: 8,
+    paddingTop: 12,
   },
   subject: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: '#1e3a8a',
   },
   code: {
     fontSize: 14,
-    color: '#555',
+    color: '#3f4e7d',
   },
   body: {
     flex: 0.7,
@@ -169,17 +186,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   attendance: {
-
     fontSize: 42,
-
     fontWeight: '700',
-    color: '#333',
+    color: '#1e3a8a',
   },
   percentSymbol: {
-
     fontSize: 26,
-
-    color: '#333',
+    color: '#1e3a8a',
     marginBottom: 2,
     marginLeft: 2,
   },
@@ -190,5 +203,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 24,
     right: 24,
+    backgroundColor: '#f0f0f0',
+    padding: 8,
+    borderRadius: 24,
   },
 });
