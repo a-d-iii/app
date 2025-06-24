@@ -1,11 +1,15 @@
+ 
 import React, { useEffect, useRef } from 'react';
+ 
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   Dimensions,
+ 
   Animated,
+ 
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -23,8 +27,10 @@ const subjects = [
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_MARGIN = 12;
+ 
 const CARD_WIDTH = (SCREEN_WIDTH - CARD_MARGIN * 3) / 2 - 8;
 const CARD_HEIGHT = 130;
+ 
 
 function getBackgroundColor(p: number): string {
   if (p >= 75) return '#c8e6c9';
@@ -37,6 +43,7 @@ function getIcon(p: number): string {
   if (p >= 70) return 'alert-circle';
   return 'close-circle';
 }
+ 
 
 function SubjectCard({ item }: { item: typeof subjects[0] }) {
   const bg = getBackgroundColor(item.attendance);
@@ -51,11 +58,16 @@ function SubjectCard({ item }: { item: typeof subjects[0] }) {
       ]),
     ).start();
   }, [scale]);
+ 
 
+function SubjectCard({ item }: { item: typeof subjects[0] }) {
+  const bg = getBackgroundColor(item.attendance);
+  const icon = getIcon(item.attendance);
   return (
     <View style={[styles.card, { backgroundColor: bg }]}>
       <View style={styles.header}>
         <Text style={styles.subject}>{item.name}</Text>
+ 
       </View>
       <View style={styles.body}>
         <View style={styles.percentWrap}>
@@ -66,6 +78,7 @@ function SubjectCard({ item }: { item: typeof subjects[0] }) {
           <Ionicons name={icon as any} size={22} color="#333" style={styles.icon} />
         </Animated.View>
       </View>
+ 
     </View>
   );
 }
@@ -88,7 +101,9 @@ export default function Attendance() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   title: {
+ 
     fontSize: 28,
+ 
     fontWeight: '700',
     margin: 16,
     color: '#333',
@@ -111,7 +126,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   subject: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: '#333',
   },
@@ -126,12 +141,16 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   attendance: {
+ 
     fontSize: 36,
+ 
     fontWeight: '700',
     color: '#333',
   },
   percentSymbol: {
+ 
     fontSize: 22,
+ 
     color: '#333',
     marginBottom: 4,
     marginLeft: 2,
