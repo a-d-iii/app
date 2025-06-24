@@ -124,7 +124,7 @@ export default function Attendance() {
       />
       <Pressable onPress={handleRefresh} style={styles.refreshWrap}>
         <Animated.View style={{ transform: [{ rotate: rotateInterpolate }, { scale: rScale }] }}>
-          <Ionicons name="refresh" size={28} color="#1e3a8a" />
+          <Ionicons name="refresh" size={28} color="#212121" />
         </Animated.View>
       </Pressable>
     </SafeAreaView>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '700',
     margin: 16,
-    color: '#1e3a8a',
+    color: '#212121',
     textAlign: 'left',
   },
   list: {
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   },
   labCard: {
     borderWidth: 2,
-    borderColor: '#2196f3',
+    borderColor: '#757575',
   },
   cardPressed: {
     opacity: 0.8,
@@ -167,11 +167,11 @@ const styles = StyleSheet.create({
   subject: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1e3a8a',
+    color: '#212121',
   },
   code: {
     fontSize: 14,
-    color: '#3f4e7d',
+    color: '#212121',
   },
   body: {
     flex: 0.7,
@@ -188,11 +188,11 @@ const styles = StyleSheet.create({
   attendance: {
     fontSize: 42,
     fontWeight: '700',
-    color: '#1e3a8a',
+    color: '#212121',
   },
   percentSymbol: {
     fontSize: 26,
-    color: '#1e3a8a',
+    color: '#212121',
     marginBottom: 2,
     marginLeft: 2,
   },
