@@ -23,6 +23,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -86,7 +87,11 @@ fun BasicApp() {
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = stringResource(id = items[selectedIndex].labelRes))
+                if (selectedIndex == 2) {
+                    AttendanceScreen()
+                } else {
+                    Text(text = stringResource(id = items[selectedIndex].labelRes))
+                }
             }
         }
     }
