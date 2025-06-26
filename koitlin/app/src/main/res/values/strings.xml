@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BasicApp</string>
+    <string name="home">Home</string>
+    <string name="planner">Planner</string>
+    <string name="attendance">Attendance</string>
+    <string name="food">Food</string>
+    <string name="more">More</string>
+</resources>
